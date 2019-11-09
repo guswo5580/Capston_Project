@@ -9,41 +9,15 @@ import {
   View,
   Dimensions
 } from 'react-native';
-import { MapView } from 'expo';
+import { MapView, Permissions } from 'expo';
 import { Bubbles } from 'react-native-loader';
 import mainColor from '../constants/Colors';
 
-const headerHorizontalpadding = Dimensions.get('window').width / 4;
+const width = Dimensions.get('window').width;
+const headerHorizontalpadding = width / 4;
 
 export default function SettingsScreen() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerContentContainer}>
-          <View style={styles.headerContentDate}>
-            <Text style={styles.headerContentDateText}>2019/11/09/18:29</Text>
-          </View>
-          <View style={styles.headerContentMain}>
-            <Text style={styles.headerContentMainText}>출동 대기중</Text>
-          </View>
-          <View style={styles.headerContentFooter}>
-            <Bubbles size={5} color="#FFF" />
-          </View>
-        </View>
-      </View>
-      <View style={styles.main}>
-        {/* <MapView
-          style={{ flex: 1 }}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
-        /> */}
-      </View>
-    </View>
-  );
+  return <MapView style={{ flex: 1 }}></MapView>;
 }
 
 SettingsScreen.navigationOptions = {
@@ -60,8 +34,10 @@ const styles = StyleSheet.create({
     backgroundColor: mainColor.tintColor
   },
   main: {
-    flex: 2,
-    padding: 20
+    flex: 2
+  },
+  mapStyle: {
+    width: Dimensions.get('window').width
   },
   // footer: {
   //   flex: 1,
@@ -99,4 +75,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   }
+  ///////////////////////////////////
 });
