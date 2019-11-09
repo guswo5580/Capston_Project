@@ -14,7 +14,7 @@ import {
   Cancle
 } from '../components/NotificationExample';
 
-export default function SettingsScreen() {
+export default function NotificationScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -31,7 +31,7 @@ export default function SettingsScreen() {
   );
 }
 
-SettingsScreen.navigationOptions = {
+NotificationScreen.navigationOptions = {
   header: null
 };
 
