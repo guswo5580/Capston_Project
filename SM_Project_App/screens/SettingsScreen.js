@@ -26,7 +26,7 @@ export default function SettingsScreen() {
             <ToggleSwitch
               isOn={isOnComplete}
               onColor="red"
-              offColor="grey"
+              offColor="gray"
               size="medium"
               onToggle={setisOnComplete}
             />
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   footerbtn: {
-    backgroundColor: 'grey',
+    backgroundColor: 'gray',
     paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 5,
