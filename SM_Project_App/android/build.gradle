@@ -2,12 +2,13 @@
 
 buildscript {
   ext {
-    minSdkVersion = 21
-    targetSdkVersion = 28
     compileSdkVersion = 28
-
+    targetSdkVersion = 28
+    minSdkVersion = 21
     buildToolsVersion = '28.0.0'
     supportLibVersion = '28.0.0'
+    googlePlayServicesVersion = "11.8.0"
+    androidMapsUtilsVersion = "0.5+"
     kotlinVersion = '1.3.21'
     repositoryUrl = "file:${System.env.HOME}/.m2/repository/"
   }

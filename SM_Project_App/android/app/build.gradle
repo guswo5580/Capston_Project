@@ -199,6 +199,8 @@ dependencies {
       ]
   ])
   
+  //Add React-native-maps
+  implementation project(':react-native-maps')
 }
 
 // This has to be down here for some reason

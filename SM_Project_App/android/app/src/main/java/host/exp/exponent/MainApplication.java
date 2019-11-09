@@ -10,6 +10,7 @@ import java.util.List;
 import expo.loaders.provider.interfaces.AppLoaderPackagesProviderInterface;
 import host.exp.exponent.generated.BasePackageList;
 import okhttp3.OkHttpClient;
+import com.airbnb.android.react.maps.MapsPackage;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
@@ -31,6 +32,13 @@ public class MainApplication extends ExpoApplication implements AppLoaderPackage
         // new MainReactPackage()
     );
   }
+  @Override
+    protected List<ReactPackage> getPackages() {
+        return Arrays.<ReactPackage>asList(
+                new MainReactPackage(),
+                new MapsPackage()
+        );
+    }
 
   public List<Package> getExpoPackages() {
     return new BasePackageList().getPackageList();

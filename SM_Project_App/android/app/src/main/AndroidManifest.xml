@@ -357,6 +357,10 @@
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb0"/>
 
     <meta-data android:name="standaloneStripeScheme" android:value="58166486-0464-4a14-ac3b-807a3aa88e38" />
+    <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyBHuEppdQX4cGkD52jyvIARBE1qyjU5sL8"/>
+
   </application>
 
 </manifest>
