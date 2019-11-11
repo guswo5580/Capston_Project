@@ -18,13 +18,9 @@ import MapView, {
   Polygon,
   Circle
 } from 'react-native-maps'
-// import Geolocation from '@react-native-community/geolocation'
-// import { request, PERMISSIONS } from 'react-native-permissions'
 import * as Permissions from 'expo-permissions'
 import Carousel from 'react-native-snap-carousel'
-// import Polyline from '@mapbox/polyline'
 import SlidingUpPanel from 'rn-sliding-up-panel'
-// import { Bubbles } from 'react-native-loader'
 import mainColor from '../constants/Colors'
 
 const locations = require('../constants/locations.json')
