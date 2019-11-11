@@ -19,16 +19,8 @@ import MapView, {
   Circle
 } from 'react-native-maps'
 import * as Permissions from 'expo-permissions'
-import Carousel from 'react-native-snap-carousel'
-import Modal, {
-  ModalTitle,
-  ModalContent,
-  ModalFooter,
-  ModalButton,
-  SlideAnimation,
-  ScaleAnimation
-} from 'react-native-modals'
-import mainColor from '../constants/Colors'
+import { FloatingAction } from 'react-native-floating-action'
+import Property from '../components/Property'
 
 const locations = require('../constants/locations.json')
 const GOOGLE_MAP_KEY = 'AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ'
@@ -38,40 +30,32 @@ const height = Dimensions.get('window').height
 
 export default class HomeScreen extends React.Component {
   state = {
-    markers: [],
-    coordinates: [
+    actions: [
       {
-        name: '예시 1',
-        latitude: 37.7946386,
-        longitude: -122.421646,
-        img: require('../assets/images/robot-dev.png')
+        text: 'Accessibility',
+        icon: require('../assets/images/ic_accessibility_white.png'),
+        name: 'bt_accessibility',
+        position: 2
       },
       {
-        name: '예시 2',
-        latitude: 37.7665248,
-        longitude: -122.4165628,
-        img: require('../assets/images/robot-dev.png')
+        text: 'Language',
+        icon: require('../assets/images/ic_language_white.png'),
+        name: 'bt_language',
+        position: 1
       },
       {
-        name: '예시 3',
-        latitude: 37.7834153,
-        longitude: -122.4527787,
-        img: require('../assets/images/robot-dev.png')
+        text: 'Location',
+        icon: require('../assets/images/ic_room_white.png'),
+        name: 'bt_room',
+        position: 3
       },
       {
-        name: '예시 4',
-        latitude: 37.7948105,
-        longitude: -122.4596065,
-        img: require('../assets/images/robot-dev.png')
+        text: 'Video',
+        icon: require('../assets/images/ic_videocam_white.png'),
+        name: 'bt_videocam',
+        position: 4
       }
-    ],
-    customBackgroundModal: false,
-    defaultAnimationModal: false,
-    swipeableModal: false,
-    scaleAnimationModal: false,
-    slideAnimationModal: false,
-    bottomModalAndTitle: false,
-    bottomModal: false
+    ]
   }
   componentDidMount() {
     this.requestLocationPermission()
@@ -114,35 +98,20 @@ export default class HomeScreen extends React.Component {
           showsUserLocation={true}
           style={styles.map}
           initialRegion={this.state.initialPosition}></MapView>
-        <View style={styles.modalbutton}>
-          <Button
-            title=" Slide Animation"
-            onPress={() => {
-              this.setState({
-                slideAnimationModal: true
-              })
+        <View style={styles.container}>
+          <Property
+            propertyName="overlayColor"
+            propertyValue="rgba(255, 255, 255, 1)"
+            defaultValue="rgba(68, 68, 68, 0.6)"
+          />
+          <FloatingAction
+            actions={this.state.actions}
+            overlayColor="rgba(255, 255, 255, 1)"
+            onPressItem={name => {
+              Alert.alert('Icon pressed', `the icon ${name} was pressed`)
             }}
           />
         </View>
-
-        <Modal
-          onDismiss={() => {
-            this.setState({ slideAnimationModal: false })
-          }}
-          onTouchOutside={() => {
-            this.setState({ slideAnimationModal: false })
-          }}
-          swipeDirection="down"
-          onSwipeOut={() => this.setState({ slideAnimationModal: false })}
-          visible={this.state.slideAnimationModal}
-          modalTitle={
-            <ModalTitle title="Modal - Slide Animation" hasTitleBar={false} />
-          }
-          modalAnimation={new SlideAnimation({ slideFrom: 'bottom' })}>
-          <ModalContent>
-            <Text>Slide Animation</Text>
-          </ModalContent>
-        </Modal>
       </View>
     )
   }
@@ -158,39 +127,5 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject
-  },
-  modalbutton: {
-    position: 'absolute',
-    bottom: 0,
-    // left: 40,
-    width: width
-    // height: 100
-  },
-  dialogContentView: {
-    paddingLeft: 18,
-    paddingRight: 18
-  },
-  navigationBar: {
-    borderBottomColor: '#b5b5b5',
-    borderBottomWidth: 0.5,
-    backgroundColor: '#ffffff'
-  },
-  navigationTitle: {
-    padding: 10
-  },
-  navigationButton: {
-    padding: 10
-  },
-  navigationLeftButton: {
-    paddingLeft: 20,
-    paddingRight: 40
-  },
-  navigator: {
-    flex: 1
-    // backgroundColor: '#000000',
-  },
-  customBackgroundModal: {
-    opacity: 0.5,
-    backgroundColor: '#000'
   }
 })

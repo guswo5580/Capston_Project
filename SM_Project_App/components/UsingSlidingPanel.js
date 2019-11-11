@@ -30,35 +30,7 @@ const height = Dimensions.get('window').height
 // const headerHorizontalpadding = width / 4
 
 export default class HomeScreen extends React.Component {
-  state = {
-    markers: [],
-    coordinates: [
-      {
-        name: '예시 1',
-        latitude: 37.7946386,
-        longitude: -122.421646,
-        img: require('../assets/images/robot-dev.png')
-      },
-      {
-        name: '예시 2',
-        latitude: 37.7665248,
-        longitude: -122.4165628,
-        img: require('../assets/images/robot-dev.png')
-      },
-      {
-        name: '예시 3',
-        latitude: 37.7834153,
-        longitude: -122.4527787,
-        img: require('../assets/images/robot-dev.png')
-      },
-      {
-        name: '예시 4',
-        latitude: 37.7948105,
-        longitude: -122.4596065,
-        img: require('../assets/images/robot-dev.png')
-      }
-    ]
-  }
+  state = {}
   componentDidMount() {
     this.requestLocationPermission()
   }
