@@ -358,8 +358,8 @@
 
     <meta-data android:name="standaloneStripeScheme" android:value="58166486-0464-4a14-ac3b-807a3aa88e38" />
     <meta-data
-     android:name="Near.React.Native.App"
-     android:value="AIzaSyAK7wVY4QNAmElV21G9QYHpvq6bzcuvdlY"/>
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ"/>
 
   </application>
 

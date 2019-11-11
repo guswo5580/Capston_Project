@@ -14,6 +14,8 @@ import com.airbnb.android.react.maps.MapsPackage;
 
 // Needed for `react-native link`
 // import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
+import com.reactnativecommunity.geolocation.GeolocationPackage;
 
 public class MainApplication extends ExpoApplication implements AppLoaderPackagesProviderInterface<ReactPackage> {
 
@@ -29,14 +31,18 @@ public class MainApplication extends ExpoApplication implements AppLoaderPackage
         // TODO: add native modules!
 
         // Needed for `react-native link`
-        // new MainReactPackage()
+        // new MainReactPackage(),
+            new RNPermissionsPackage(),
+        // new MainReactPackage(),
+        
     );
   }
   @Override
     protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-                new MainReactPackage(),
-                new MapsPackage()
+        return Arrays.asList(
+            new MainReactPackage(),
+            new GeolocationPackage(),
+            new MapsPackage()
         );
     }
 
@@ -53,4 +59,5 @@ public class MainApplication extends ExpoApplication implements AppLoaderPackage
     // Customize/override OkHttp client here
     return builder;
   }
+  
 }

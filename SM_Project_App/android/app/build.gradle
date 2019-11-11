@@ -103,6 +103,8 @@ apply from: 'expo.gradle'
 apply from: "../../node_modules/react-native-unimodules/gradle.groovy"
 
 dependencies {
+    implementation project(':react-native-permissions')
+    implementation project(':@react-native-community_geolocation')
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation 'com.android.support:multidex:1.0.1'
@@ -201,6 +203,7 @@ dependencies {
   
   //Add React-native-maps
   implementation project(':react-native-maps')
+  implementation project(':react-native-community-geolocation')
 }
 
 // This has to be down here for some reason
