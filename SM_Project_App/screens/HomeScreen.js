@@ -20,43 +20,73 @@ import MapView, {
 } from 'react-native-maps'
 import * as Permissions from 'expo-permissions'
 import { FloatingAction } from 'react-native-floating-action'
-import Property from '../components/Property'
+import StartingScreen from '../components/StartigScreen'
+import MainHeader from '../components/MainHeader'
+import UserModal from '../components/UserModal'
+import mainColor from '../constants/Colors'
+import actionJson from '../constants/actions'
 
-const locations = require('../constants/locations.json')
 const GOOGLE_MAP_KEY = 'AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ'
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
+
 // const headerHorizontalpadding = width / 4
 
 export default class HomeScreen extends React.Component {
   state = {
+    declare: true,
     actions: [
       {
-        text: 'Accessibility',
-        icon: require('../assets/images/ic_accessibility_white.png'),
-        name: 'bt_accessibility',
-        position: 2
-      },
-      {
-        text: 'Language',
+        text: '신고자 전화',
         icon: require('../assets/images/ic_language_white.png'),
         name: 'bt_language',
+        textColor: 'white',
+        transparent: true,
+        textBackground: 'transparent',
+        textElevation: 0,
+        margin: 4,
+        buttonSize: 50,
         position: 1
       },
       {
-        text: 'Location',
+        text: '신고자 정보 확인',
+        icon: require('../assets/images/ic_accessibility_white.png'),
+        name: '신고자 정보 확인',
+        textColor: 'white',
+        transparent: true,
+        textBackground: 'transparent',
+        textElevation: 0,
+        margin: 4,
+        buttonSize: 50,
+        position: 2
+      },
+      {
+        text: '최단거리 검색',
         icon: require('../assets/images/ic_room_white.png'),
         name: 'bt_room',
+        textColor: 'white',
+        transparent: true,
+        textBackground: 'transparent',
+        textElevation: 0,
+        margin: 4,
+        buttonSize: 50,
         position: 3
       },
       {
-        text: 'Video',
+        text: '사건 완료',
         icon: require('../assets/images/ic_videocam_white.png'),
         name: 'bt_videocam',
+        textColor: 'white',
+        transparent: true,
+        textBackground: 'transparent',
+        textElevation: 0,
+        margin: 4,
+        buttonSize: 50,
         position: 4
       }
     ]
   }
+
   componentDidMount() {
     this.requestLocationPermission()
   }
@@ -73,8 +103,6 @@ export default class HomeScreen extends React.Component {
   locateCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
-        console.log(JSON.stringify(position))
-
         let initialPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -90,30 +118,51 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          ref={map => (this._map = map)}
-          showsUserLocation={true}
-          style={styles.map}
-          initialRegion={this.state.initialPosition}></MapView>
+    if (this.state.declare === true && this.state.initialPosition) {
+      return (
         <View style={styles.container}>
-          <Property
-            propertyName="overlayColor"
-            propertyValue="rgba(255, 255, 255, 1)"
-            defaultValue="rgba(68, 68, 68, 0.6)"
-          />
-          <FloatingAction
-            actions={this.state.actions}
-            overlayColor="rgba(255, 255, 255, 1)"
-            onPressItem={name => {
-              Alert.alert('Icon pressed', `the icon ${name} was pressed`)
-            }}
-          />
+          <View style={styles.header}>
+            <MainHeader />
+          </View>
+          <View style={styles.main}>
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              ref={map => (this._map = map)}
+              style={styles.map}
+              showsUserLocation={true}
+              initialRegion={this.state.initialPosition}></MapView>
+          </View>
+          <View style={styles.Floatingcontainer}>
+            {/* <Property
+              propertyName="overlayColor"
+              propertyValue="rgba(255, 255, 255, 1)"
+              defaultValue="rgba(68, 68, 68, 0.6)"
+            /> */}
+            <FloatingAction
+              actions={this.state.actions}
+              overlayColor="rgba(0, 0, 0, 0.5)"
+              onPressItem={text => {
+                if (text === '신고자 정보 확인') {
+                  return <UserModal slideAnimationModal={true} />
+                  // Alert.alert('Icon pressed', `the icon ${text} was pressed`)
+                } else {
+                  Alert.alert('Icon pressed', `the icon ${text} was pressed`)
+                }
+              }}
+            />
+          </View>
         </View>
-      </View>
-    )
+      )
+    } else if (this.state.declare === true && !this.state.initialPosition) {
+      return (
+        <View
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 50 }}>Loading....</Text>
+        </View>
+      )
+    } else {
+      return <StartingScreen />
+    }
   }
 }
 
@@ -123,9 +172,21 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject
+    flex: 7,
+    paddingTop: 22
+  },
+  header: {
+    flex: 2,
+    backgroundColor: mainColor.emergency
+    // maxHeight: 150
+  },
+  main: {
+    flex: 5
   },
   map: {
+    flex: 1
+  },
+  Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
   }
 })

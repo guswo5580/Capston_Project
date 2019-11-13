@@ -46,19 +46,19 @@ const styles = StyleSheet.create({
   },
   propertyName: {
     fontSize: 18,
-    color: '#000',
+    color: 'yellow',
     fontWeight: 'bold',
     marginBottom: 10
   },
   propertyType: {
     fontSize: 14,
-    color: '#000',
+    color: 'blue',
     fontWeight: 'bold',
     marginBottom: 5
   },
   propertyValue: {
     fontSize: 14,
-    color: '#585757',
+    color: 'green',
     marginBottom: 5
   },
   action: {
@@ -66,9 +66,8 @@ const styles = StyleSheet.create({
     width: 170,
     textAlign: 'center',
     fontSize: 16,
-    paddingVertical: 5,
-    backgroundColor: '#00D09E',
-    color: '#FFF'
+    paddingVertical: 5
+    // color: '#FFF'
   }
 })
 
