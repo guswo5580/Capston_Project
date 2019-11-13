@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Image,
   StyleSheet,
@@ -10,16 +10,16 @@ import {
   ScrollView,
   Alert,
   Platform
-} from 'react-native'
+} from "react-native";
 import MapView, {
   PROVIDER_GOOGLE,
   Marker,
   Callout,
   Polygon,
   Circle
-} from 'react-native-maps'
-import * as Permissions from 'expo-permissions'
-import Carousel from 'react-native-snap-carousel'
+} from "react-native-maps";
+import * as Permissions from "expo-permissions";
+import Carousel from "react-native-snap-carousel";
 import Modal, {
   ModalTitle,
   ModalContent,
@@ -27,13 +27,13 @@ import Modal, {
   ModalButton,
   SlideAnimation,
   ScaleAnimation
-} from 'react-native-modals'
-import mainColor from '../constants/Colors'
+} from "react-native-modals";
+import mainColor from "../constants/Colors";
 
-const locations = require('../constants/locations.json')
-const GOOGLE_MAP_KEY = 'AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ'
-const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
+const locations = require("../constants/locations.json");
+const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 // const headerHorizontalpadding = width / 4
 
 export default class UserModal extends React.Component {
@@ -45,10 +45,7 @@ export default class UserModal extends React.Component {
     slideAnimationModal: false,
     bottomModalAndTitle: false,
     bottomModal: false
-  }
-  componentDidMount() {
-    console.log(this.props.slideAnimationModal)
-  }
+  };
   render() {
     return (
       <View>
@@ -64,10 +61,10 @@ export default class UserModal extends React.Component {
           </View> */}
         <Modal
           onDismiss={() => {
-            this.setState({ slideAnimationModal: false })
+            this.setState({ slideAnimationModal: false });
           }}
           onTouchOutside={() => {
-            this.setState({ slideAnimationModal: false })
+            this.setState({ slideAnimationModal: false });
           }}
           swipeDirection="down"
           onSwipeOut={() => this.setState({ slideAnimationModal: false })}
@@ -75,13 +72,14 @@ export default class UserModal extends React.Component {
           modalTitle={
             <ModalTitle title="Modal - Slide Animation" hasTitleBar={false} />
           }
-          modalAnimation={new SlideAnimation({ slideFrom: 'bottom' })}>
+          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
+        >
           <ModalContent>
             <Text>Slide Animation</Text>
           </ModalContent>
         </Modal>
       </View>
-    )
+    );
   }
 }
 
@@ -98,9 +96,9 @@ const styles = StyleSheet.create({
     paddingRight: 18
   },
   navigationBar: {
-    borderBottomColor: '#b5b5b5',
+    borderBottomColor: "#b5b5b5",
     borderBottomWidth: 0.5,
-    backgroundColor: '#ffffff'
+    backgroundColor: "#ffffff"
   },
   navigationTitle: {
     padding: 10
@@ -118,6 +116,6 @@ const styles = StyleSheet.create({
   },
   customBackgroundModal: {
     opacity: 0.5,
-    backgroundColor: '#000'
+    backgroundColor: "#000"
   }
-})
+});
