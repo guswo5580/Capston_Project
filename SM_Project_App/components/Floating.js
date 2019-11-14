@@ -1,27 +1,30 @@
 import React from "react";
-import { Image, StyleSheet, Text, View, Button, Alert } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  TouchableOpacity,
+  Dimensions
+} from "react-native";
 import Modal, {
   ModalTitle,
   ModalContent,
   ModalFooter,
-  ModalButton,
-  SlideAnimation,
-  ScaleAnimation
+  SlideAnimation
 } from "react-native-modals";
 
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
 
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+
 export default class FloatingandModal extends React.Component {
   state = {
     slideAnimationModal: false,
-    customBackgroundModal: false,
-    defaultAnimationModal: false,
-    swipeableModal: false,
-    scaleAnimationModal: false,
-    slideAnimationModal: false,
-    bottomModalAndTitle: false,
-    bottomModal: false,
     actions: [
       {
         text: "신고자 전화",
@@ -102,14 +105,69 @@ export default class FloatingandModal extends React.Component {
           swipeDirection="down"
           onSwipeOut={() => this.setState({ slideAnimationModal: false })}
           visible={this.state.slideAnimationModal}
-          modalTitle={
-            <ModalTitle title="Modal - Slide Animation" hasTitleBar={false} />
-          }
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
         >
-          <ModalContent>
-            <Text>Slide Animation</Text>
+          <ModalContent style={styles.modalContainer}>
+            <View style={styles.modalMain}>
+              <View style={styles.modalImage}>
+                <Image
+                  source={
+                    __DEV__
+                      ? require("../assets/images/example.png")
+                      : require("../assets/images/example.png")
+                  }
+                  style={styles.userImage}
+                />
+              </View>
+              <View style={styles.modalText}>
+                <View style={styles.repeatContent}>
+                  <Text style={styles.TextTitle}>이름</Text>
+                  <Text style={styles.TextInfo}>조현재</Text>
+                </View>
+                <View style={styles.repeatContent}>
+                  <Text style={styles.TextTitle}>나이</Text>
+                  <Text style={styles.TextInfo}>26세, 1994년 03월 08일</Text>
+                </View>
+                <View style={styles.repeatContent}>
+                  <Text style={styles.TextTitle}>혈액형</Text>
+                  <Text style={styles.TextInfo}>B형(RH+)</Text>
+                </View>
+                <View style={styles.repeatContent}>
+                  <Text style={styles.TextTitle}>정보</Text>
+                  <Text style={styles.TextInfo}>캡스톤 개발 고통 중</Text>
+                </View>
+                <View style={styles.repeatContentLast}>
+                  <Text style={styles.TextTitleLast}>현재 심장박동</Text>
+                  <Text style={styles.TextInfoLast}>보통(164bpm)</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.modalSub}>
+              <View style={styles.repeatContentSub}>
+                <Text style={styles.TextTitleSub}>이름</Text>
+                <Text style={styles.TextInfoSub}>조현재</Text>
+              </View>
+              <View style={styles.repeatContentSub}>
+                <Text style={styles.TextTitleSub}>연락처</Text>
+                <Text style={styles.TextInfoSub}>010-8941-5576</Text>
+              </View>
+              <View style={styles.repeatContentSub}>
+                <Text style={styles.TextTitleSub}>주소</Text>
+                <Text style={styles.TextInfoSub}>
+                  서울특별시 광진구 군자동 116-9 103호
+                </Text>
+              </View>
+            </View>
           </ModalContent>
+          <ModalFooter>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => this.setState({ slideAnimationModal: false })}
+            >
+              <Text style={styles.closeBtnText}>닫기</Text>
+            </TouchableOpacity>
+          </ModalFooter>
         </Modal>
       </View>
     );
@@ -124,26 +182,88 @@ const styles = StyleSheet.create({
   Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
   },
-  dialogContentView: {
-    paddingLeft: 18,
-    paddingRight: 18
+  modalContainer: {
+    width: width * 0.85,
+    height: height * 0.4
   },
-  navigationBar: {
-    borderBottomColor: "#b5b5b5",
-    borderBottomWidth: 0.5,
-    backgroundColor: "#ffffff"
+  modalMain: {
+    flex: 5,
+    flexDirection: "row",
+    maxHeight: height / 5,
+    paddingBottom: 10,
+    borderBottomColor: Color.lightgray,
+    borderBottomWidth: 2
   },
-  navigationTitle: {
-    padding: 10,
-    paddingLeft: 20,
-    paddingRight: 40
+  modalImage: {
+    flex: 2,
+    resizeMode: "contain"
   },
-  navigator: {
-    flex: 1
-    // backgroundColor: '#000000',
+  modalText: {
+    flex: 3
   },
-  customBackgroundModal: {
-    opacity: 0.5,
-    backgroundColor: "#000"
+  repeatContent: {
+    flex: 4,
+    flexDirection: "row",
+    maxHeight: 20
+  },
+  TextTitle: {
+    flex: 1,
+    fontSize: 12,
+    paddingLeft: 10,
+    fontWeight: "bold"
+  },
+  TextInfo: {
+    flex: 3,
+    fontSize: 12
+  },
+  repeatContentLast: {
+    flex: 4,
+    flexDirection: "row",
+    maxHeight: 20,
+    marginTop: 20
+  },
+  TextTitleLast: {
+    flex: 2,
+    fontSize: 12,
+    paddingLeft: 10,
+    fontWeight: "bold"
+  },
+  TextInfoLast: {
+    flex: 2,
+    fontSize: 12
+  },
+  ///////////////////////////////////////////////////////////////
+  modalSub: {
+    flex: 1,
+    paddingTop: 13,
+    maxHeight: height / 8
+  },
+  repeatContentSub: {
+    flex: 5,
+    flexDirection: "row",
+    maxHeight: 20
+  },
+  TextTitleSub: {
+    flex: 1,
+    fontSize: 12,
+    marginLeft: 0,
+    fontWeight: "bold"
+  },
+  TextInfoSub: {
+    flex: 4,
+    fontSize: 12
+  },
+  ////////////////////////////////////////////////
+  closeBtn: {
+    width: width * 0.85,
+    backgroundColor: Color.lightgray,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: -15,
+    minHeight: 50
+  },
+  closeBtnText: {
+    fontSize: 19,
+    color: "white"
   }
 });
