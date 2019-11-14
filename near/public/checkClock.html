@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
+</head>
+<body>
+<div id="app">
+     <div class="colorchange">
+          {{message}}
+     </div>
+</div>
+<script>
+ new Vue({
+  el: '#app',
+  data: {
+    message:"",
+    check:"",
+
+  },
+  methods:{
+    testFunction () {
+      var v = this;
+      setInterval(function () {
+        let date = new Date().toLocaleDateString();
+        let time = new Date().toLocaleTimeString();
+        v.message = date + " " + time;
+    }, 1000);
+   }
+	},
+ mounted () {
+  this.check = this.testFunction();
+}
+ });
+
+</script>
+
+</body>
+<style>
+.colorchange {
+   color: red;
+   font-size: 10px;
+}
+</style>
+</html>
