@@ -19,6 +19,7 @@ import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartigScreen";
 import MainHeader from "../components/MainHeader";
+import Loading from "../components/Loading";
 import Color from "../constants/Colors";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
@@ -83,11 +84,7 @@ export default class HomeScreen extends React.Component {
         </View>
       );
     } else if (this.state.declare === true && !this.state.initialPosition) {
-      return (
-        <View>
-          <Text>Loading</Text>
-        </View>
-      );
+      return <Loading />;
     } else {
       return <StartingScreen />;
     }
