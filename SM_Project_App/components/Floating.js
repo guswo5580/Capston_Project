@@ -89,8 +89,11 @@ export default class FloatingandModal extends React.Component {
       <View style={styles.Floatingcontainer}>
         <FloatingAction
           actions={this.state.actions}
-          color="rgba(0, 0, 0, 0.5)"
+          color="white"
           overlayColor="rgba(0, 0, 0, 0.5)"
+          iconWidth={20}
+          iconHeight={20}
+          iconColor={Color.Deepgray}
           onPressItem={text => {
             if (text === "신고자 정보 확인") {
               this.setState({
