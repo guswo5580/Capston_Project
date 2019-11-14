@@ -2,7 +2,7 @@
   <div class="dv">
     <div>
       <div class="rightBox">
-        <div class="testline">
+        <div v-if="victim | police" class="testline">
           <div v-if="victim" :style="red" class="firstDiv">
             <img src="../../public/NumberOne.png" width="30px" align="left" class="imgMv" />
           </div>
@@ -16,7 +16,7 @@
           <div v-if="police" class="secondDiv">{{callInfo2}}</div>
           <span class="thirdDiv">
             {{newPosition.name}}
-            <span>수동신고</span>
+            <span v-if="victim">{{typeOfCall[0]}}</span>
           </span>
         </div>
       </div>
@@ -58,6 +58,7 @@ export default {
     return {
       newPosition: {},
       messages: ["신고접수", "출동 배정", "출동 중"],
+      typeOfCall: ["수동신고", "자동신고"],
       red: {
         backgroundColor: "#E60012",
         width: "15%",
