@@ -17,7 +17,7 @@ import MapView, {
 
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
-import StartingScreen from "../components/StartigScreen";
+import StartingScreen from "../components/StartScreen";
 import MainHeader from "../components/MainHeader";
 import Loading from "../components/Loading";
 import Color from "../constants/Colors";

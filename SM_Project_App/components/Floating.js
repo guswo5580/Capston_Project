@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Image,
   StyleSheet,
@@ -30,9 +31,10 @@ export default class FloatingandModal extends React.Component {
     actions: [
       {
         text: "신고자 전화",
-        icon: require("../assets/images/ic_accessibility_white.png"),
+        icon: require("../assets/images/FloatingIcon/Call.png"),
         name: "call",
         textColor: "white",
+        color: "white",
         transparent: true,
         textBackground: "transparent",
         textElevation: 0,
@@ -42,9 +44,10 @@ export default class FloatingandModal extends React.Component {
       },
       {
         text: "신고자 정보 확인",
-        icon: require("../assets/images/ic_language_white.png"),
+        icon: require("../assets/images/FloatingIcon/User.png"),
         name: "신고자 정보 확인",
         textColor: "white",
+        color: "white",
         transparent: true,
         textBackground: "transparent",
         textElevation: 0,
@@ -54,9 +57,10 @@ export default class FloatingandModal extends React.Component {
       },
       {
         text: "최단거리 검색",
-        icon: require("../assets/images/ic_room_white.png"),
+        icon: require("../assets/images/FloatingIcon/Direction.png"),
         name: "bt_room",
         textColor: "white",
+        color: "white",
         transparent: true,
         textBackground: "transparent",
         textElevation: 0,
@@ -66,9 +70,10 @@ export default class FloatingandModal extends React.Component {
       },
       {
         text: "사건 완료",
-        icon: require("../assets/images/ic_videocam_white.png"),
+        icon: require("../assets/images/FloatingIcon/Finish.png"),
         name: "사건 완료",
         textColor: "white",
+        color: "white",
         transparent: true,
         textBackground: "transparent",
         textElevation: 0,
@@ -84,8 +89,7 @@ export default class FloatingandModal extends React.Component {
       <View style={styles.Floatingcontainer}>
         <FloatingAction
           actions={this.state.actions}
-          color="rgb(255,255,255)"
-          icon="../assets/images/floating_btn.svg"
+          color="rgba(0, 0, 0, 0.5)"
           overlayColor="rgba(0, 0, 0, 0.5)"
           onPressItem={text => {
             if (text === "신고자 정보 확인") {
@@ -200,3 +204,7 @@ const styles = StyleSheet.create({
     color: "white"
   }
 });
+
+FloatingAction.propTypes = {
+  floatingIcon: PropTypes.any
+};
