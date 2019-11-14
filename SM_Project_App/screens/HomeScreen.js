@@ -80,9 +80,8 @@ export default class HomeScreen extends React.Component {
               initialRegion={this.state.initialPosition}
             ></MapView>
           </View>
-          <View style={styles.Floatingcontainer}>
-            <Floating />
-          </View>
+
+          <Floating />
         </View>
       );
     } else if (this.state.declare === true && !this.state.initialPosition) {

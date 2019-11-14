@@ -76,19 +76,40 @@ export default class FloatingandModal extends React.Component {
 
   render() {
     return (
-      <FloatingAction
-        actions={this.state.actions}
-        overlayColor="rgba(0, 0, 0, 0.5)"
-        onPressItem={text => {
-          if (text === "신고자 정보 확인") {
-            this.setState({
-              slideAnimationModal: true
-            });
-          } else {
-            Alert.alert("Icon pressed", `the icon ${text} was pressed`);
+      <View style={styles.Floatingcontainer}>
+        <FloatingAction
+          actions={this.state.actions}
+          overlayColor="rgba(0, 0, 0, 0.5)"
+          onPressItem={text => {
+            if (text === "신고자 정보 확인") {
+              this.setState({
+                slideAnimationModal: true
+              });
+            } else {
+              Alert.alert("Icon pressed", `the icon ${text} was pressed`);
+            }
+          }}
+        />
+        <Modal
+          onDismiss={() => {
+            this.setState({ slideAnimationModal: false });
+          }}
+          onTouchOutside={() => {
+            this.setState({ slideAnimationModal: false });
+          }}
+          swipeDirection="down"
+          onSwipeOut={() => this.setState({ slideAnimationModal: false })}
+          visible={this.state.slideAnimationModal}
+          modalTitle={
+            <ModalTitle title="Modal - Slide Animation" hasTitleBar={false} />
           }
-        }}
-      />
+          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
+        >
+          <ModalContent>
+            <Text>Slide Animation</Text>
+          </ModalContent>
+        </Modal>
+      </View>
     );
   }
 }
