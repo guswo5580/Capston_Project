@@ -10,7 +10,6 @@ import {
   Dimensions
 } from "react-native";
 import Modal, {
-  ModalTitle,
   ModalContent,
   ModalFooter,
   SlideAnimation
@@ -18,6 +17,7 @@ import Modal, {
 
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
+import SelectModal from "./UserModal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -25,6 +25,8 @@ const height = Dimensions.get("window").height;
 export default class FloatingandModal extends React.Component {
   state = {
     slideAnimationModal: false,
+    userModal: false,
+    finishModal: false,
     actions: [
       {
         text: "신고자 전화",
@@ -65,7 +67,7 @@ export default class FloatingandModal extends React.Component {
       {
         text: "사건 완료",
         icon: require("../assets/images/ic_videocam_white.png"),
-        name: "bt_videocam",
+        name: "사건 완료",
         textColor: "white",
         transparent: true,
         textBackground: "transparent",
@@ -88,7 +90,13 @@ export default class FloatingandModal extends React.Component {
           onPressItem={text => {
             if (text === "신고자 정보 확인") {
               this.setState({
-                slideAnimationModal: true
+                slideAnimationModal: true,
+                userModal: true
+              });
+            } else if (text === "사건 완료") {
+              this.setState({
+                slideAnimationModal: true,
+                finishModal: true
               });
             } else {
               Alert.alert("Icon pressed", `the icon ${text} was pressed`);
@@ -97,73 +105,69 @@ export default class FloatingandModal extends React.Component {
         />
         <Modal
           onDismiss={() => {
-            this.setState({ slideAnimationModal: false });
+            if (this.state.userModal === true) {
+              this.setState({
+                slideAnimationModal: false,
+                userModal: false
+              });
+            } else {
+              this.setState({
+                slideAnimationModal: false,
+                finishModal: false
+              });
+            }
           }}
           onTouchOutside={() => {
-            this.setState({ slideAnimationModal: false });
+            if (this.state.userModal === true) {
+              this.setState({
+                slideAnimationModal: false,
+                userModal: false
+              });
+            } else {
+              this.setState({
+                slideAnimationModal: false,
+                finishModal: false
+              });
+            }
           }}
           swipeDirection="down"
-          onSwipeOut={() => this.setState({ slideAnimationModal: false })}
+          onSwipeOut={() => {
+            if (this.state.userModal === true) {
+              this.setState({
+                slideAnimationModal: false,
+                userModal: false
+              });
+            } else {
+              this.setState({
+                slideAnimationModal: false,
+                finishModal: false
+              });
+            }
+          }}
           visible={this.state.slideAnimationModal}
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
         >
-          <ModalContent style={styles.modalContainer}>
-            <View style={styles.modalMain}>
-              <View style={styles.modalImage}>
-                <Image
-                  source={
-                    __DEV__
-                      ? require("../assets/images/example.png")
-                      : require("../assets/images/example.png")
-                  }
-                  style={styles.userImage}
-                />
-              </View>
-              <View style={styles.modalText}>
-                <View style={styles.repeatContent}>
-                  <Text style={styles.TextTitle}>이름</Text>
-                  <Text style={styles.TextInfo}>조현재</Text>
-                </View>
-                <View style={styles.repeatContent}>
-                  <Text style={styles.TextTitle}>나이</Text>
-                  <Text style={styles.TextInfo}>26세, 1994년 03월 08일</Text>
-                </View>
-                <View style={styles.repeatContent}>
-                  <Text style={styles.TextTitle}>혈액형</Text>
-                  <Text style={styles.TextInfo}>B형(RH+)</Text>
-                </View>
-                <View style={styles.repeatContent}>
-                  <Text style={styles.TextTitle}>정보</Text>
-                  <Text style={styles.TextInfo}>캡스톤 개발 고통 중</Text>
-                </View>
-                <View style={styles.repeatContentLast}>
-                  <Text style={styles.TextTitleLast}>현재 심장박동</Text>
-                  <Text style={styles.TextInfoLast}>보통(164bpm)</Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.modalSub}>
-              <View style={styles.repeatContentSub}>
-                <Text style={styles.TextTitleSub}>이름</Text>
-                <Text style={styles.TextInfoSub}>조현재</Text>
-              </View>
-              <View style={styles.repeatContentSub}>
-                <Text style={styles.TextTitleSub}>연락처</Text>
-                <Text style={styles.TextInfoSub}>010-8941-5576</Text>
-              </View>
-              <View style={styles.repeatContentSub}>
-                <Text style={styles.TextTitleSub}>주소</Text>
-                <Text style={styles.TextInfoSub}>
-                  서울특별시 광진구 군자동 116-9 103호
-                </Text>
-              </View>
-            </View>
-          </ModalContent>
+          <SelectModal
+            userModal={this.state.userModal}
+            finishModal={this.state.finishModal}
+          />
           <ModalFooter>
             <TouchableOpacity
               style={styles.closeBtn}
-              onPress={() => this.setState({ slideAnimationModal: false })}
+              onPress={() => {
+                if (this.state.userModal === true) {
+                  this.setState({
+                    slideAnimationModal: false,
+                    userModal: false
+                    // finishModal: false
+                  });
+                } else {
+                  this.setState({
+                    slideAnimationModal: false,
+                    finishModal: false
+                  });
+                }
+              }}
             >
               <Text style={styles.closeBtnText}>닫기</Text>
             </TouchableOpacity>
@@ -182,78 +186,7 @@ const styles = StyleSheet.create({
   Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
   },
-  modalContainer: {
-    width: width * 0.85,
-    height: height * 0.4
-  },
-  modalMain: {
-    flex: 5,
-    flexDirection: "row",
-    maxHeight: height / 5,
-    paddingBottom: 10,
-    borderBottomColor: Color.lightgray,
-    borderBottomWidth: 2
-  },
-  modalImage: {
-    flex: 2,
-    resizeMode: "contain"
-  },
-  modalText: {
-    flex: 3
-  },
-  repeatContent: {
-    flex: 4,
-    flexDirection: "row",
-    maxHeight: 20
-  },
-  TextTitle: {
-    flex: 1,
-    fontSize: 12,
-    paddingLeft: 10,
-    fontWeight: "bold"
-  },
-  TextInfo: {
-    flex: 3,
-    fontSize: 12
-  },
-  repeatContentLast: {
-    flex: 4,
-    flexDirection: "row",
-    maxHeight: 20,
-    marginTop: 20
-  },
-  TextTitleLast: {
-    flex: 2,
-    fontSize: 12,
-    paddingLeft: 10,
-    fontWeight: "bold"
-  },
-  TextInfoLast: {
-    flex: 2,
-    fontSize: 12
-  },
-  ///////////////////////////////////////////////////////////////
-  modalSub: {
-    flex: 1,
-    paddingTop: 13,
-    maxHeight: height / 8
-  },
-  repeatContentSub: {
-    flex: 5,
-    flexDirection: "row",
-    maxHeight: 20
-  },
-  TextTitleSub: {
-    flex: 1,
-    fontSize: 12,
-    marginLeft: 0,
-    fontWeight: "bold"
-  },
-  TextInfoSub: {
-    flex: 4,
-    fontSize: 12
-  },
-  ////////////////////////////////////////////////
+
   closeBtn: {
     width: width * 0.85,
     backgroundColor: Color.lightgray,
