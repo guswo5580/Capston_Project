@@ -16,6 +16,7 @@ import com.airbnb.android.react.maps.MapsPackage;
 // import com.facebook.react.ReactApplication;
 import com.reactnativecommunity.rnpermissions.RNPermissionsPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
+import com.horcrux.svg.SvgPackage;
 
 public class MainApplication extends ExpoApplication implements AppLoaderPackagesProviderInterface<ReactPackage> {
 
@@ -42,7 +43,8 @@ public class MainApplication extends ExpoApplication implements AppLoaderPackage
         return Arrays.asList(
             new MainReactPackage(),
             new GeolocationPackage(),
-            new MapsPackage()
+            new MapsPackage(),
+            new SvgPackage()
         );
     }
 

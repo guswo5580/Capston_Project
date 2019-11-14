@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Image,
   Platform,
@@ -7,8 +7,9 @@ import {
   Text,
   TouchableOpacity,
   View
-} from 'react-native';
-import ToggleSwitch from 'toggle-switch-react-native';
+} from "react-native";
+import ToggleSwitch from "toggle-switch-react-native";
+import Color from "../constants/Colors";
 
 export default function SettingsScreen() {
   const [isOnComplete, setisOnComplete] = useState(false);
@@ -25,8 +26,8 @@ export default function SettingsScreen() {
           <View style={styles.mainFunction}>
             <ToggleSwitch
               isOn={isOnComplete}
-              onColor="red"
-              offColor="gray"
+              onColor="#EA2340"
+              offColor="#D0D0D0"
               size="medium"
               onToggle={setisOnComplete}
             />
@@ -70,52 +71,52 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   headerContainer: {
     flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 20
   },
   headerMain: {
     flex: 1,
     fontSize: 25,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   mainContainer: {
     flex: 2,
-    flexDirection: 'row',
+    flexDirection: "row",
     maxHeight: 40
   },
   mainTitle: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     fontSize: 22,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   mainFunction: {
     flex: 1,
-    alignItems: 'flex-end'
+    alignItems: "flex-end"
   },
   mainSub: {
     flex: 1,
     fontSize: 15,
-    textAlign: 'right',
-    alignItems: 'center'
+    textAlign: "right",
+    alignItems: "center"
   },
   footerbtn: {
-    backgroundColor: 'gray',
+    backgroundColor: Color.lightgray,
     paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
     height: 50
   },
   BtnText: {
     fontSize: 19,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center'
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center"
   }
 });

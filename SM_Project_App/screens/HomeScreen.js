@@ -15,13 +15,11 @@ import MapView, {
   Circle
 } from "react-native-maps";
 
-import { AppLoading } from "expo";
-
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartigScreen";
 import MainHeader from "../components/MainHeader";
-import mainColor from "../constants/Colors";
+import Color from "../constants/Colors";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
@@ -85,7 +83,11 @@ export default class HomeScreen extends React.Component {
         </View>
       );
     } else if (this.state.declare === true && !this.state.initialPosition) {
-      return <AppLoading onError={console.warn} />;
+      return (
+        <View>
+          <Text>Loading</Text>
+        </View>
+      );
     } else {
       return <StartingScreen />;
     }
@@ -98,16 +100,20 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 7,
-    paddingTop: 22
+    ...StyleSheet.absoluteFillObject,
+    paddingTop: 24
   },
   header: {
-    flex: 2,
-    backgroundColor: mainColor.emergency
-    // maxHeight: 150
+    position: "absolute",
+    top: "10%",
+    left: "12%",
+    backgroundColor: Color.mainColor,
+    zIndex: 1,
+    borderRadius: 50,
+    minHeight: 100
   },
   main: {
-    flex: 5
+    ...StyleSheet.absoluteFillObject
   },
   map: {
     flex: 1

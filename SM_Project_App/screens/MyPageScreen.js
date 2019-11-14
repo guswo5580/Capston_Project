@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-
+import React from "react";
+import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import Color from "../constants/Colors";
 export default function MyPageScreen() {
   return (
     <View style={styles.container}>
@@ -17,8 +17,8 @@ export default function MyPageScreen() {
             <Image
               source={
                 __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
+                  ? require("../assets/images/profile.jpg")
+                  : require("../assets/images/profile.jpg")
               }
               style={styles.userImage}
             />
@@ -78,31 +78,33 @@ const styles = StyleSheet.create({
   footer: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   headerContainer: {
     flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 20
   },
   headerMain: {
     flex: 1,
     fontSize: 25,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   headerSub: {
     fontSize: 19,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   mainContainer: {
     flex: 3,
-    flexDirection: 'row'
+    flexDirection: "row"
   },
   ImageContainer: {
     flex: 1,
-    padding: 20,
-    alignItems: 'center'
+    overflow: "hidden",
+    alignItems: "center",
+    position: "relative",
+    padding: 5
   },
   InfoContainer: {
     flex: 2,
@@ -110,35 +112,35 @@ const styles = StyleSheet.create({
     paddingTop: 20
   },
   userImage: {
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginTop: 15
   },
   InfoContent: {
     flex: 5,
-    flexDirection: 'row',
+    flexDirection: "row",
     maxHeight: 20
   },
   title: {
     flex: 1,
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   Information: {
     flex: 4,
     fontSize: 15
   },
   footerbtn: {
-    backgroundColor: 'grey',
+    backgroundColor: Color.lightgray,
     paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
     height: 50
   },
   BtnText: {
     fontSize: 19,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center'
+    fontWeight: "bold",
+    color: "white",
+    textAlign: "center"
   }
 });

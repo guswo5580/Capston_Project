@@ -10,7 +10,7 @@ import Modal, {
 } from "react-native-modals";
 
 import { FloatingAction } from "react-native-floating-action";
-import mainColor from "../constants/Colors";
+import Color from "../constants/Colors";
 
 export default class FloatingandModal extends React.Component {
   state = {
@@ -25,8 +25,8 @@ export default class FloatingandModal extends React.Component {
     actions: [
       {
         text: "신고자 전화",
-        icon: require("../assets/images/ic_language_white.png"),
-        name: "bt_language",
+        icon: require("../assets/images/ic_accessibility_white.png"),
+        name: "call",
         textColor: "white",
         transparent: true,
         textBackground: "transparent",
@@ -37,7 +37,7 @@ export default class FloatingandModal extends React.Component {
       },
       {
         text: "신고자 정보 확인",
-        icon: require("../assets/images/ic_accessibility_white.png"),
+        icon: require("../assets/images/ic_language_white.png"),
         name: "신고자 정보 확인",
         textColor: "white",
         transparent: true,
@@ -79,6 +79,8 @@ export default class FloatingandModal extends React.Component {
       <View style={styles.Floatingcontainer}>
         <FloatingAction
           actions={this.state.actions}
+          color="rgb(255,255,255)"
+          icon="../assets/images/floating_btn.svg"
           overlayColor="rgba(0, 0, 0, 0.5)"
           onPressItem={text => {
             if (text === "신고자 정보 확인") {

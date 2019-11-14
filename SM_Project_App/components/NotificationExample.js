@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+
 import {
   Image,
   Platform,
@@ -7,7 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View
-} from 'react-native';
+} from "react-native";
 
 export const Opening = () => {
   return (
@@ -64,40 +65,40 @@ export const Cancle = () => {
 const styles = StyleSheet.create({
   mainContentContainer: {
     flex: 4,
-    flexDirection: 'row',
+    flexDirection: "row",
     maxHeight: 100,
     marginHorizontal: 20,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: "rgba(0,0,0,0.1)",
     borderBottomWidth: 2,
-    alignItems: 'center'
+    alignItems: "center"
   },
   mainContent: {
     flex: 3,
-    flexDirection: 'column'
+    flexDirection: "column"
   },
   mainNavigation: {
     flex: 1
   },
   mainContentText: {
     fontSize: 13,
-    fontWeight: 'bold'
+    fontWeight: "bold"
   },
   mainContentDate: {
     fontSize: 11,
-    color: 'gray'
+    color: "gray"
   },
   navigationBtn: {
-    backgroundColor: 'white',
-    borderColor: 'gray',
+    backgroundColor: "white",
+    borderColor: "gray",
     borderWidth: 2,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 15,
-    justifyContent: 'center'
+    borderRadius: 30,
+    justifyContent: "center"
   },
   BtnText: {
     fontSize: 15,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    fontWeight: "bold",
+    textAlign: "center"
   }
 });
