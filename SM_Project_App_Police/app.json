@@ -30,7 +30,7 @@
       "package": "Near.React.Native.App",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyBHuEppdQX4cGkD52jyvIARBE1qyjU5sL8"
+          "apiKey": "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ"
         }
       },
       "publishBundlePath": "android\\app\\src\\main\\assets\\shell-app.bundle",

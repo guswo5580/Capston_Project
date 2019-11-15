@@ -341,7 +341,7 @@
     <!-- BEGIN GOOGLE MAPS CONFIG -->
     <meta-data
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDh7eDB9snEFSYtf-k0gfxA45HFoR0L--I"/>
+      android:value="AIzaSyBHuEppdQX4cGkD52jyvIARBE1qyjU5sL8"/>
     <!-- END GOOGLE MAPS CONFIG -->
 
     <!-- ADD GOOGLE MOBILE ADS CONFIG HERE -->
