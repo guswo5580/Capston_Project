@@ -26,20 +26,24 @@ export default {
       isPolice: false,
       victimButton: {
         width: "100%",
-        height: "20px",
+        height: "40px",
         marginTop: "20px",
         backgroundColor: "#E60012",
         color: "white",
         border: 0,
-        outline: 0
+        outline: 0,
+        fontSize: "17px"
       },
       policeButton: {
         width: "100%",
-        height: "20px",
+        height: "40px",
         backgroundColor: "#036EB8",
         color: "white",
+        padding: 0,
+        margin: 30,
         border: 0,
-        outline: 0
+        outline: 0,
+        fontSize: "17px"
       },
       //   redCall: { url: "red.ico" },
       //  blueCall: { url: "blue.ico" },

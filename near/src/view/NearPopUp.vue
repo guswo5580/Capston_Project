@@ -14,10 +14,13 @@
           </div>
           <div v-if="victim" class="secondDiv">{{callInfo1}}</div>
           <div v-if="police" class="secondDiv">{{callInfo2}}</div>
-          <span class="thirdDiv">
-            {{newPosition.name}}
-            <span v-if="victim">{{typeOfCall[0]}}</span>
-          </span>
+          <div>
+            <span class="thirdDiv">{{newPosition.name}}</span>
+            <span v-if="victim" class="thirdDiv">{{typeOfCall[0]}}</span>
+          </div>
+          <div>
+            <span class="fourthDiv">담당 경찰관이 배정되지 않았습니다.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -205,6 +208,13 @@ li {
   float: center;
   margin: 0 auto;
   font-size: 11px;
+}
+.fourthDiv {
+  width: 55%;
+  float: center;
+  margin: 0 auto;
+  font-size: 11px;
+  color: #d0d0d0;
 }
 .imgMv {
   margin-left: 10px;
