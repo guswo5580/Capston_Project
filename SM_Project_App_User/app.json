@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Near_User_App",
+    "slug": "SM_Project_App_User",
+    "privacy": "public",
+    "sdkVersion": "35.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "splash": {
+      "image": "./assets/images/Near.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#EA2340"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "isDetached": true,
+    "detach": {
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.13.0-sdk35.0.0-b816b7af-88da-4ca9-87a5-7438f0c21b6e.tar.gz"
+    },
+    "scheme": "expaeffcce61683446ea94c497293e3cae6",
+    "android": {
+      "package": "Near.User",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ"
+        }
+      },
+      "publishBundlePath": "android\\app\\src\\main\\assets\\shell-app.bundle",
+      "publishManifestPath": "android\\app\\src\\main\\assets\\shell-app-manifest.json"
+    }
+  }
+}
