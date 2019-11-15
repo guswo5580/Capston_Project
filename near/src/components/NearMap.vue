@@ -82,10 +82,10 @@ export default {
           class: "경위",
           bloodType: "AB형(RH++)",
           position: { lat: 37.54817, lng: 127.069234 },
-          img: "MrYoo.jpeg",
+          img: "Police.jpg",
           report: false,
           identity: "police",
-          icon: { url: "white.png" }
+          icon: { url: "testWhite.png" }
         },
         {
           id: 2,
@@ -93,7 +93,7 @@ export default {
           age: "age 3",
           bloodType: "",
           position: { lat: 37.539704, lng: 127.065603 },
-          img: "",
+          img: "MrYoo.jpeg",
           report: false,
           identity: "victim",
           icon: { url: "yellow.ico" }
@@ -104,7 +104,7 @@ export default {
           age: "age 4",
           bloodType: "",
           position: { lat: 37.537928, lng: 127.071459 },
-          img: "",
+          img: "MrYoo.jpeg",
           report: false,
           identity: "victim",
           icon: { url: "yellow.ico" }
@@ -116,7 +116,7 @@ export default {
           class: "경위",
           bloodType: "O형(RH++)",
           position: { lat: 37.545344, lng: 127.07664 },
-          img: "MrYoo.jpeg",
+          img: "Police.jpg",
           report: false,
           identity: "police",
           icon: { url: "white.png" }
@@ -128,7 +128,7 @@ export default {
           class: "경위",
           bloodType: "A형(RH++)",
           position: { lat: 37.54921, lng: 127.09006 },
-          img: "MrYoo.jpeg",
+          img: "Police.jpg",
           report: false,
           identity: "police",
           icon: { url: "white.png" }
@@ -140,7 +140,7 @@ export default {
           class: "경위",
           bloodType: "B형(RH++)",
           position: { lat: 37.551836, lng: 127.077932 },
-          img: "MrYoo.jpeg",
+          img: "Police.jpg",
           report: false,
           identity: "police",
           icon: { url: "white.png" }
@@ -152,7 +152,7 @@ export default {
           class: "경위",
           bloodType: "O형(RH++)",
           position: { lat: 37.545313, lng: 127.062799 },
-          img: "MrYoo.jpeg",
+          img: "Police.jpg",
           report: false,
           identity: "police",
           icon: { url: "white.png" }
@@ -221,19 +221,20 @@ export default {
 
       if (marker.identity === "police") {
         return `<div>
-            <div>
-                <img  src=${userImg} align="left" width="74px" height="98px" >
+            <div >
+                <img  src=${userImg} align="left" width="128px" height="128px" class="imgMv">
                 <div class="policeFrontContents">이름    <span class="policeBackContents">${marker.name}</span></div>
                <div class="policeFrontContents">소속    <span class="policeBackContents">${marker.workArea}</span></div>
                <div class="policeFrontContents">계급   <span class="policeBackContents" >${marker.class}</span></div>
                <div class="policeFrontContents">혈액형    <span class="policeBackContents" style="padding-left:8px;">${marker.bloodType}</span></div>
             </div>
           </div>
+          <div class="dv"></div>
           </div>`;
       } else {
         return `<div>
             <div>
-                <img  src=${userImg} align="left" width="74px" height="98px" >
+                <img  src=${userImg} align="left" width="106.2px" height="141.6px" class="imgMv" >
                 <div class="contents-word">이름    <span class="contents-dword">${marker.name}</span></div>
                <div class="contents-word">나이    <span class="contents-dword">${marker.age}</span></div>
                <div class="contents-word">혈액형   <span class="contents-dword" style="padding-left:8px;">${marker.bloodType}</span></div>
@@ -267,7 +268,8 @@ export default {
   color: white;
 }
 .gm-style-iw-d {
-  width: 40vh;
+  width: 45vh;
+  height: 100%;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -291,10 +293,12 @@ div.card-image {
   text-align: left;
 }
 .contents-word {
+  font-size: 17px;
   font-weight: bold;
   padding-left: 10px;
   padding-bottom: 3px;
   padding-top: 7px;
+  margin: 7px;
 }
 .contents-dword {
   font-weight: lighter;
@@ -304,14 +308,14 @@ div.card-image {
   vertical-align: middle;
 }
 .bpm {
-  padding-left: 160px;
+  padding-left: 220px;
   font-weight: bold;
   font-size: 25px;
 }
 .bpm-word {
   font-weight: bold;
   padding-left: 0;
-  padding-bottom: 3px;
+  padding-bottom: 15px;
   font-size: 17px;
 }
 .bpm-bpm {
@@ -320,7 +324,8 @@ div.card-image {
 
 .divChange {
   height: -40px;
-  padding-bottom: 30px;
+
+  padding-bottom: 9px;
   color: lightgray;
   width: 100%;
   border-bottom: 2px;
@@ -328,7 +333,10 @@ div.card-image {
 }
 .policeFrontContents {
   font-weight: bold;
-  padding-top: 9px;
+
+  font-size: 17px;
+  margin: 14.5px;
+  /* margin: 10; */
   /* padding-left: 10px;
   padding-bottom: 3px; */
 }
@@ -338,5 +346,13 @@ div.card-image {
   justify-content: center;
   align-items: center;
   vertical-align: middle;
+}
+.dv {
+  /* width: 100%;
+  height: 100%; */
+  padding: 5px;
+}
+.imgMv {
+  margin-right: 20px;
 }
 </style>
