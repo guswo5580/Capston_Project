@@ -28,18 +28,29 @@
         @closeclick="infoWinOpen=false"
       >
         <div v-html="infoContent" @Click="changedInfo()"></div>
+        <!-- <testPulse v-if="clickedVictim"></testPulse> -->
+        <NearChart v-if="clickedVictim"></NearChart>
+        <!-- <trend
+          v-if="clickedVictim"
+          :data="[0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0]"
+          :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
+          auto-draw
+          :autoDrawDuration="30000"
+          smooth
+          :key="componentKey"
+        ></trend>-->
         <NearMapModal></NearMapModal>
       </gmap-info-window>
     </gmap-map>
   </div>
 </template>
-
 <script>
 /* global google */
 
 import { EventBus } from "../event/eventBus";
 import NearMapModal from "./common/NearMapModal";
-
+import NearChart from "./common/NearChart";
+import testPulse from "./common/testPulse";
 export default {
   name: "GoogleMap",
   data() {
@@ -158,7 +169,10 @@ export default {
           icon: { url: "white.png" }
         }
       ],
-      clickedPosition: { lat: 0, lng: 0 }
+      clickedPosition: { lat: 0, lng: 0 },
+      clickedPolice: false,
+      clickedVictim: false,
+      componentKey: 0
     };
   },
   created() {
@@ -220,6 +234,8 @@ export default {
       let userImg = JSON.stringify(marker.img);
 
       if (marker.identity === "police") {
+        this.clickedPolice = true;
+        this.clickedVictim = false;
         return `<div>
             <div >
                 <img  src=${userImg} align="left" width="128px" height="128px" class="imgMv">
@@ -232,6 +248,8 @@ export default {
           <div class="dv"></div>
           </div>`;
       } else {
+        this.clickedPolice = false;
+        this.clickedVictim = true;
         return `<div>
             <div>
                 <img  src=${userImg} align="left" width="106.2px" height="141.6px" class="imgMv" >
@@ -241,8 +259,6 @@ export default {
                <div class="contents-word">정보    <span class="contents-dword">${marker.info}</span></div>
             </div>
             <div class="divChange"></div>
-            <div class="bpm-word" style="padding-top: 10px;">현재 심장박동 <span class="bpm">164</span> <span class="bpm-bpm">bpm</span></div>
-            <div><img src="heartbeat.png" width="100%"</div>
             </div>
           </div>
           </div>`;
@@ -250,7 +266,9 @@ export default {
     }
   },
   components: {
-    NearMapModal
+    NearMapModal,
+    NearChart,
+    testPulse
   }
 };
 </script>
@@ -268,7 +286,7 @@ export default {
   color: white;
 }
 .gm-style-iw-d {
-  width: 45vh;
+  width: 50vh;
   height: 100%;
   background-repeat: no-repeat;
   background-position: center;

@@ -16,6 +16,10 @@ import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 Vue.use(BootstrapVue);
+
+import Trend from 'vuetrend';
+Vue.use(Trend);
+
 new Vue({
 	render: h => h(App),
 	router,
