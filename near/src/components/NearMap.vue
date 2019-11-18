@@ -26,19 +26,10 @@
         :position="infoWindowPos"
         :opened="infoWinOpen"
         @closeclick="infoWinOpen=false"
+        :props="markers"
       >
         <div v-html="infoContent" @Click="changedInfo()"></div>
-        <!-- <testPulse v-if="clickedVictim"></testPulse> -->
         <NearChart v-if="clickedVictim"></NearChart>
-        <!-- <trend
-          v-if="clickedVictim"
-          :data="[0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0]"
-          :gradient="['#6fa8dc', '#42b983', '#2c3e50']"
-          auto-draw
-          :autoDrawDuration="30000"
-          smooth
-          :key="componentKey"
-        ></trend>-->
         <NearMapModal></NearMapModal>
       </gmap-info-window>
     </gmap-map>
@@ -50,7 +41,7 @@
 import { EventBus } from "../event/eventBus";
 import NearMapModal from "./common/NearMapModal";
 import NearChart from "./common/NearChart";
-import testPulse from "./common/testPulse";
+import NearMissionComplete from "../view/NearMissionComplete";
 export default {
   name: "GoogleMap",
   data() {
@@ -95,6 +86,7 @@ export default {
           position: { lat: 37.54817, lng: 127.069234 },
           img: "Police.jpg",
           report: false,
+          waitingCall: false,
           identity: "police",
           icon: { url: "testWhite.png" }
         },
@@ -129,6 +121,7 @@ export default {
           position: { lat: 37.545344, lng: 127.07664 },
           img: "Police.jpg",
           report: false,
+          waitingCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
@@ -141,6 +134,7 @@ export default {
           position: { lat: 37.54921, lng: 127.09006 },
           img: "Police.jpg",
           report: false,
+          waitingCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
@@ -153,6 +147,7 @@ export default {
           position: { lat: 37.551836, lng: 127.077932 },
           img: "Police.jpg",
           report: false,
+          waitingCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
@@ -165,6 +160,7 @@ export default {
           position: { lat: 37.545313, lng: 127.062799 },
           img: "Police.jpg",
           report: false,
+          waitingCall: false,
           identity: "police",
           icon: { url: "white.png" }
         }
@@ -172,7 +168,11 @@ export default {
       clickedPosition: { lat: 0, lng: 0 },
       clickedPolice: false,
       clickedVictim: false,
-      componentKey: 0
+      componentKey: 0,
+      purpleCall: "purple.ico",
+      waitingCall: 1,
+      policeBackID: "",
+      victimBackID: ""
     };
   },
   created() {
@@ -180,20 +180,37 @@ export default {
       //  delete this.markers[number].icon.url;
       console.log(redCall);
       this.markers[number].icon = redCall;
-    });
-    EventBus.$on("yellowImage", (yellowCall, number) => {
-      //  delete this.markers[number].icon.url;
-      this.markers[number].icon = yellowCall;
-    });
-    EventBus.$on("blueImage", (blueCall, number) => {
-      //  delete this.markers[number].icon.url;
-      this.markers[number].icon = blueCall;
-    });
-    EventBus.$on("whiteImage", (whiteCall, number) => {
-      //  delete this.markers[number].icon.url;
-      console.log(whiteCall);
-      this.markers[number].icon = whiteCall;
-    });
+    }),
+      EventBus.$on("yellowImage", (yellowCall, number) => {
+        //  delete this.markers[number].icon.url;
+        this.markers[number].icon = yellowCall;
+      }),
+      EventBus.$on("blueImage", (blueCall, number) => {
+        //  delete this.markers[number].icon.url;
+        this.markers[number].icon = blueCall;
+      }),
+      EventBus.$on("whiteImage", (whiteCall, number) => {
+        //  delete this.markers[number].icon.url;
+        console.log(whiteCall);
+        this.markers[number].icon = whiteCall;
+      }),
+      //사건완료시 경찰, 사용자 색 원래대로 돌리기
+      EventBus.$on("backYellow", policeBackId => {
+        this.policeBackID = policeBackId;
+        console.log(this.policeBackID);
+        console.log("backYellow Call! ", this.policeBackID);
+        this.markers[this.policeBackId].icon = "yellow.ico";
+        // this.markers[victimId].report = false;
+      }),
+      EventBus.$on("backWhite", vicitmBackId => {
+        console.log(this.markers[victimBackId].icon);
+        this.markers[victimBackId].icon = "white.png";
+        // this.markers[policeId].report = false;
+      }),
+      EventBus.$on("changePurple", (purpleCall, index) => {
+        console.log(this.markers[index].icon);
+        this.markers[index].icon = purpleCall;
+      });
   },
   mounted() {
     this.$refs.gmap.$mapPromise.then(map => {
@@ -227,14 +244,19 @@ export default {
 
     getInfoWindowContent: function(marker, countCall) {
       this.clickedPosition = marker;
-      //  console.log(this.clickedPosition.icon.url);
-      //  this.clickedPosition.icon.url.pop();
-      //  this.clickedPosition.icon.url = "test.png";
-      EventBus.$emit("getPosition", this.clickedPosition, this.countCall);
+      EventBus.$emit(
+        "getPosition",
+        this.clickedPosition,
+        this.countCall,
+        this.clickedPosition.id
+      );
       let userImg = JSON.stringify(marker.img);
 
       if (marker.identity === "police") {
-        this.clickedPolice = true;
+        EventBus.$emit("buttonPurple", marker.id);
+        EventBus.$emit("changePurple", this.purpleCall, marker.id);
+        EventBus.$emit("askingPolice", this.waitingCall);
+        // EventBus.$emit("policeDone", marker.id);
         this.clickedVictim = false;
         return `<div>
             <div >
@@ -248,6 +270,7 @@ export default {
           <div class="dv"></div>
           </div>`;
       } else {
+        // EventBus.$emit("victimDone", marker.id);
         this.clickedPolice = false;
         this.clickedVictim = true;
         return `<div>
@@ -268,7 +291,7 @@ export default {
   components: {
     NearMapModal,
     NearChart,
-    testPulse
+    NearMissionComplete
   }
 };
 </script>
@@ -324,20 +347,6 @@ div.card-image {
   justify-content: center;
   align-items: center;
   vertical-align: middle;
-}
-.bpm {
-  padding-left: 220px;
-  font-weight: bold;
-  font-size: 25px;
-}
-.bpm-word {
-  font-weight: bold;
-  padding-left: 0;
-  padding-bottom: 15px;
-  font-size: 17px;
-}
-.bpm-bpm {
-  font-weight: normal;
 }
 
 .divChange {

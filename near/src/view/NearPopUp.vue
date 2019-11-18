@@ -2,24 +2,24 @@
   <div class="dv">
     <div>
       <div class="rightBox">
-        <div v-if="victim | police" class="testline">
+        <div v-if="victim | police | policeWay" class="testline">
           <div v-if="victim" :style="red" class="firstDiv">
             <img src="../../public/NumberOne.png" width="30px" align="left" class="imgMv" />
           </div>
-          <div v-if="police" :style="blue" class="firstDiv">
-            <img src="../../public/NumberThree.png" width="30px" align="left" class="imgMv" />
+          <div v-if="police" :style="purple" class="firstDiv">
+            <img src="../../public/NumberTwo.png" width="30px" align="left" class="imgMv" />
           </div>
-          <div v-if="policeWay" :style="purple" class="firstDiv">
+          <div v-if="policeWay" :style="blue" class="firstDiv">
             <img src="../../public/NumberThree.png" width="30px" align="left" class="imgMv" />
           </div>
           <div v-if="victim" class="secondDiv">{{callInfo1}}</div>
-          <div v-if="police" class="secondDiv">{{callInfo2}}</div>
+          <div v-if="police" class="secondDiv">{{callInfo3}}</div>
+          <div v-if="policeWay" class="secondDiv">{{callInfo2}}</div>
           <div>
-            <span class="thirdDiv">{{newPosition.name}}</span>
+            <span v-if="victim" class="thirdDiv">{{callName}}</span>
             <span v-if="victim" class="thirdDiv">{{typeOfCall[0]}}</span>
-          </div>
-          <div>
-            <span class="fourthDiv">담당 경찰관이 배정되지 않았습니다.</span>
+            <br />
+            <span class="fourthDiv">{{currentSituation[0]}}</span>
           </div>
         </div>
       </div>
@@ -61,6 +61,7 @@ export default {
     return {
       newPosition: {},
       messages: ["신고접수", "출동 배정", "출동 중"],
+      currentSituation: ["담당 경찰관이 배정되지 않았습니다."],
       typeOfCall: ["수동신고", "자동신고"],
       red: {
         backgroundColor: "#E60012",
@@ -91,26 +92,42 @@ export default {
       policeWay: false,
       callInfo1: "",
       callInfo2: "",
-      callInfo3: ""
+      callInfo3: "",
+      callName: ""
     };
   },
-  created() {
+  mounted() {
     EventBus.$on("getPosition2", markers => {
-      console.log(markers.identity);
       this.newPosition = markers;
       if (markers.identity === "victim") {
+        // console.log("1) victim");
         this.victim = true;
         this.police = false;
         this.policeWay = false;
         this.callInfo1 = "신고 접수";
-      } else if (this.newPosition.identity === "police") {
-        this.police = true;
+        this.callName = markers.name;
+      } else if (markers.identity === "police") {
+        this.police = false;
+        this.policeWay = true;
         this.victim = false;
-        this.policeWay = false;
         this.callInfo2 = "출동 중";
       }
     });
+    EventBus.$on("buttonPurple", markers => {
+      this.newPosition = markers;
+      console.log("purple!!!");
+      if (markers.identity === "police") {
+        this.police = true;
+        this.policeWay = false;
+        this.victim = false;
+        this.callInfo3 = "확인 중";
+      }
+    });
   }
+  // beforeDestroy() {
+  //   EventBus.$off("getPosition2");
+  //   EventBus.$off("buttonPurple");
+  // }
 };
 </script>
 <style scoped>
@@ -208,6 +225,7 @@ li {
   float: center;
   margin: 0 auto;
   font-size: 11px;
+  padding-left: 10px;
 }
 .fourthDiv {
   width: 55%;
@@ -215,6 +233,8 @@ li {
   margin: 0 auto;
   font-size: 11px;
   color: #d0d0d0;
+  padding-left: 10px;
+  position: absolute;
 }
 .imgMv {
   margin-left: 10px;

@@ -16,7 +16,7 @@
               <i class="fas fa-circle second"></i>
               <span>
                 출동 배정
-                <span style="color:#707070;">1건</span>
+                <span style="color:#707070;">{{askingCall}}건</span>
                 <span class="divLine">|</span>
               </span>
             </b-col>
@@ -46,6 +46,7 @@ export default {
   data() {
     return {
       victimCall: 0,
+      askingCall: 0,
       policeCall: 0
     };
   },
@@ -54,8 +55,16 @@ export default {
       this.victimCall += countCall;
     });
     //     EventBus.$off("victimCall");
+    EventBus.$on("askingPolice", countCall => {
+      this.askingCall += countCall;
+    });
     EventBus.$on("policeCall", countCall => {
+      this.askingCall -= countCall;
       this.policeCall += countCall;
+    });
+    EventBus.$on("doneCall", () => {
+      this.policeCall -= 1;
+      this.victimCall -= 1;
     });
     //     EventBus.$off("policeCall");
   }

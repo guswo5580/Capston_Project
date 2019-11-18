@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="bpm-word" style="padding-top: 10px;">
+    <div :style="bpmWord" style="padding-top: 10px;">
       현재 심장박동
-      <span class="bpm">{{pulseNumber}}</span>
-      <span class="bpm-bpm">bpm</span>
+      <span :style="bpm">{{pulseNumber}}</span>
+      <span :style="bpmBpm">bpm</span>
     </div>
     <trend
       :data="numbers"
@@ -23,6 +23,20 @@ export default {
   data() {
     return {
       componentKey: 0,
+      bpm: {
+        paddingLeft: "260px",
+        fontWeight: "bold",
+        fontSize: "25px"
+      },
+      bpmWord: {
+        fontWeight: "bold",
+        paddingLeft: 0,
+        paddingBottom: "15px",
+        fontSize: "17px"
+      },
+      bpmBpm: {
+        fontWeight: "normal"
+      },
       numbers: [
         -0.1,
         -0,
@@ -226,9 +240,9 @@ export default {
 };
 </script>
 
-<style>
-.bpm {
-  padding-left: 220px;
+<style >
+/* .bpm {
+  padding-left: 280px;
   font-weight: bold;
   font-size: 25px;
 }
@@ -240,5 +254,5 @@ export default {
 }
 .bpm-bpm {
   font-weight: normal;
-}
+} */
 </style>

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import { router } from './routes/index';
+import { store } from './store/store';
 Vue.config.productionTip = false;
 
 import * as VueGoogleMaps from 'vue2-google-maps';
@@ -20,7 +21,10 @@ Vue.use(BootstrapVue);
 import Trend from 'vuetrend';
 Vue.use(Trend);
 
+Vue.prototype.$eventBus = new Vue();
+
 new Vue({
 	render: h => h(App),
 	router,
+	store,
 }).$mount('#app');
