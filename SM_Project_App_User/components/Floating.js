@@ -24,15 +24,16 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 export default class FloatingandModal extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     slideAnimationModal: false,
-    userModal: false,
-    finishModal: false,
-    actions: [
+    actions1: [
       {
-        text: "신고자 전화",
-        icon: require("../assets/images/FloatingIcon/Call.png"),
-        name: "call",
+        text: "신고 취소",
+        icon: require("../assets/images/FloatingIcon/cancle.png"),
+        name: "cancle",
         textColor: "white",
         color: "white",
         transparent: true,
@@ -41,24 +42,13 @@ export default class FloatingandModal extends React.Component {
         margin: 0,
         buttonSize: 55,
         position: 1
-      },
+      }
+    ],
+    actions2: [
       {
-        text: "신고자 정보 확인",
-        icon: require("../assets/images/FloatingIcon/User.png"),
-        name: "신고자 정보 확인",
-        textColor: "white",
-        color: "white",
-        transparent: true,
-        textBackground: "transparent",
-        textElevation: 0,
-        margin: 0,
-        buttonSize: 55,
-        position: 2
-      },
-      {
-        text: "최단거리 검색",
-        icon: require("../assets/images/FloatingIcon/Direction.png"),
-        name: "bt_room",
+        text: "담당자와 전화",
+        icon: require("../assets/images/FloatingIcon/Call.png"),
+        name: "call",
         textColor: "white",
         color: "white",
         transparent: true,
@@ -69,9 +59,9 @@ export default class FloatingandModal extends React.Component {
         position: 3
       },
       {
-        text: "사건 완료",
-        icon: require("../assets/images/FloatingIcon/Finish.png"),
-        name: "사건 완료",
+        text: "담당자 정보 확인",
+        icon: require("../assets/images/FloatingIcon/confirm.png"),
+        name: "confirm",
         textColor: "white",
         color: "white",
         transparent: true,
@@ -79,110 +69,135 @@ export default class FloatingandModal extends React.Component {
         textElevation: 0,
         margin: 0,
         buttonSize: 55,
-        position: 4
+        position: 3
+      },
+      {
+        text: "신고 취소",
+        icon: require("../assets/images/FloatingIcon/cancle.png"),
+        name: "cancle",
+        textColor: "white",
+        color: "white",
+        transparent: true,
+        textBackground: "transparent",
+        textElevation: 0,
+        margin: 0,
+        buttonSize: 55,
+        position: 3
       }
     ]
   };
 
   render() {
-    return (
-      <View style={styles.Floatingcontainer}>
-        <FloatingAction
-          actions={this.state.actions}
-          color="white"
-          overlayColor="rgba(0, 0, 0, 0.5)"
-          iconWidth={20}
-          iconHeight={20}
-          iconColor={Color.Deepgray}
-          actionsPaddingTopBottom={2}
-          distanceToEdge={20}
-          onPressItem={text => {
-            if (text === "신고자 정보 확인") {
-              this.setState({
-                slideAnimationModal: true,
-                userModal: true
-              });
-            } else if (text === "사건 완료") {
-              this.setState({
-                slideAnimationModal: true,
-                finishModal: true
-              });
-            } else {
-              Alert.alert("Icon pressed", `the icon ${text} was pressed`);
-            }
-          }}
-        />
-        <Modal
-          onDismiss={() => {
-            if (this.state.userModal === true) {
-              this.setState({
-                slideAnimationModal: false,
-                userModal: false
-              });
-            } else {
-              this.setState({
-                slideAnimationModal: false,
-                finishModal: false
-              });
-            }
-          }}
-          onTouchOutside={() => {
-            if (this.state.userModal === true) {
-              this.setState({
-                slideAnimationModal: false,
-                userModal: false
-              });
-            } else {
-              this.setState({
-                slideAnimationModal: false,
-                finishModal: false
-              });
-            }
-          }}
-          swipeDirection="down"
-          onSwipeOut={() => {
-            if (this.state.userModal === true) {
-              this.setState({
-                slideAnimationModal: false,
-                userModal: false
-              });
-            } else {
-              this.setState({
-                slideAnimationModal: false,
-                finishModal: false
-              });
-            }
-          }}
-          visible={this.state.slideAnimationModal}
-          modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
-        >
-          <SelectModal
-            userModal={this.state.userModal}
-            finishModal={this.state.finishModal}
+    if (this.props.status) {
+      return (
+        <View style={styles.Floatingcontainer}>
+          <FloatingAction
+            actions={this.state.actions2}
+            color="white"
+            overlayColor="rgba(0, 0, 0, 0.5)"
+            iconWidth={20}
+            iconHeight={20}
+            iconColor={Color.Deepgray}
+            actionsPaddingTopBottom={2}
+            distanceToEdge={20}
+            onPressItem={text => {
+              if (text === "confirm") {
+                this.setState({
+                  slideAnimationModal: true
+                });
+              } else {
+                Alert.alert("Icon pressed", `the icon ${text} was pressed`);
+              }
+            }}
           />
-          <ModalFooter>
-            <TouchableOpacity
-              style={styles.closeBtn}
-              onPress={() => {
-                if (this.state.userModal === true) {
+          <Modal
+            onDismiss={() => {
+              this.setState({
+                slideAnimationModal: false
+              });
+            }}
+            onTouchOutside={() => {
+              this.setState({
+                slideAnimationModal: false
+              });
+            }}
+            swipeDirection="down"
+            onSwipeOut={() => {
+              this.setState({
+                slideAnimationModal: false
+              });
+            }}
+            visible={this.state.slideAnimationModal}
+            modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
+          >
+            <ModalContent style={styles.modalContainer}>
+              <View style={{ flex: 4 }}>
+                <View style={styles.modalMain}>
+                  <View style={styles.modalImage}>
+                    <Image
+                      source={
+                        __DEV__
+                          ? require("../assets/images/profile.png")
+                          : require("../assets/images/profile.png")
+                      }
+                      style={styles.userImage}
+                    />
+                  </View>
+                  <View style={styles.modalText}>
+                    <View style={styles.repeatContent}>
+                      <Text style={styles.TextTitle}>이름</Text>
+                      <Text style={styles.TextInfo}>박원형(남)</Text>
+                    </View>
+                    <View style={styles.repeatContent}>
+                      <Text style={styles.TextTitle}>소속</Text>
+                      <Text style={styles.TextInfo}>둔춘 파출소</Text>
+                    </View>
+                    <View style={styles.repeatContent}>
+                      <Text style={styles.TextTitle}>계급</Text>
+                      <Text style={styles.TextInfo}>경위</Text>
+                    </View>
+                    <View style={styles.ContentMessage}>
+                      <Text style={styles.Message}>약 3분 뒤(235m) 이내</Text>
+                      <Text style={styles.Message}>현장 도착 예정입니다.</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </ModalContent>
+            <ModalFooter>
+              <TouchableOpacity
+                style={styles.closeBtn}
+                onPress={() => {
                   this.setState({
-                    slideAnimationModal: false,
-                    userModal: false
+                    slideAnimationModal: false
                   });
-                } else {
-                  this.setState({
-                    slideAnimationModal: false,
-                    finishModal: false
-                  });
-                }
-              }}
-            >
-              <Text style={styles.closeBtnText}>닫기</Text>
-            </TouchableOpacity>
-          </ModalFooter>
-        </Modal>
-      </View>
-    );
+                }}
+              >
+                <Text style={styles.closeBtnText}>닫기</Text>
+              </TouchableOpacity>
+            </ModalFooter>
+          </Modal>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.Floatingcontainer}>
+          <FloatingAction
+            actions={this.state.actions1}
+            color="white"
+            overlayColor="rgba(0, 0, 0, 0.5)"
+            iconWidth={20}
+            iconHeight={20}
+            iconColor={Color.Deepgray}
+            actionsPaddingTopBottom={2}
+            distanceToEdge={20}
+            onPressItem={text => {
+              Alert.alert("Icon pressed", `the icon ${text} was pressed`);
+            }}
+          />
+        </View>
+      );
+    }
   }
 }
 
@@ -194,7 +209,45 @@ const styles = StyleSheet.create({
   Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
   },
-
+  modalContainer: {
+    width: width * 0.85,
+    height: height * 0.3 - 40
+  },
+  modalMain: {
+    flex: 5,
+    flexDirection: "row",
+    maxHeight: height * 0.21
+  },
+  modalImage: {
+    flex: 2,
+    resizeMode: "contain"
+  },
+  modalText: {
+    flex: 3,
+    marginLeft: 0
+  },
+  repeatContent: {
+    flex: 4,
+    flexDirection: "row",
+    maxHeight: 20
+  },
+  TextTitle: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: "bold"
+  },
+  TextInfo: {
+    flex: 3,
+    fontSize: 12
+  },
+  ContentMessage: {
+    flex: 1,
+    marginTop: 20
+  },
+  Message: {
+    fontSize: 14,
+    fontWeight: "bold"
+  },
   closeBtn: {
     width: width * 0.85,
     backgroundColor: Color.lightgray,

@@ -5,19 +5,18 @@ import {
   Text,
   View,
   Dimensions,
-  Platform
+  Platform,
+  TouchableOpacity
 } from "react-native";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  Callout,
-  Polygon,
-  Circle
-} from "react-native-maps";
-
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import Modal, {
+  ModalContent,
+  ModalFooter,
+  SlideAnimation
+} from "react-native-modals";
 import * as Permissions from "expo-permissions";
 import UserHeader from "./UserHeader";
-import Loading from "./Loading";
+import DeclareModal from "./DeclareModal";
 import Color from "../constants/Colors";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
@@ -25,7 +24,9 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 export default class StartScreen extends React.Component {
-  state = {};
+  state = {
+    notification: false //true = 신고 접수되어 모달 등장
+  };
   componentDidMount() {
     this.requestLocationPermission();
   }
@@ -71,6 +72,7 @@ export default class StartScreen extends React.Component {
             initialRegion={this.state.initialPosition}
           ></MapView>
         </View>
+        {this.state.notification ? <DeclareModal /> : null}
       </View>
     );
   }
@@ -82,8 +84,7 @@ StartScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
-    paddingTop: 24
+    ...StyleSheet.absoluteFillObject
   },
   header: {
     position: "absolute",
@@ -108,8 +109,5 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1
-  },
-  Floatingcontainer: {
-    ...StyleSheet.absoluteFillObject
   }
 });

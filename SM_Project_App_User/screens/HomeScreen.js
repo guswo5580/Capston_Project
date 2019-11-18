@@ -7,13 +7,7 @@ import {
   Dimensions,
   Platform
 } from "react-native";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  Callout,
-  Polygon,
-  Circle
-} from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
@@ -30,7 +24,8 @@ const height = Dimensions.get("window").height;
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: false
+    declare: true, //false = 신고가 들어가기 전, true는 신고가 들어간 후 모달 화면
+    status: true //false = 신고 접수 중, true = 출동 중
   };
 
   componentDidMount() {
@@ -68,7 +63,7 @@ export default class HomeScreen extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.header}>
-            <MainHeader />
+            <MainHeader status={this.state.status} />
           </View>
           <View style={styles.main}>
             <MapView
@@ -79,8 +74,11 @@ export default class HomeScreen extends React.Component {
               initialRegion={this.state.initialPosition}
             ></MapView>
           </View>
-
-          <Floating />
+          {this.state.status ? (
+            <Floating status={this.state.status} />
+          ) : (
+            <Floating status={this.state.status} />
+          )}
         </View>
       );
     } else if (this.state.declare === true && !this.state.initialPosition) {
@@ -105,10 +103,18 @@ const styles = StyleSheet.create({
     top: "7%",
     left: "5%",
     width: width * 0.9,
-    backgroundColor: Color.mainColor,
+    // backgroundColor: this.state.BackGround,
     zIndex: 1,
-    borderRadius: 50,
-    minHeight: 100
+
+    minHeight: 100,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12
   },
   main: {
     ...StyleSheet.absoluteFillObject

@@ -32,10 +32,8 @@ async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync([
       require("./assets/images/FloatingIcon/Call.png"),
-      require("./assets/images/FloatingIcon/Direction.png"),
-      require("./assets/images/FloatingIcon/Finish.png"),
-      require("./assets/images/FloatingIcon/Plus.png"),
-      require("./assets/images/FloatingIcon/User.png"),
+      require("./assets/images/FloatingIcon/confirm.png"),
+      require("./assets/images/FloatingIcon/cancle.png"),
       require("./assets/images/Navigation/home.png"),
       require("./assets/images/Navigation/home_active.png"),
       require("./assets/images/Navigation/mypage.png"),

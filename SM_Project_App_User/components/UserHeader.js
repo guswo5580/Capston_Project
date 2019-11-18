@@ -9,6 +9,7 @@ import {
   Button,
   ScrollView
 } from "react-native";
+import Modal, { ModalContent } from "react-native-modals";
 import Color from "../constants/Colors";
 
 const width = Dimensions.get("window").width;
