@@ -21,7 +21,7 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet("compileSdkVersion", 28)
+  compileSdkVersion safeExtGet("compileSdkVersion", 33)
 
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -30,8 +30,8 @@ android {
 
   defaultConfig {
     applicationId 'Near.React.Native.App'
-    minSdkVersion safeExtGet("minSdkVersion", 21)
-    targetSdkVersion safeExtGet("targetSdkVersion", 28)
+    minSdkVersion safeExtGet("minSdkVersion", 33)
+    targetSdkVersion safeExtGet("targetSdkVersion", 33)
     versionCode 1
     versionName '1.0.0'
 

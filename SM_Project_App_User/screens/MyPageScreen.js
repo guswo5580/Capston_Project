@@ -27,8 +27,8 @@ export default function MyPageScreen() {
             <Image
               source={
                 __DEV__
-                  ? require("../assets/images/profile.png")
-                  : require("../assets/images/profile.png")
+                  ? require("../assets/images/User.png")
+                  : require("../assets/images/User.png")
               }
               style={styles.userImage}
             />
@@ -36,19 +36,19 @@ export default function MyPageScreen() {
           <View style={styles.InfoContainer}>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>이름</Text>
-              <Text style={styles.Information}>박원형(남)</Text>
+              <Text style={styles.Information}>유승훈(남)</Text>
             </View>
             <View style={styles.InfoContent}>
-              <Text style={styles.title}>소속</Text>
-              <Text style={styles.Information}>둔춘 파출소</Text>
+              <Text style={styles.title}>주소</Text>
+              <Text style={styles.Information}>서울시 광진구 군자동</Text>
             </View>
             <View style={styles.InfoContent}>
-              <Text style={styles.title}>계급</Text>
-              <Text style={styles.Information}>경위</Text>
+              <Text style={styles.title}>상세주소</Text>
+              <Text style={styles.Information}>116-9 103호</Text>
             </View>
             <View style={styles.InfoContent}>
-              <Text style={styles.title}>경번</Text>
-              <Text style={styles.Information}>19-66601132</Text>
+              <Text style={styles.title}>설명</Text>
+              <Text style={styles.Information}>캡스톤 고통 보호 중</Text>
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>연락처</Text>
@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   InfoContent: {
-    flex: 5,
+    flex: 6,
     flexDirection: "row",
     maxHeight: 30,
     marginLeft: 15
   },
   title: {
-    flex: 1,
+    flex: 2,
     fontSize: 15,
     fontWeight: "bold"
   },

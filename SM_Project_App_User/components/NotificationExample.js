@@ -10,13 +10,11 @@ import {
   View
 } from "react-native";
 
-export const Opening = () => {
+export const Cancle = () => {
   return (
     <View style={styles.mainContentContainer}>
       <View style={styles.mainContent}>
-        <Text style={styles.mainContentText}>
-          순찰을 시작합니다. 오늘도 안전한 하루 되세요!
-        </Text>
+        <Text style={styles.mainContentText}>신고를 취소하였습니다.</Text>
         <Text style={styles.mainContentDate}>2019/10/28/18:26</Text>
       </View>
       <View style={styles.mainNavigation}>
@@ -28,13 +26,26 @@ export const Opening = () => {
   );
 };
 
-export const Notification = () => {
+export const Declare_manual = () => {
   return (
     <View style={styles.mainContentContainer}>
       <View style={styles.mainContent}>
-        <Text style={styles.mainContentText}>
-          서울 강동경찰서 출동배정이 확인되었습니다
-        </Text>
+        <Text style={styles.mainContentText}>수동 신고를 접수하였습니다.</Text>
+        <Text style={styles.mainContentDate}>2019/10/28/18:26</Text>
+      </View>
+      <View style={styles.mainNavigation}>
+        <TouchableOpacity style={styles.navigationBtn} onPress={() => {}}>
+          <Text style={styles.BtnText}>신원 확인</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+export const Declare_automatic = () => {
+  return (
+    <View style={styles.mainContentContainer}>
+      <View style={styles.mainContent}>
+        <Text style={styles.mainContentText}>자동 신고를 접수하였습니다.</Text>
         <Text style={styles.mainContentDate}>2019/10/28/18:26</Text>
       </View>
       <View style={styles.mainNavigation}>
@@ -46,11 +57,13 @@ export const Notification = () => {
   );
 };
 
-export const Cancle = () => {
+export const Notification = () => {
   return (
     <View style={styles.mainContentContainer}>
       <View style={styles.mainContent}>
-        <Text style={styles.mainContentText}>신고가 취소되었습니다</Text>
+        <Text style={styles.mainContentText}>
+          경찰관 출동 배정이 완료되었습니다.
+        </Text>
         <Text style={styles.mainContentDate}>2019/10/28/18:26</Text>
       </View>
       <View style={styles.mainNavigation}>

@@ -27,18 +27,12 @@ public class MainApplication extends ExpoApplication implements AppLoaderPackage
     return Arrays.<ReactPackage>asList(
         // Add your own packages here!
         // TODO: add native modules!
-
+        new MainReactPackage(),
+                new MapsPackage()
         // Needed for `react-native link`
         // new MainReactPackage()
     );
   }
-  @Override
-    protected List<ReactPackage> getPackages() {
-        return Arrays.asList(
-            new MainReactPackage(),
-            new MapsPackage(),
-        );
-    }
 
   public List<Package> getExpoPackages() {
     return new BasePackageList().getPackageList();

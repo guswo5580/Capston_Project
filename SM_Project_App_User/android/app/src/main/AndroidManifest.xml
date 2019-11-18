@@ -5,11 +5,11 @@
   xmlns:tools="http://schemas.android.com/tools">
 
   <permission
-    android:name="Near.User.permission.C2D_MESSAGE"
+    android:name="Near.App.Police.permission.C2D_MESSAGE"
     android:protectionLevel="signature"/>
 
   <!-- These are required permissions to make the app run -->
-  <uses-permission android:name="Near.User.permission.C2D_MESSAGE" />
+  <uses-permission android:name="Near.App.Police.permission.C2D_MESSAGE" />
   <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -46,12 +46,14 @@
   <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
   <application
+  
     android:name=".MainApplication"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:largeHeap="true"
     android:usesCleartextTraffic="true">
+
 
     <activity
       android:name=".LauncherActivity"
@@ -74,7 +76,7 @@
       android:theme="@style/Theme.Exponent.Splash"
       android:windowSoftInputMode="adjustResize">
       <intent-filter>
-        <data android:scheme="expaeffcce61683446ea94c497293e3cae6"/>
+        <data android:scheme="exp157caa6410c143cc970a65ce27cf22c5"/>
 
         <action android:name="android.intent.action.VIEW"/>
 
@@ -146,7 +148,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="Near.User" android:path="oauthredirect"/>
+        <data android:scheme="Near.App.Police" android:path="oauthredirect"/>
       </intent-filter>
     </activity>
 
@@ -164,7 +166,7 @@
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="expo.modules.payments.stripe.67ad9129-53b0-4873-b641-1bc81a985b34" />
+            <data android:scheme="expo.modules.payments.stripe.8011658c-be9f-4af4-908d-8eaa4159ffc7" />
         </intent-filter>
     </activity>
     <!-- Versioned Activity for Stripe -->
@@ -282,7 +284,7 @@
         <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
         <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
-        <category android:name="Near.User"/>
+        <category android:name="Near.App.Police"/>
       </intent-filter>
     </receiver>
 
@@ -341,8 +343,11 @@
     <!-- BEGIN GOOGLE MAPS CONFIG -->
     <meta-data
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ"/>
+      android:value="AIzaSyDh7eDB9snEFSYtf-k0gfxA45HFoR0L--I"/>
     <!-- END GOOGLE MAPS CONFIG -->
+      <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ"/> 
 
     <!-- ADD GOOGLE MOBILE ADS CONFIG HERE -->
     <!-- BEGIN GOOGLE MOBILE ADS CONFIG -->
@@ -356,7 +361,7 @@
     <!-- The Facebook SDK runs FacebookInitProvider on startup and crashes if there isn't an ID here -->
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb0"/>
 
-    <meta-data android:name="standaloneStripeScheme" android:value="67ad9129-53b0-4873-b641-1bc81a985b34" />
+    <meta-data android:name="standaloneStripeScheme" android:value="8011658c-be9f-4af4-908d-8eaa4159ffc7" />
   </application>
 
 </manifest>

@@ -16,23 +16,16 @@ import MapView, {
 } from "react-native-maps";
 
 import * as Permissions from "expo-permissions";
-import Floating from "../components/Floating";
-import StartingScreen from "../components/StartScreen";
-import MainHeader from "../components/MainHeader";
-import Loading from "../components/Loading";
+import UserHeader from "./UserHeader";
+import Loading from "./Loading";
 import Color from "../constants/Colors";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-// const headerHorizontalpadding = width / 4
-
-export default class HomeScreen extends React.Component {
-  state = {
-    declare: false
-  };
-
+export default class StartScreen extends React.Component {
+  state = {};
   componentDidMount() {
     this.requestLocationPermission();
   }
@@ -64,34 +57,26 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-    if (this.state.declare === true && this.state.initialPosition) {
-      return (
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <MainHeader />
-          </View>
-          <View style={styles.main}>
-            <MapView
-              provider={PROVIDER_GOOGLE}
-              ref={map => (this._map = map)}
-              style={styles.map}
-              showsUserLocation={true}
-              initialRegion={this.state.initialPosition}
-            ></MapView>
-          </View>
-
-          <Floating />
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <UserHeader />
         </View>
-      );
-    } else if (this.state.declare === true && !this.state.initialPosition) {
-      return <Loading />;
-    } else {
-      return <StartingScreen />;
-    }
+        <View style={styles.main}>
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            ref={map => (this._map = map)}
+            style={styles.map}
+            showsUserLocation={true}
+            initialRegion={this.state.initialPosition}
+          ></MapView>
+        </View>
+      </View>
+    );
   }
 }
 
-HomeScreen.navigationOptions = {
+StartScreen.navigationOptions = {
   header: null
 };
 
@@ -105,10 +90,18 @@ const styles = StyleSheet.create({
     top: "7%",
     left: "5%",
     width: width * 0.9,
-    backgroundColor: Color.mainColor,
+    backgroundColor: "white",
     zIndex: 1,
     borderRadius: 50,
-    minHeight: 100
+    minHeight: 50,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12
   },
   main: {
     ...StyleSheet.absoluteFillObject

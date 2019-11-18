@@ -9,7 +9,8 @@ import {
   View
 } from "react-native";
 import {
-  Opening,
+  Declare_automatic,
+  Declare_manual,
   Notification,
   Cancle
 } from "../components/NotificationExample";
@@ -23,7 +24,8 @@ export default function NotificationScreen() {
         </View>
       </View>
       <View style={styles.main}>
-        <Opening />
+        <Declare_automatic />
+        <Declare_manual />
         <Notification />
         <Cancle />
       </View>

@@ -29,26 +29,35 @@ export default function App(props) {
 }
 
 async function loadResourcesAsync() {
-  // 로딩 데이터 설정
   await Promise.all([
     Asset.loadAsync([
       require("./assets/images/FloatingIcon/Call.png"),
       require("./assets/images/FloatingIcon/Direction.png"),
       require("./assets/images/FloatingIcon/Finish.png"),
       require("./assets/images/FloatingIcon/Plus.png"),
-      require("./assets/images/FloatingIcon/User.png")
+      require("./assets/images/FloatingIcon/User.png"),
+      require("./assets/images/Navigation/home.png"),
+      require("./assets/images/Navigation/home_active.png"),
+      require("./assets/images/Navigation/mypage.png"),
+      require("./assets/images/Navigation/mypage_active.png"),
+      require("./assets/images/Navigation/notification.png"),
+      require("./assets/images/Navigation/notification_active.png"),
+      require("./assets/images/Navigation/setting.png"),
+      require("./assets/images/Navigation/setting_active.png")
     ]),
     Font.loadAsync({
+      // This is the font that we are using for our tab bar
       ...Ionicons.font,
       // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-      // 폰트 설정
+      // remove this if you are not using it in your app
       "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf")
     })
   ]);
 }
 
 function handleLoadingError(error) {
-  // 에러 처리
+  // In this case, you might want to report the error to your error reporting
+  // service, for example Sentry
   console.warn(error);
 }
 
