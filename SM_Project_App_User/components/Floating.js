@@ -100,6 +100,7 @@ export default class FloatingandModal extends React.Component {
             iconColor={Color.Deepgray}
             actionsPaddingTopBottom={2}
             distanceToEdge={20}
+            showBackground={true}
             onPressItem={text => {
               if (text === "confirm") {
                 this.setState({
@@ -207,7 +208,8 @@ FloatingandModal.navigationOptions = {
 
 const styles = StyleSheet.create({
   Floatingcontainer: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1
   },
   modalContainer: {
     width: width * 0.85,

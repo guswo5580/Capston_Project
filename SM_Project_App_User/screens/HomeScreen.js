@@ -103,18 +103,16 @@ const styles = StyleSheet.create({
     top: "7%",
     left: "5%",
     width: width * 0.9,
-    // backgroundColor: this.state.BackGround,
-    zIndex: 1,
-
     minHeight: 100,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 6
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12
+    zIndex: 1
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 6
+    // },
+    // shadowOpacity: 0.37,
+    // shadowRadius: 7.49,
+    // elevation: 1
   },
   main: {
     ...StyleSheet.absoluteFillObject
