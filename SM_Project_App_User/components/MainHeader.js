@@ -41,7 +41,7 @@ export default class MainHeader extends React.Component {
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 50,
-            backgroundColor: Color.Deepgray
+            backgroundColor: Color.Headergray
           }}
         >
           <View style={styles.headerContentDate}>

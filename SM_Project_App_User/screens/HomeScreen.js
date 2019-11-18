@@ -25,7 +25,7 @@ const height = Dimensions.get("window").height;
 export default class HomeScreen extends React.Component {
   state = {
     declare: true, //false = 신고가 들어가기 전, true는 신고가 들어간 후 모달 화면
-    status: true //false = 신고 접수 중, true = 출동 중
+    status: false //false = 신고 접수 중, true = 출동 중
   };
 
   componentDidMount() {
