@@ -26,7 +26,6 @@
         :position="infoWindowPos"
         :opened="infoWinOpen"
         @closeclick="infoWinOpen=false"
-        :props="markers"
       >
         <div v-html="infoContent" @Click="changedInfo()"></div>
         <NearChart v-if="clickedVictim"></NearChart>
@@ -42,6 +41,7 @@ import { EventBus } from "../event/eventBus";
 import NearMapModal from "./common/NearMapModal";
 import NearChart from "./common/NearChart";
 import NearMissionComplete from "../view/NearMissionComplete";
+import NearMPopUp from "../view/NearPopUp";
 export default {
   name: "GoogleMap",
   data() {
@@ -67,7 +67,7 @@ export default {
       markers: [
         {
           id: 0,
-          name: "유승훈 (남)",
+          name: "유승훈(남)",
           age: "27 (9301027)",
           bloodType: "O형 (RH+)",
           position: { lat: 37.546497, lng: 127.069922 },
@@ -75,11 +75,11 @@ export default {
           img: "MrYoo.jpeg",
           report: false,
           identity: "victim",
-          icon: { url: "yellow.ico" }
+          icon: { url: "testYellow.png" }
         },
         {
           id: 1,
-          name: "박원형 (남)",
+          name: "박원형(남)",
           workArea: "둔촌 파출소",
           class: "경위",
           bloodType: "AB형(RH++)",
@@ -87,8 +87,10 @@ export default {
           img: "Police.jpg",
           report: false,
           waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
           identity: "police",
-          icon: { url: "testWhite.png" }
+          icon: { url: "testtest.png" }
         },
         {
           id: 2,
@@ -114,7 +116,7 @@ export default {
         },
         {
           id: 4,
-          name: "김장수 (남)",
+          name: "김장수(남)",
           workArea: "둔촌 파출소",
           class: "경위",
           bloodType: "O형(RH++)",
@@ -122,12 +124,14 @@ export default {
           img: "Police.jpg",
           report: false,
           waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
         {
           id: 5,
-          name: "이지광 (남)",
+          name: "이지광(남)",
           workArea: "둔촌 파출소",
           class: "경위",
           bloodType: "A형(RH++)",
@@ -135,12 +139,14 @@ export default {
           img: "Police.jpg",
           report: false,
           waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
         {
           id: 6,
-          name: "김목수 (남)",
+          name: "김목수(남)",
           workArea: "둔촌 파출소",
           class: "경위",
           bloodType: "B형(RH++)",
@@ -148,12 +154,14 @@ export default {
           img: "Police.jpg",
           report: false,
           waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
           identity: "police",
           icon: { url: "white.png" }
         },
         {
           id: 7,
-          name: "최태형 (남)",
+          name: "최태형(남)",
           workArea: "둔촌 파출소",
           class: "경위",
           bloodType: "O형(RH++)",
@@ -161,6 +169,8 @@ export default {
           img: "Police.jpg",
           report: false,
           waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
           identity: "police",
           icon: { url: "white.png" }
         }
@@ -177,35 +187,29 @@ export default {
   },
   created() {
     EventBus.$on("redImage", (redCall, number) => {
-      //  delete this.markers[number].icon.url;
       console.log(redCall);
       this.markers[number].icon = redCall;
     }),
       EventBus.$on("yellowImage", (yellowCall, number) => {
-        //  delete this.markers[number].icon.url;
         this.markers[number].icon = yellowCall;
       }),
-      EventBus.$on("blueImage", (blueCall, number) => {
-        //  delete this.markers[number].icon.url;
+      EventBus.$on("changeBlue", (blueCall, number) => {
         this.markers[number].icon = blueCall;
       }),
       EventBus.$on("whiteImage", (whiteCall, number) => {
-        //  delete this.markers[number].icon.url;
         console.log(whiteCall);
         this.markers[number].icon = whiteCall;
       }),
       //사건완료시 경찰, 사용자 색 원래대로 돌리기
-      EventBus.$on("backYellow", policeBackId => {
-        this.policeBackID = policeBackId;
-        console.log(this.policeBackID);
-        console.log("backYellow Call! ", this.policeBackID);
-        this.markers[this.policeBackId].icon = "yellow.ico";
-        // this.markers[victimId].report = false;
+      EventBus.$on("backYellow", victimBackId => {
+        this.victimBackID = victimBackId;
+        console.log(this.victimBackID);
+        console.log("backYellow Call! ", this.victimBackID);
+        this.markers[victimBackId].icon = "yellow.ico";
       }),
-      EventBus.$on("backWhite", vicitmBackId => {
-        console.log(this.markers[victimBackId].icon);
-        this.markers[victimBackId].icon = "white.png";
-        // this.markers[policeId].report = false;
+      EventBus.$on("backWhite", policeBackId => {
+        console.log(policeBackId);
+        this.markers[policeBackId].icon = "white.png";
       }),
       EventBus.$on("changePurple", (purpleCall, index) => {
         console.log(this.markers[index].icon);
@@ -253,10 +257,6 @@ export default {
       let userImg = JSON.stringify(marker.img);
 
       if (marker.identity === "police") {
-        EventBus.$emit("buttonPurple", marker.id);
-        EventBus.$emit("changePurple", this.purpleCall, marker.id);
-        EventBus.$emit("askingPolice", this.waitingCall);
-        // EventBus.$emit("policeDone", marker.id);
         this.clickedVictim = false;
         return `<div>
             <div >
@@ -270,7 +270,6 @@ export default {
           <div class="dv"></div>
           </div>`;
       } else {
-        // EventBus.$emit("victimDone", marker.id);
         this.clickedPolice = false;
         this.clickedVictim = true;
         return `<div>
@@ -291,7 +290,8 @@ export default {
   components: {
     NearMapModal,
     NearChart,
-    NearMissionComplete
+    NearMissionComplete,
+    NearMPopUp
   }
 };
 </script>

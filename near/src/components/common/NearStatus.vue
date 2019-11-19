@@ -54,7 +54,6 @@ export default {
     EventBus.$on("victimCall", countCall => {
       this.victimCall += countCall;
     });
-    //     EventBus.$off("victimCall");
     EventBus.$on("askingPolice", countCall => {
       this.askingCall += countCall;
     });
@@ -66,7 +65,6 @@ export default {
       this.policeCall -= 1;
       this.victimCall -= 1;
     });
-    //     EventBus.$off("policeCall");
   }
 };
 </script>

@@ -6,51 +6,47 @@
           <div v-if="victim" :style="red" class="firstDiv">
             <img src="../../public/NumberOne.png" width="30px" align="left" class="imgMv" />
           </div>
-          <div v-if="police" :style="purple" class="firstDiv">
+          <div v-else-if="police" :style="purple" class="firstDiv">
             <img src="../../public/NumberTwo.png" width="30px" align="left" class="imgMv" />
           </div>
-          <div v-if="policeWay" :style="blue" class="firstDiv">
+          <div v-else-if="policeWay" :style="blue" class="firstDiv">
             <img src="../../public/NumberThree.png" width="30px" align="left" class="imgMv" />
           </div>
           <div v-if="victim" class="secondDiv">{{callInfo1}}</div>
-          <div v-if="police" class="secondDiv">{{callInfo3}}</div>
-          <div v-if="policeWay" class="secondDiv">{{callInfo2}}</div>
+          <div v-else-if="police" class="secondDiv">{{callInfo3}}</div>
+          <div v-else-if="policeWay" class="secondDiv">{{callInfo2}}</div>
           <div>
-            <span v-if="victim" class="thirdDiv">{{callName}}</span>
-            <span v-if="victim" class="thirdDiv">{{typeOfCall[0]}}</span>
-            <br />
-            <span class="fourthDiv">{{currentSituation[0]}}</span>
+            <span v-if="victim" class="thirdDiv">
+              {{victimName}},
+              <span>{{typeOfCall[0]}}</span>
+            </span>
+
+            <span v-if="police" class="thirdDiv">
+              {{victimWHO}}
+              <span>수동 신고</span>
+            </span>
+
+            <span v-if="policeWay" class="thirdDiv">
+              {{victimWHO}}
+              <span>수동 신고</span>
+            </span>
           </div>
+          <span v-if="victim" class="fourthDiv">{{currentSituation[0]}}</span>
+          <span v-else-if="police" class="fourthDiv">
+            {{policeName}}
+            <span>{{policeClass}}</span>
+            <span>({{policeWorkArea}})</span>
+            <span style="padding-left:5px">{{messages[1]}}</span>
+          </span>
+          <span v-else-if="policeWay" class="fourthDiv">
+            {{policeName}}
+            <span>{{policeClass}}</span>
+            <span>({{policeWorkArea}})</span>
+            <span style="padding-left:5px">{{messages[3]}}</span>
+          </span>
         </div>
       </div>
     </div>
-    <!-- <div>
-      <div class="divIn">
-        <span v-if="victim" :style="red" class="firstDiv">
-          <img src="../../public/NumberOne.png" width="30%" align="left" />
-        </span>
-        <span v-if="police" :style="blue">
-          <img src="../../public/NumberTwo.png" width="30%" align="left" />
-        </span>
-        <span v-if="policeWay" :style="purple">
-          <img src="../../public/NumberThree.png" width="30%" align="left" />
-        </span>
-      </div>
-      <div class="divIn">{{callInfo1}}<</div>
-      <div class="divIn">{{newPosition.name}}</div>
-
-      <div v-if="victim" :style="red">
-        <div class="changeIn">
-          <img src="NumberOne.svg" width="30px" height="20px" align="left" />
-        </div>
-        <div class="changeIn"></div>
-        <div class="changeIn"></div>
-      </div>
-
-      <ul>
-        <li v-for="(info) in this.newPosition" :key="info.id">{{info}}</li>
-      </ul>
-    </div>-->
   </div>
 </template>
 
@@ -60,9 +56,9 @@ export default {
   data() {
     return {
       newPosition: {},
-      messages: ["신고접수", "출동 배정", "출동 중"],
+      messages: ["신고접수", "출동 배정", "출동 중", "출동 승인"],
       currentSituation: ["담당 경찰관이 배정되지 않았습니다."],
-      typeOfCall: ["수동신고", "자동신고"],
+      typeOfCall: ["수동 신고", "자동 신고"],
       red: {
         backgroundColor: "#E60012",
         width: "15%",
@@ -93,7 +89,11 @@ export default {
       callInfo1: "",
       callInfo2: "",
       callInfo3: "",
-      callName: ""
+      victimName: "",
+      policeName: "",
+      policeClass: "",
+      policeWorkArea: "",
+      victimWHO: ""
     };
   },
   mounted() {
@@ -105,15 +105,18 @@ export default {
         this.police = false;
         this.policeWay = false;
         this.callInfo1 = "신고 접수";
-        this.callName = markers.name;
+        this.victimName = markers.name;
       } else if (markers.identity === "police") {
         this.police = false;
         this.policeWay = true;
         this.victim = false;
         this.callInfo2 = "출동 중";
+        this.policeName = markers.name;
+        this.policeClass = markers.class;
+        this.policeWorkArea = markers.workArea;
       }
     });
-    EventBus.$on("buttonPurple", markers => {
+    EventBus.$on("buttonPurple", (markers, victimWho) => {
       this.newPosition = markers;
       console.log("purple!!!");
       if (markers.identity === "police") {
@@ -121,6 +124,10 @@ export default {
         this.policeWay = false;
         this.victim = false;
         this.callInfo3 = "확인 중";
+        this.policeName = markers.name;
+        this.policeClass = markers.class;
+        this.policeWorkArea = markers.workArea;
+        this.victimWHO = victimWho;
       }
     });
   }

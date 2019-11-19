@@ -1,45 +1,22 @@
 <template>
   <div class="dv">
-    <div>
-      <div class="rightBox">
-        <div class="testline">
-          <div :style="finish" class="firstDiv">
-            <img src="../../public/finish.png" width="30px" align="left" class="imgMv" />
-          </div>
-          <span class="secondDiv">사건완료</span>
-          <div>
-            <span class="thirdDiv">{{victimName}}</span>
-          </div>
-          <div class="fourthDiv">
-            <span class="fourthDiv">{{policeName}}</span>
-            <span style="padding-left:5px">{{policeClass}}</span>
-            <span>({{policeWorkArea}})</span>
-            <span>담당</span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <div class="dv" v-if="isDone">
-        <div>
-          <div class="rightBox">
-            <div class="testline">
-              <div :style="finish" class="firstDiv">
-                <img src="../../public/finish.png" width="30px" align="left" class="imgMv" />
-              </div>
-              <span class="secondDiv">사건완료</span>
-              <div>
-                <span class="thirdDiv">{{victimName}}</span>
-              </div>
-              <div class="fourthDiv">
-                <span class="fourthDiv">{{policeName}}</span>
-                <span style="padding-left:5px">{{policeClass}}</span>
-                <span>({{policeWorkArea}})</span>
-                <span>담당</span>
-                <span></span>
-              </div>
+    <div v-if="isDone">
+      <div>
+        <div class="rightBox">
+          <div class="testline">
+            <div :style="finish" class="firstDiv">
+              <img src="../../public/finish.png" width="30px" align="left" class="imgMv" />
+            </div>
+            <span class="secondDiv">사건완료</span>
+            <div>
+              <span class="thirdDiv">{{victimName}}</span>
+            </div>
+            <div class="fourthDiv">
+              <span class="fourthDiv">{{policeName}}</span>
+              <span style="padding-left:5px">{{policeClass}}</span>
+              <span>({{policeWorkArea}})</span>
+              <span>담당</span>
+              <span></span>
             </div>
           </div>
         </div>
@@ -70,7 +47,9 @@ export default {
       policeClass: "",
       policeWorkArea: "",
       whiteCall: "white.png",
-      yellowCall: "yellow.ico"
+      yellowCall: "yellow.ico",
+      policeBackID: "",
+      victimBackID: ""
     };
   },
 
@@ -89,51 +68,17 @@ export default {
         console.log(index);
         this.victimName = victimMarkers.name;
       }),
-      EventBus.$on("JobsDone", () => {
-        var v = this;
-        console.log("5초뒤 작동");
-        v.isDone = true;
-        EventBus.$emit("backYellow", this.victimId);
-        EventBus.$emit("backWhite", this.polcieId);
-        EventBus.$emit("backPoliceButton");
-        EventBus.$emit("backVictimButton");
-        EventBus.$emit("doneCall");
-        // setTimeout(() => {
-        //   v.isDone = true;
-        //   EventBus.$emit("backYellow", this.victimId);
-        //   EventBus.$emit("backWhite", this.polcieId);
-        //   EventBus.$emit("backPoliceButton");
-        //   EventBus.$emit("backVictimButton");
-        //   EventBus.$emit("doneCall");
-        // }, 6000);
+      EventBus.$on("JOBSDONE", (policeId, victimId) => {
+        setTimeout(() => {
+          this.isDone = true;
+          EventBus.$emit("backYellow", victimId);
+          EventBus.$emit("backWhite", policeId);
+          EventBus.$emit("backPoliceButton");
+          EventBus.$emit("backVictimButton");
+          EventBus.$emit("doneCall");
+        }, 6000);
       });
-    // setTimeout(() => {
-    //   let v = this;
-    //   console.log("5초뒤 작동");
-    //   v.isDone = true;
-    //   this.callEventFunction();
-    // }, 6000);
   }
-  // methods: {
-  // //   callEventFunction() {
-  // //     EventBus.$emit("backYellow", this.victimId);
-  // //     EventBus.$emit("backWhite", this.policeId);
-  // //     EventBus.$emit("backPoliceButton");
-  // //     EventBus.$emit("backVictimButton");
-  // //     EventBus.$emit("doneCall");
-  // //   }
-  // // }
-  // // methods: {
-  // //   callFinish() {
-  // //     let v = this;
-  // //     setTimeOut(function() {
-  // //       v.isDone = true;
-  // //     }, 5000);
-  // //   }
-  // // },
-  // // mounted() {
-  // //   this.callFinish();
-  // // }
 };
 </script>
 

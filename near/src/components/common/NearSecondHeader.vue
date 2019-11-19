@@ -6,7 +6,6 @@
 </template>
 
 <script>
-// import { timeFunction } from "../../etc/time";
 export default {
   data() {
     return {

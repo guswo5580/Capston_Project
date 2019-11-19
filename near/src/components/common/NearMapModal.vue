@@ -4,16 +4,9 @@
     <b-modal id="modal-center" centered title="BootstrapVue">
       <p class="my-4">Vertically centered modal!</p>
     </b-modal>-->
-    <button
-      v-if="isPolice"
-      :style="policeButton"
-      @click="policeButtonClick(this.markers)"
-    >{{message}}</button>
-    <button
-      v-if="isVictim"
-      :style="victimButton"
-      @click="victimButtonClick(this.markers)"
-    >{{message}}</button>
+    <button v-if="isPolice" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
+    <button v-if="isWaiting" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
+    <button v-if="isVictim" :style="victimButton" @click="victimButtonClick()">{{message}}</button>
     <!-- <button v-if="backPolice" :style="policeButton" @click="buttonChecked()">{{policeMessage}}</button>
     <button v-if="backVictim" :style="victimButton" @click="buttonChecked()">{{victimMessage}}</button>-->
   </div>
@@ -21,9 +14,9 @@
 
 <script>
 import { EventBus } from "../../event/eventBus";
-
+import NearPopUp from "../../view/NearPopUp";
+import NearMissionComplete from "../../view/NearMissionComplete";
 export default {
-  props: [markers],
   data() {
     return {
       message: "출동 배정",
@@ -41,6 +34,7 @@ export default {
       isVictim: false,
       isPolice: false,
       isWaiting: false,
+      isDone: false,
       isFinished: 1,
       victimButton: {
         width: "100%",
@@ -63,18 +57,18 @@ export default {
         outline: 0,
         fontSize: "17px"
       },
-      //   redCall: { url: "red.ico" },
-      //  blueCall: { url: "blue.ico" },
-      //  purpleCall: { url: "purple.ico" },
-      //  whiteCall: { url: "white.png" },
-      //   yellowCall: { url: "yellow.ico" },
       redCall: "red.ico",
       whiteCall: "white.png",
       yellowCall: "yellow.ico",
       blueCall: "blue.ico",
       purpleCall: "purple.ico",
       policeBackCALLID: "",
-      victimBackCALLID: ""
+      victimBackCALLID: "",
+      purpleCall: "purple.ico",
+      waitingCall: 1,
+      blueCall: "blue.ico",
+      victimCallName: "",
+      isAccept: false
     };
   },
   created() {
@@ -86,11 +80,12 @@ export default {
         this.isPolice = true;
         this.isWaiting = false;
         this.isVictim = false;
-        EventBus.$emit("buttonPurple", position);
+        // EventBus.$emit("buttonPurple", position);
       } else {
         this.isVictim = true;
         this.isWaiting = false;
         this.isPolice = false;
+        this.victimCallName = position.name;
       }
       // Police 출동 여부 및 출동배정
       if (this.markers.report === false && this.markers.identity === "police") {
@@ -105,37 +100,44 @@ export default {
   },
   methods: {
     policeButtonClick() {
-      if (this.markers.report === false && this.markers.identity === "police") {
+      if (this.markers.report === false && this.isPolice === true) {
         this.markers.report = !this.markers.report;
+        //팝업에 보라색 나타내기
+        EventBus.$emit("buttonPurple", this.markers, this.victimCallName);
+        console.log("과연 누구인가?", this.victimCallName);
+        //아이콘 보라색 바꾸기
+        EventBus.$emit("changePurple", this.purpleCall, this.markers.id);
+        //secondHeader에 출동배정 숫자올리기
+        EventBus.$emit("askingPolice", this.waitingCall);
+        this.message = " 확인 중";
+        this.isWaiting = true;
+        this.isPolice = false;
         this.policeBackCALLID = this.markers.id;
+      } else if (this.markers.report === true && this.isWaiting === true) {
+        // 나중에 서버에서 확인 받는건 NearMap.vue에 경찰 마커 객체에 acceptCall이 true일때 다음 진행하도록 만들자
+        // 서버에서 특정값 true값 나오면 뜨게끔 나중에 바꿔야함
+        this.isWaiting = false;
+        this.isPolice = true;
         this.message = "출동 중";
         EventBus.$emit("policeCall", this.policeCall);
         let index = this.markers.id;
-        EventBus.$emit("blueImage", this.blueCall, index);
-        // EventBus.$emit("policeDONE", this.markers, index);
-        console.log(
-          "PoliceBackCALLID! and VictimBackCALLID",
-          policeBackCALLID,
-          victimBackCALLID
+        EventBus.$emit("changeBlue", this.blueCall, index);
+        EventBus.$emit("policeDONE", this.markers, index);
+
+        EventBus.$emit(
+          "JOBSDONE",
+          this.policeBackCALLID,
+          this.victimBackCALLID
         );
-        if (this.policeBackCALLID !== NULL && this.victimBackCALLID !== NULL) {
-          EventBus.$emit(
-            "JobsDone",
-            this.policeBackCALLID,
-            this.victimBackCALLID
-          );
-        }
         EventBus.$emit("getPosition2", this.markers);
-      } else if (
-        this.markers.report === true &&
-        this.markers.identity === "police"
-      ) {
-        this.markers.report = !this.markers.report;
+        this.isDone = true;
+      } else if (this.markers.report === true && this.isDone === true) {
+        this.isDone = false;
+        this.markers.report = !this.markers.report.false;
         this.message = "출동 대기중 ";
         EventBus.$emit("policeCall", this.policeBackCall);
         let index = this.markers.id;
-        EventBus.$emit("whiteImage", this.whiteCall, index);
-        EventBus.$emit("getPosition2", this.markers);
+        // EventBus.$emit("whiteImage", this.whiteCall, index);
       }
     },
 
@@ -148,7 +150,7 @@ export default {
         EventBus.$emit("victimCall", this.victimCall, index);
         EventBus.$emit("redImage", this.redCall, index);
         EventBus.$emit("getPosition2", this.markers);
-        // EventBus.$emit("victimDONE", this.markers, index);
+        EventBus.$emit("victimDONE", this.markers, index);
       } else if (
         this.markers.report === true &&
         this.markers.identity === "victim"
@@ -161,41 +163,10 @@ export default {
         EventBus.$emit("getPosition2", this.markers);
       }
     }
-
-    //       if (this.markers.report === false && this.markers.identity === "police") {
-    //         this.markers.report = !this.markers.report;
-    //         this.message = "출동 배정";
-    //         EventBus.$emit("policeCall", this.policeCall);
-    //         let index = this.markers.id;
-    //         EventBus.$emit("blueImage", this.blueCall, index);
-    //         //경찰 임무 완수시 사건완료 알림
-    //         EventBus.$emit("JobsDone");
-    //       } else if (
-    //         this.markers.report === true &&
-    //         this.markers.identity === "police"
-    //       ) {
-    //         this.markers.report = !this.markers.report;
-    //         this.message = "출동 대기중 ";
-    //         EventBus.$emit("policeCall", this.policeBackCall);
-    //         let index = this.markers.id;
-    //         EventBus.$emit("whiteImage", this.whiteCall, index);
-    //       }
-    //       if (this.markers.report === false && this.markers.identity === "victim") {
-    //         this.markers.report = !this.markers.report;
-    //         this.message = "신고 접수 ";
-    //         EventBus.$emit("victimCall", this.victimCall);
-    //         let index = this.markers.id;
-    //         EventBus.$emit("redImage", this.redCall, index);
-    //       } else if (
-    //         this.markers.report === true &&
-    //         this.markers.identity === "victim"
-    //       ) {
-    //         this.markers.report = !this.markers.report;
-    //         this.message = "출동 배정 ";
-    //         EventBus.$emit("victimCall", this.victimBackCall);
-    //         let index = this.markers.id;
-    //         EventBus.$emit("yellowImage", this.yellowCall, index);
-    //       }
+  },
+  components: {
+    NearPopUp,
+    NearMissionComplete
   }
 };
 </script>

@@ -17,8 +17,6 @@
 </template>
 
 <script>
-// import Trend from "vuetrend";
-// :autoDrawDuration="30000"
 export default {
   data() {
     return {

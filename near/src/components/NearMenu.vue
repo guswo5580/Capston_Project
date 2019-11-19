@@ -63,10 +63,4 @@ a:focus {
   color: black;
   border-bottom: 2px solid;
 }
-/* .changeLine {
-  color: black;
-  text-decoration: underline;
-  text-underline-position: under;
-  border-bottom: solid;
-} */
 </style>
