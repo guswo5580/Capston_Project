@@ -7,6 +7,7 @@
     <button v-if="isPolice" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
     <button v-if="isWaiting" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
     <button v-if="isVictim" :style="victimButton" @click="victimButtonClick()">{{message}}</button>
+    <router-link v-if="isWaiting" to="/missionComplete"></router-link>
     <!-- <button v-if="backPolice" :style="policeButton" @click="buttonChecked()">{{policeMessage}}</button>
     <button v-if="backVictim" :style="victimButton" @click="buttonChecked()">{{victimMessage}}</button>-->
   </div>
@@ -123,7 +124,6 @@ export default {
         let index = this.markers.id;
         EventBus.$emit("changeBlue", this.blueCall, index);
         EventBus.$emit("policeDONE", this.markers, index);
-
         EventBus.$emit(
           "JOBSDONE",
           this.policeBackCALLID,
