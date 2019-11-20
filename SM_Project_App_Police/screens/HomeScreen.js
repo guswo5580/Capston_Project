@@ -15,6 +15,11 @@ import MapView, {
   Circle
 } from "react-native-maps";
 
+//////Import socket/////
+//////io 위치는 상황에 따라 변경 가능/////
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client/dist/socket.io";
+
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartScreen";
@@ -32,6 +37,17 @@ export default class HomeScreen extends React.Component {
   state = {
     declare: true
   };
+  // constructor() {
+  //   super();
+  //   // 웹 서버에서 보내는 emit 신호를 on으로 읽기
+  //   // declare의 변수 변환
+  //   this.socket = io("영덕이형 포트", { jsonp: false });
+  //   this.socket.on("update", () => {
+  //     this.setState({
+  //       declare: false
+  //     });
+  //   });
+  }
 
   componentDidMount() {
     this.requestLocationPermission();

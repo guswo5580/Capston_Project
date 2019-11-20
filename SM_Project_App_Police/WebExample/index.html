@@ -1,0 +1,15 @@
+<h1>Welcome</h1>
+
+<button>Update</button>
+<script src="/socket.io/socket.io.js"></script>
+
+
+<!-- 웹 프론트에서 emit 신호 -->
+<script>
+  const socket = io();
+  let button = document.querySelector('button');
+  button.onclick = () => {
+    console.log('sending update');
+    socket.emit('update');
+  }
+</script>
