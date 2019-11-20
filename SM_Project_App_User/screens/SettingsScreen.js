@@ -12,7 +12,8 @@ import ToggleSwitch from "toggle-switch-react-native";
 import Color from "../constants/Colors";
 
 export default function SettingsScreen() {
-  const [isOnComplete, setisOnComplete] = useState(false);
+  const [isOnVibe, setisOnVibe] = useState(true);
+  const [isOnDeclare, setisOnDeclare] = useState(true);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -25,11 +26,23 @@ export default function SettingsScreen() {
           <Text style={styles.mainTitle}>진동</Text>
           <View style={styles.mainFunction}>
             <ToggleSwitch
-              isOn={isOnComplete}
+              isOn={isOnVibe}
               onColor="#EA2340"
               offColor="#D0D0D0"
               size="medium"
-              onToggle={setisOnComplete}
+              onToggle={setisOnVibe}
+            />
+          </View>
+        </View>
+        <View style={styles.mainContainer}>
+          <Text style={styles.mainTitle}>자동 신고</Text>
+          <View style={styles.mainFunction}>
+            <ToggleSwitch
+              isOn={isOnDeclare}
+              onColor="#EA2340"
+              offColor="#D0D0D0"
+              size="medium"
+              onToggle={setisOnDeclare}
             />
           </View>
         </View>
