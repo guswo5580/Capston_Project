@@ -23,6 +23,11 @@
       </div>
     </div>
   </div>
+  <!-- <div>
+    <ul>
+      <li v-for="name in marker" :key="name">{{name}}</li>
+    </ul>
+  </!-->
 </template>
 
 <script>
@@ -54,19 +59,35 @@ export default {
   },
 
   created() {
+    // if (localStorage.length > 0) {
+    //   for (let i = 0; i < localStorage.length; i++) {
+    //     if (localStorage.key(i) !== "loglevel:webpack-dev-server") {
+    //       this.marker.push(JSON.parse(localStorage.getItem("marker")));
+    //     }
+    //   }
+    // }
     EventBus.$on("policeDONE", (policeMarkers, index) => {
+      this.marker = policeMarkers.name;
       this.policeId = index;
       // this.isDone = false;
       console.log(index);
       this.policeName = policeMarkers.name;
       this.policeClass = policeMarkers.class;
       this.policeWorkArea = policeMarkers.workArea;
+      // this.marker.push(
+      //   JSON.parse(localStorage.setItem(index, policeMarkers.name))
+      // );
+      this.$emit("addMarker", this.marker);
     }),
       EventBus.$on("victimDONE", (victimMarkers, index) => {
+        this.marker = victimMarkers.name;
         this.victimId = index;
         // this.isDone = false;
         console.log(index);
         this.victimName = victimMarkers.name;
+        // this.marker.push(
+        //   JSON.parse(localStorage.getItem(index, victimMarkers.name))
+        // );
       }),
       EventBus.$on("JOBSDONE", (policeId, victimId) => {
         setTimeout(() => {

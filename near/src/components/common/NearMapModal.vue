@@ -1,26 +1,27 @@
 <template>
   <div>
-    <!-- <b-button v-b-modal.modal-center>Launch centered modal</b-button>
-    <b-modal id="modal-center" centered title="BootstrapVue">
-      <p class="my-4">Vertically centered modal!</p>
-    </b-modal>-->
-    <button v-if="isPolice" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
-    <button v-if="isWaiting" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
-    <button v-if="isVictim" :style="victimButton" @click="victimButtonClick()">{{message}}</button>
-    <router-link v-if="isWaiting" to="/missionComplete"></router-link>
-    <!-- <button v-if="backPolice" :style="policeButton" @click="buttonChecked()">{{policeMessage}}</button>
-    <button v-if="backVictim" :style="victimButton" @click="buttonChecked()">{{victimMessage}}</button>-->
+    <button v-if="isPolice" :style="policeButton" @click="policeButtonClick()">{{pMessage}}</button>
+    <button v-else-if="isWaiting" :style="policeButton" @click="policeButtonClick()">{{message}}</button>
+
+    <button v-else-if="isVictim" :style="victimButton" @click="victimButtonClick()">{{vMessage}}</button>
+    <button
+      v-else-if="isCallVictim"
+      :style="victimButton"
+      @click="victimButtonClick()"
+    >{{vvMessage}}</button>
   </div>
 </template>
 
 <script>
 import { EventBus } from "../../event/eventBus";
-import NearPopUp from "../../view/NearPopUp";
-import NearMissionComplete from "../../view/NearMissionComplete";
+
 export default {
   data() {
     return {
+      vMessage: "출동 배정",
+      pMessage: "출동 대기중",
       message: "출동 배정",
+      vvMessage: "신고 접수",
       policeMessage: "출동 대기중",
       victimMessage: "출동 배정",
       backPolice: false,
@@ -33,6 +34,7 @@ export default {
       policeBackCall: -1,
       waitingCall: 1,
       isVictim: false,
+      isCallVictim: false,
       isPolice: false,
       isWaiting: false,
       isDone: false,
@@ -81,7 +83,6 @@ export default {
         this.isPolice = true;
         this.isWaiting = false;
         this.isVictim = false;
-        // EventBus.$emit("buttonPurple", position);
       } else {
         this.isVictim = true;
         this.isWaiting = false;
@@ -98,6 +99,13 @@ export default {
         this.message = "출동 배정";
       }
     });
+    EventBus.$on("FinishJob", () => {
+      this.vvMessage = "출동 배정";
+      this.vMessage = "출동 배정";
+      this.pMessage = "출동 대기중";
+      this.isCallVictim = false;
+      this.isVictim = true;
+    });
   },
   methods: {
     policeButtonClick() {
@@ -110,16 +118,16 @@ export default {
         EventBus.$emit("changePurple", this.purpleCall, this.markers.id);
         //secondHeader에 출동배정 숫자올리기
         EventBus.$emit("askingPolice", this.waitingCall);
-        this.message = " 확인 중";
         this.isWaiting = true;
         this.isPolice = false;
+        this.message = " 확인 중";
         this.policeBackCALLID = this.markers.id;
       } else if (this.markers.report === true && this.isWaiting === true) {
         // 나중에 서버에서 확인 받는건 NearMap.vue에 경찰 마커 객체에 acceptCall이 true일때 다음 진행하도록 만들자
         // 서버에서 특정값 true값 나오면 뜨게끔 나중에 바꿔야함
         this.isWaiting = false;
         this.isPolice = true;
-        this.message = "출동 중";
+        this.pMessage = "출동 중";
         EventBus.$emit("policeCall", this.policeCall);
         let index = this.markers.id;
         EventBus.$emit("changeBlue", this.blueCall, index);
@@ -133,40 +141,32 @@ export default {
         this.isDone = true;
       } else if (this.markers.report === true && this.isDone === true) {
         this.isDone = false;
-        this.markers.report = !this.markers.report.false;
-        this.message = "출동 대기중 ";
+        this.isPolice = true;
+        this.markers.report = !this.markers.report;
+        // this.message = "출동 대기중 ";
         EventBus.$emit("policeCall", this.policeBackCall);
         let index = this.markers.id;
-        // EventBus.$emit("whiteImage", this.whiteCall, index);
       }
     },
 
     victimButtonClick() {
-      if (this.markers.report === false && this.markers.identity === "victim") {
+      if (this.markers.report === false && this.isVictim === true) {
         this.markers.report = !this.markers.report;
-        this.message = "신고 접수 ";
         this.victimBackCALLID = this.markers.id;
+        this.vMessage = "신고 접수";
         let index = this.markers.id;
         EventBus.$emit("victimCall", this.victimCall, index);
         EventBus.$emit("redImage", this.redCall, index);
         EventBus.$emit("getPosition2", this.markers);
         EventBus.$emit("victimDONE", this.markers, index);
-      } else if (
-        this.markers.report === true &&
-        this.markers.identity === "victim"
-      ) {
-        this.markers.report = !this.markers.report;
-        this.message = "출동 배정 ";
+      } else if (this.markers.report === true && this.isCallVictim === true) {
+        this.vvMessage = "출동 배정 ";
         let index = this.markers.id;
         EventBus.$emit("victimCall", this.victimBackCall, index);
         EventBus.$emit("yellowImage", this.yellowCall, index);
         EventBus.$emit("getPosition2", this.markers);
       }
     }
-  },
-  components: {
-    NearPopUp,
-    NearMissionComplete
   }
 };
 </script>
