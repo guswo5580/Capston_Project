@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Near.Police.App",
+    "name": "Near.User.App",
     "slug": "Near_Police",
     "privacy": "public",
     "sdkVersion": "35.0.0",

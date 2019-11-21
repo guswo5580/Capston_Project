@@ -11,13 +11,15 @@ import {
 import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
 import Color from "../constants/Colors";
+import DeclareModal from "./DeclareModal.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 export default class StartingScreen extends React.Component {
   state = {
-    isActive: false
+    isActive: false,
+    Modal: true
   };
   render() {
     if (this.state.isActive === false) {
@@ -67,6 +69,7 @@ export default class StartingScreen extends React.Component {
               </Animated.Text>
             </TouchableNativeFeedback>
           </View>
+          {this.state.Modal ? <DeclareModal modal={this.state.Modal} /> : null}
         </View>
       );
     } else {
@@ -116,6 +119,7 @@ export default class StartingScreen extends React.Component {
               </Animated.Text>
             </TouchableNativeFeedback>
           </View>
+          {this.state.Modal ? <DeclareModal modal={this.state.Modal} /> : null}
         </View>
       );
     }

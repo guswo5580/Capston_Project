@@ -35,7 +35,7 @@ const height = Dimensions.get("window").height;
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: true
+    declare: false
   };
   // constructor() {
   //   super();
@@ -47,7 +47,7 @@ export default class HomeScreen extends React.Component {
   //       declare: false
   //     });
   //   });
-  }
+  // }
 
   componentDidMount() {
     this.requestLocationPermission();
