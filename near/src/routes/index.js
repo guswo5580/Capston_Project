@@ -11,7 +11,7 @@ export const router = new VueRouter({
 	routes: [
 		{
 			path: '/',
-			redirect: '/flow',
+			redirect: '/popup',
 		},
 
 		{

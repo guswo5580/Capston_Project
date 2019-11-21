@@ -131,6 +131,10 @@ export default {
       }
     });
   }
+  // beforeDestroy() {
+  //   EventBus.$off("getPosition2");
+  //   EventBus.$off("buttonPurple");
+  // }
 };
 </script>
 <style scoped>
