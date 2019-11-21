@@ -13,6 +13,7 @@ import Modal, {
   ModalFooter,
   SlideAnimation
 } from "react-native-modals";
+import EventBus from "react-native-event-bus";
 import Color from "../constants/Colors";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -29,15 +30,19 @@ export default class DeclareModal extends React.Component {
       });
 
       if (this.state.count === 0) {
-        console.log("end");
-        clearInterval(this.counter);
         this.setState({
           slideAnimationModal: false
         });
+        EventBus.getInstance().fireEvent("GrantDeclare", {
+          declare: true
+        });
+        clearInterval(this.counter);
       }
     }, 1000);
   }
-
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener);
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -46,14 +51,14 @@ export default class DeclareModal extends React.Component {
             this.setState({
               slideAnimationModal: false
             });
-          }}
-          onTouchOutside={() => {
-            this.setState({
-              slideAnimationModal: false
+            EventBus.getInstance().fireEvent("CancleDeclare", {
+              notification: false
             });
+            clearInterval(this.counter);
           }}
           swipeDirection="down"
           onSwipeOut={() => {
+            clearInterval(this.counter);
             this.setState({
               slideAnimationModal: false
             });
@@ -121,6 +126,10 @@ export default class DeclareModal extends React.Component {
                 this.setState({
                   slideAnimationModal: false
                 });
+                EventBus.getInstance().fireEvent("CancleDeclare", {
+                  notification: false
+                });
+                clearInterval(this.counter);
               }}
             >
               <Text style={styles.closeBtnText}>신고 취소</Text>

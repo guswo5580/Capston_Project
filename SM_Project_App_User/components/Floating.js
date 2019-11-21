@@ -16,6 +16,7 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 
+import EventBus from "react-native-event-bus";
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
 import SelectModal from "./UserModal";
@@ -106,6 +107,11 @@ export default class FloatingandModal extends React.Component {
                 this.setState({
                   slideAnimationModal: true
                 });
+              } else if (text === "cancle") {
+                EventBus.getInstance().fireEvent("CancleDeclare", {
+                  declare: false,
+                  status: false
+                });
               } else {
                 Alert.alert("Icon pressed", `the icon ${text} was pressed`);
               }
@@ -193,7 +199,10 @@ export default class FloatingandModal extends React.Component {
             actionsPaddingTopBottom={2}
             distanceToEdge={20}
             onPressItem={text => {
-              Alert.alert("Icon pressed", `the icon ${text} was pressed`);
+              EventBus.getInstance().fireEvent("CancleDeclare", {
+                declare: false,
+                status: false
+              });
             }}
           />
         </View>

@@ -5,10 +5,12 @@ import {
   Text,
   View,
   Dimensions,
-  Platform
+  Platform,
+  Alert
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
+import EventBus from "react-native-event-bus";
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartScreen";
@@ -24,12 +26,37 @@ const height = Dimensions.get("window").height;
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: true, //false = 신고가 들어가기 전, true는 신고가 들어간 후 모달 화면
+    declare: false, //false = 신고가 들어가기 전, true는 신고가 들어간 후 모달 화면
     status: false //false = 신고 접수 중, true = 출동 중
   };
 
+  ////////////////////////////////////////////////////////////////////
+  ////////소켓 통신으로 신호를 받으면 status를 true로 변경
+  ///////////////////////////////////////////////////////////////////
+
   componentDidMount() {
     this.requestLocationPermission();
+    EventBus.getInstance().addListener(
+      "GrantDeclare",
+      (this.listener = data => {
+        this.setState({
+          declare: true
+        });
+      })
+    );
+    EventBus.getInstance().addListener(
+      "CancleDeclare",
+      (this.listener = data => {
+        this.setState({
+          declare: false,
+          status: false
+        });
+      })
+    );
+  }
+
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener);
   }
 
   requestLocationPermission = async () => {

@@ -6,7 +6,8 @@ import {
   View,
   Dimensions,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import Modal, {
@@ -14,6 +15,8 @@ import Modal, {
   ModalFooter,
   SlideAnimation
 } from "react-native-modals";
+
+import EventBus from "react-native-event-bus";
 import * as Permissions from "expo-permissions";
 import UserHeader from "./UserHeader";
 import DeclareModal from "./DeclareModal";
@@ -25,11 +28,12 @@ const height = Dimensions.get("window").height;
 
 export default class StartScreen extends React.Component {
   state = {
-    notification: false //true = 신고 접수되어 모달 등장
+    notification: true //true = 신고 접수되어 모달 등장
   };
-  componentDidMount() {
-    this.requestLocationPermission();
-  }
+
+  //////////////////////////////////////////////////
+  //라즈베리파이 소켓 통신을 통해 notification을 true로 변경
+  //////////////////////////////////////////////////
 
   requestLocationPermission = async () => {
     const { status } = await Permissions.getAsync(Permissions.LOCATION);
@@ -56,6 +60,20 @@ export default class StartScreen extends React.Component {
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 }
     );
   };
+
+  componentDidMount() {
+    EventBus.getInstance().addListener(
+      "CancleDeclare",
+      (this.listener = data => {
+        this.setState({
+          notification: false
+        });
+      })
+    );
+  }
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener);
+  }
 
   render() {
     return (
