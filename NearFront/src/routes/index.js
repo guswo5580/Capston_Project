@@ -16,15 +16,18 @@ export const router = new VueRouter({
 
 		{
 			path: '/popup',
+			name: 'popup',
 			component: NearPopUp,
 		},
 
 		{
 			path: '/missionComplete',
+			name: 'missionComplete',
 			component: NearMissionComplete,
 		},
 		{
 			path: '/flow',
+			name: 'flow',
 			component: NearFlow,
 		},
 	],
