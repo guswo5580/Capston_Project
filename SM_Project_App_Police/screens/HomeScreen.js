@@ -61,6 +61,15 @@ export default class HomeScreen extends React.Component {
         });
       })
     );
+    EventBus.getInstance().addListener(
+      "BackToStartScreen",
+      (this.listener = data => {
+        // console.log(data);
+        this.setState({
+          declare: false
+        });
+      })
+    );
   }
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);

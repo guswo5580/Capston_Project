@@ -16,6 +16,9 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 
+//////Import EventBus//////
+import EventBus from "react-native-event-bus";
+
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
 import SelectModal from "./UserModal";
@@ -28,6 +31,7 @@ export default class FloatingandModal extends React.Component {
     slideAnimationModal: false,
     userModal: false,
     finishModal: false,
+    SendMessage: false,
     actions: [
       {
         text: "신고자 전화",
@@ -84,6 +88,13 @@ export default class FloatingandModal extends React.Component {
     ]
   };
 
+  componentDidUpdate() {
+    if (this.state.SendMessage === true) {
+      EventBus.getInstance().fireEvent("BackToStartScreen", {
+        declare: false
+      });
+    }
+  }
   render() {
     return (
       <View style={styles.Floatingcontainer}>
@@ -172,7 +183,8 @@ export default class FloatingandModal extends React.Component {
                 } else {
                   this.setState({
                     slideAnimationModal: false,
-                    finishModal: false
+                    finishModal: false,
+                    SendMessage: true
                   });
                 }
               }}

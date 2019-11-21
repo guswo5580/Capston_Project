@@ -22,7 +22,7 @@ export default class StartingScreen extends React.Component {
     Modal: true
   };
 
-  //소켓 통신으로 DeclareModal 부르기
+  //소켓 통신으로 Modal을 true로  부르기
 
   render() {
     if (this.state.isActive === false) {

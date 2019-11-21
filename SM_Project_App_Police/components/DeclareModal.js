@@ -40,11 +40,6 @@ export default class DeclareModal extends React.Component {
               declare: true
             });
           }}
-          onTouchOutside={() => {
-            this.setState({
-              slideAnimationModal: false
-            });
-          }}
           swipeDirection="down"
           onSwipeOut={() => {
             this.setState({
