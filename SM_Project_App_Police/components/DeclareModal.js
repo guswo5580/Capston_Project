@@ -15,6 +15,9 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 
+//////Import EventBus//////
+import EventBus from "react-native-event-bus";
+
 import Color from "../constants/Colors";
 
 const width = Dimensions.get("window").width;
@@ -32,6 +35,9 @@ export default class DeclareModal extends React.Component {
           onDismiss={() => {
             this.setState({
               slideAnimationModal: false
+            });
+            EventBus.getInstance().fireEvent("ShowMainPage", {
+              declare: true
             });
           }}
           onTouchOutside={() => {
@@ -107,7 +113,7 @@ export default class DeclareModal extends React.Component {
                 });
               }}
             >
-              <Text style={styles.closeBtnText}>닫기</Text>
+              <Text style={styles.closeBtnText}>출동 접수</Text>
             </TouchableOpacity>
           </ModalFooter>
         </Modal>

@@ -19,7 +19,8 @@ import MapView, {
 //////io 위치는 상황에 따라 변경 가능/////
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client/dist/socket.io";
-
+//////Import EventBus//////
+import EventBus from "react-native-event-bus";
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartScreen";
@@ -51,6 +52,18 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     this.requestLocationPermission();
+    EventBus.getInstance().addListener(
+      "ShowMainPage",
+      (this.listener = data => {
+        // console.log(data);
+        this.setState({
+          declare: true
+        });
+      })
+    );
+  }
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener);
   }
 
   requestLocationPermission = async () => {
