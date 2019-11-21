@@ -1,264 +1,269 @@
 <template>
-  <div>
-    <!-- <gmap-map
+	<div>
+		<!-- <gmap-map
       ref="gmap"
       :center="{lat:currentLocation.lat, lng:currentLocation.lng}"
       :zoom="8"
       style="width:100%;  height: 100vh;"
       @click="geolocation"
     >-->
-    <gmap-map
-      ref="gmap"
-      :center="{lat:currentLocation.lat, lng:currentLocation.lng}"
-      :zoom="8"
-      style="width:100%;  height: 100vh;"
-    >
-      <gmap-marker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :icon="m.icon"
-        @click="toggleInfoWindow(m,index)"
-      ></gmap-marker>
+		<gmap-map
+			ref="gmap"
+			:center="{ lat: currentLocation.lat, lng: currentLocation.lng }"
+			:zoom="8"
+			style="width:100%;  height: 100vh;"
+		>
+			<gmap-marker
+				:key="index"
+				v-for="(m, index) in markers"
+				:position="m.position"
+				:icon="m.icon"
+				@click="toggleInfoWindow(m, index)"
+			></gmap-marker>
 
-      <gmap-info-window
-        :options="infoOptions"
-        :position="infoWindowPos"
-        :opened="infoWinOpen"
-        @closeclick="infoWinOpen=false"
-      >
-        <div v-html="infoContent" @Click="changedInfo()"></div>
-        <NearChart v-if="clickedVictim"></NearChart>
-        <NearMapModal></NearMapModal>
-      </gmap-info-window>
-    </gmap-map>
-  </div>
+			<gmap-info-window
+				:options="infoOptions"
+				:position="infoWindowPos"
+				:opened="infoWinOpen"
+				@closeclick="infoWinOpen = false"
+			>
+				<div v-html="infoContent" @Click="changedInfo()"></div>
+				<NearChart v-if="clickedVictim"></NearChart>
+				<NearMapModal></NearMapModal>
+			</gmap-info-window>
+		</gmap-map>
+	</div>
 </template>
 <script>
 /* global google */
 
-import { EventBus } from "../event/eventBus";
-import NearMapModal from "./common/NearMapModal";
-import NearChart from "./common/NearChart";
-import NearMissionComplete from "../view/NearMissionComplete";
-import NearMPopUp from "../view/NearPopUp";
+import { EventBus } from '../event/eventBus';
+import NearMapModal from './common/NearMapModal';
+import NearChart from './common/NearChart';
+import NearMissionComplete from '../view/NearMissionComplete';
+import NearMPopUp from '../view/NearPopUp';
 export default {
-  name: "GoogleMap",
-  data() {
-    return {
-      currentLocation: { lat: 0, lng: 0 },
-      map: null,
-      infoContent: "",
-      infoWindowPos: {
-        lat: 0,
-        lng: 0
-      },
-      infoWinOpen: false,
-      currentMidx: null,
-      countCall: 1,
-      //
-      infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35
-        }
-      },
-      callfunction: false,
-      markers: [
-        {
-          id: 0,
-          name: "유승훈(남)",
-          age: "27 (9301027)",
-          bloodType: "O형 (RH+)",
-          position: { lat: 37.546497, lng: 127.069922 },
-          info: "조선실세 사건 증인 보호 중",
-          img: "MrYoo.jpeg",
-          report: false,
-          identity: "victim",
-          icon: { url: "testYellow.png" }
-        },
-        {
-          id: 1,
-          name: "박원형(남)",
-          workArea: "둔촌 파출소",
-          class: "경위",
-          bloodType: "AB형(RH++)",
-          position: { lat: 37.54817, lng: 127.069234 },
-          img: "Police.jpg",
-          report: false,
-          waitingCall: false,
-          acceptCall: false,
-          finishCall: false,
-          identity: "police",
-          icon: { url: "testtest.png" }
-        },
-        {
-          id: 2,
-          name: "House of Johannes Cele",
-          age: "age 3",
-          bloodType: "",
-          position: { lat: 37.539704, lng: 127.065603 },
-          img: "MrYoo.jpeg",
-          report: false,
-          identity: "victim",
-          icon: { url: "yellow.ico" }
-        },
-        {
-          id: 3,
-          name: "House of Johannes Cele",
-          age: "age 4",
-          bloodType: "",
-          position: { lat: 37.537928, lng: 127.071459 },
-          img: "MrYoo.jpeg",
-          report: false,
-          identity: "victim",
-          icon: { url: "yellow.ico" }
-        },
-        {
-          id: 4,
-          name: "김장수(남)",
-          workArea: "둔촌 파출소",
-          class: "경위",
-          bloodType: "O형(RH++)",
-          position: { lat: 37.545344, lng: 127.07664 },
-          img: "Police.jpg",
-          report: false,
-          waitingCall: false,
-          acceptCall: false,
-          finishCall: false,
-          identity: "police",
-          icon: { url: "white.png" }
-        },
-        {
-          id: 5,
-          name: "이지광(남)",
-          workArea: "둔촌 파출소",
-          class: "경위",
-          bloodType: "A형(RH++)",
-          position: { lat: 37.54921, lng: 127.09006 },
-          img: "Police.jpg",
-          report: false,
-          waitingCall: false,
-          acceptCall: false,
-          finishCall: false,
-          identity: "police",
-          icon: { url: "white.png" }
-        },
-        {
-          id: 6,
-          name: "김목수(남)",
-          workArea: "둔촌 파출소",
-          class: "경위",
-          bloodType: "B형(RH++)",
-          position: { lat: 37.551836, lng: 127.077932 },
-          img: "Police.jpg",
-          report: false,
-          waitingCall: false,
-          acceptCall: false,
-          finishCall: false,
-          identity: "police",
-          icon: { url: "white.png" }
-        },
-        {
-          id: 7,
-          name: "최태형(남)",
-          workArea: "둔촌 파출소",
-          class: "경위",
-          bloodType: "O형(RH++)",
-          position: { lat: 37.545313, lng: 127.062799 },
-          img: "Police.jpg",
-          report: false,
-          waitingCall: false,
-          acceptCall: false,
-          finishCall: false,
-          identity: "police",
-          icon: { url: "white.png" }
-        }
-      ],
-      clickedPosition: { lat: 0, lng: 0 },
-      clickedPolice: false,
-      clickedVictim: false,
-      componentKey: 0,
-      purpleCall: "purple.ico",
-      waitingCall: 1,
-      policeBackID: "",
-      victimBackID: ""
-    };
-  },
-  created() {
-    EventBus.$on("redImage", (redCall, number) => {
-      console.log(redCall);
-      this.markers[number].icon = redCall;
-    }),
-      EventBus.$on("yellowImage", (yellowCall, number) => {
-        this.markers[number].icon = yellowCall;
-      }),
-      EventBus.$on("changeBlue", (blueCall, number) => {
-        this.markers[number].icon = blueCall;
-      }),
-      EventBus.$on("whiteImage", (whiteCall, number) => {
-        console.log(whiteCall);
-        this.markers[number].icon = whiteCall;
-      }),
-      //사건완료시 경찰, 사용자 색 원래대로 돌리기
-      EventBus.$on("backYellow", victimBackId => {
-        this.victimBackID = victimBackId;
-        console.log(this.victimBackID);
-        console.log("backYellow Call! ", this.victimBackID);
-        this.markers[victimBackId].icon = "yellow.ico";
-      }),
-      EventBus.$on("backWhite", policeBackId => {
-        console.log(policeBackId);
-        this.markers[policeBackId].icon = "white.png";
-      }),
-      EventBus.$on("changePurple", (purpleCall, index) => {
-        console.log(this.markers[index].icon);
-        this.markers[index].icon = purpleCall;
-      });
-  },
-  mounted() {
-    this.$refs.gmap.$mapPromise.then(map => {
-      const bounds = new google.maps.LatLngBounds();
-      for (let m of this.markers) {
-        bounds.extend(m.position);
-      }
-      map.fitBounds(bounds);
-    });
-  },
-  methods: {
-    toggleInfoWindow: function(marker, idx) {
-      this.infoWindowPos = marker.position;
-      this.infoContent = this.getInfoWindowContent(marker);
+	name: 'GoogleMap',
+	data() {
+		return {
+			currentLocation: { lat: 0, lng: 0 },
+			map: null,
+			infoContent: '',
+			infoWindowPos: {
+				lat: 0,
+				lng: 0,
+			},
+			infoWinOpen: false,
+			currentMidx: null,
+			countCall: 1,
+			//
+			infoOptions: {
+				pixelOffset: {
+					width: 0,
+					height: -35,
+				},
+			},
+			callfunction: false,
+			markers: [
+				{
+					id: 0,
+					name: '유승훈(남)',
+					age: '27 (9301027)',
+					bloodType: 'O형 (RH+)',
+					position: { lat: 37.546497, lng: 127.069922 },
+					info: '조선실세 사건 증인 보호 중',
+					img: 'MrYoo.jpeg',
+					report: false,
+					identity: 'victim',
+					icon: { url: 'yellow.png' },
+				},
+				{
+					id: 1,
+					name: '박원형(남)',
+					workArea: '둔촌 파출소',
+					class: '경위',
+					bloodType: 'AB형(RH++)',
+					position: { lat: 37.54817, lng: 127.069234 },
+					img: 'Police.jpg',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+				{
+					id: 2,
+					name: 'House of Johannes Cele',
+					age: 'age 3',
+					bloodType: '',
+					position: { lat: 37.539704, lng: 127.065603 },
+					img: 'MrYoo.jpeg',
+					report: false,
+					identity: 'victim',
+					icon: { url: 'yellow.png' },
+				},
+				{
+					id: 3,
+					name: 'House of Johannes Cele',
+					age: 'age 4',
+					bloodType: '',
+					position: { lat: 37.537928, lng: 127.071459 },
+					img: 'MrYoo.jpeg',
+					report: false,
+					identity: 'victim',
+					icon: { url: 'yellow.png' },
+				},
+				{
+					id: 4,
+					name: '김장수(남)',
+					workArea: '둔촌 파출소',
+					class: '경위',
+					bloodType: 'O형(RH++)',
+					position: { lat: 37.545344, lng: 127.07664 },
+					img: 'Police.jpg',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+				{
+					id: 5,
+					name: '이지광(남)',
+					workArea: '둔촌 파출소',
+					class: '경위',
+					bloodType: 'A형(RH++)',
+					position: { lat: 37.54921, lng: 127.09006 },
+					img: 'Police.jpg',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+				{
+					id: 6,
+					name: '김목수(남)',
+					workArea: '둔촌 파출소',
+					class: '경위',
+					bloodType: 'B형(RH++)',
+					position: { lat: 37.551836, lng: 127.077932 },
+					img: 'Police.jpg',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+				{
+					id: 7,
+					name: '최태형(남)',
+					workArea: '둔촌 파출소',
+					class: '경위',
+					bloodType: 'O형(RH++)',
+					position: { lat: 37.545313, lng: 127.062799 },
+					img: 'Police.jpg',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+			],
+			clickedPosition: { lat: 0, lng: 0 },
+			clickedPolice: false,
+			clickedVictim: false,
+			componentKey: 0,
+			purpleCall: 'purple.png',
+			waitingCall: 1,
+			policeBackID: '',
+			victimBackID: '',
+		};
+	},
+	created() {
+		EventBus.$on('redImage', (redCall, number) => {
+			console.log(redCall);
+			this.markers[number].icon = redCall;
+		}),
+			EventBus.$on('yellowImage', (yellowCall, number) => {
+				this.markers[number].icon = yellowCall;
+			}),
+			EventBus.$on('changeBlue', (blueCall, number) => {
+				this.markers[number].icon = blueCall;
+			}),
+			EventBus.$on('whiteImage', (whiteCall, number) => {
+				console.log(whiteCall);
+				this.markers[number].icon = whiteCall;
+			}),
+			//사건완료시 경찰, 사용자 색 원래대로 돌리기
+			EventBus.$on('backYellow', victimBackId => {
+				this.victimBackID = victimBackId;
+				console.log(this.victimBackID);
+				console.log('backYellow Call! ', this.victimBackID);
+				this.markers[victimBackId].icon = 'yellow.png';
+			}),
+			EventBus.$on('backWhite', policeBackId => {
+				console.log(policeBackId);
+				this.markers[policeBackId].icon = 'white.png';
+			}),
+			EventBus.$on('changePurple', (purpleCall, index) => {
+				console.log(this.markers[index].icon);
+				this.markers[index].icon = purpleCall;
+			}),
+			EventBus.$on('FinishJob', (pid, vid) => {
+				console.log(pid, vid);
+				this.markers[pid].report = false;
+				this.markers[vid].report = false;
+			});
+	},
+	mounted() {
+		this.$refs.gmap.$mapPromise.then(map => {
+			const bounds = new google.maps.LatLngBounds();
+			for (let m of this.markers) {
+				bounds.extend(m.position);
+			}
+			map.fitBounds(bounds);
+		});
+	},
+	methods: {
+		toggleInfoWindow: function(marker, idx) {
+			this.infoWindowPos = marker.position;
+			this.infoContent = this.getInfoWindowContent(marker);
 
-      if (this.currentMidx == idx) {
-        this.infoWinOpen = !this.infoWinOpen;
-      } else {
-        this.infoWinOpen = true;
-        this.currentMidx = idx;
-      }
-    },
-    geolocation: function() {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.currentLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-      });
-    },
+			if (this.currentMidx == idx) {
+				this.infoWinOpen = !this.infoWinOpen;
+			} else {
+				this.infoWinOpen = true;
+				this.currentMidx = idx;
+			}
+		},
+		geolocation: function() {
+			navigator.geolocation.getCurrentPosition(position => {
+				this.currentLocation = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude,
+				};
+			});
+		},
 
-    getInfoWindowContent: function(marker, countCall) {
-      this.clickedPosition = marker;
-      EventBus.$emit(
-        "getPosition",
-        this.clickedPosition,
-        this.countCall,
-        this.clickedPosition.id
-      );
-      let userImg = JSON.stringify(marker.img);
+		getInfoWindowContent: function(marker, countCall) {
+			this.clickedPosition = marker;
+			EventBus.$emit(
+				'getPosition',
+				this.clickedPosition,
+				this.countCall,
+				this.clickedPosition.id
+			);
+			let userImg = JSON.stringify(marker.img);
 
-      if (marker.identity === "police") {
-        this.clickedVictim = false;
-        return `<div>
+			if (marker.identity === 'police') {
+				this.clickedVictim = false;
+				return `<div>
             <div >
                 <img  src=${userImg} align="left" width="128px" height="128px" class="imgMv">
                 <div class="policeFrontContents">이름    <span class="policeBackContents">${marker.name}</span></div>
@@ -269,10 +274,10 @@ export default {
           </div>
           <div class="dv"></div>
           </div>`;
-      } else {
-        this.clickedPolice = false;
-        this.clickedVictim = true;
-        return `<div>
+			} else {
+				this.clickedPolice = false;
+				this.clickedVictim = true;
+				return `<div>
             <div>
                 <img  src=${userImg} align="left" width="106.2px" height="141.6px" class="imgMv" >
                 <div class="contents-word">이름    <span class="contents-dword">${marker.name}</span></div>
@@ -284,102 +289,102 @@ export default {
             </div>
           </div>
           </div>`;
-      }
-    }
-  },
-  components: {
-    NearMapModal,
-    NearChart,
-    NearMissionComplete,
-    NearMPopUp
-  }
+			}
+		},
+	},
+	components: {
+		NearMapModal,
+		NearChart,
+		NearMissionComplete,
+		NearMPopUp,
+	},
 };
 </script>
 
-<style  >
+<style>
 .information {
-  text-align: center;
-  text-decoration: bold;
+	text-align: center;
+	text-decoration: bold;
 }
 .move {
-  width: 100%;
-  height: 20px;
-  margin-top: 20px;
-  background-color: red;
-  color: white;
+	width: 100%;
+	height: 20px;
+	margin-top: 20px;
+	background-color: red;
+	color: white;
 }
 .gm-style-iw-d {
-  width: 50vh;
-  height: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+	width: 50vh;
+	height: 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 }
 
 .gm-style-iw.gm-style-iw-c {
-  padding-left: 20px;
+	padding-left: 20px;
 }
 .image,
 is-4by3 {
-  width: auto;
+	width: auto;
 }
 .top {
-  display: inline-block;
+	display: inline-block;
 }
 div.card-image {
-  width: 50px;
+	width: 50px;
 }
 
 .contents {
-  text-align: left;
+	text-align: left;
 }
 .contents-word {
-  font-size: 17px;
-  font-weight: bold;
-  padding-left: 10px;
-  padding-bottom: 3px;
-  padding-top: 7px;
-  margin: 7px;
+	font-size: 17px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-bottom: 3px;
+	padding-top: 7px;
+	margin: 7px;
 }
 .contents-dword {
-  font-weight: lighter;
-  padding-left: 20px;
-  justify-content: center;
-  align-items: center;
-  vertical-align: middle;
+	font-weight: lighter;
+	padding-left: 20px;
+	justify-content: center;
+	align-items: center;
+	vertical-align: middle;
 }
 
 .divChange {
-  height: -40px;
+	height: -40px;
 
-  padding-bottom: 9px;
-  color: lightgray;
-  width: 100%;
-  border-bottom: 2px;
-  border-bottom-style: inset;
+	padding-bottom: 9px;
+	color: lightgray;
+	width: 100%;
+	border-bottom: 2px;
+	border-bottom-style: inset;
 }
 .policeFrontContents {
-  font-weight: bold;
+	font-weight: bold;
 
-  font-size: 17px;
-  margin: 14.5px;
-  /* margin: 10; */
-  /* padding-left: 10px;
+	font-size: 17px;
+	margin: 14.5px;
+	/* margin: 10; */
+	/* padding-left: 10px;
   padding-bottom: 3px; */
 }
 .policeBackContents {
-  font-weight: lighter;
-  padding-left: 20px;
-  justify-content: center;
-  align-items: center;
-  vertical-align: middle;
+	font-weight: lighter;
+	padding-left: 20px;
+	justify-content: center;
+	align-items: center;
+	vertical-align: middle;
 }
 .dv {
-  /* width: 100%;
+	/* width: 100%;
   height: 100%; */
-  padding: 5px;
+	padding: 5px;
 }
 .imgMv {
-  margin-right: 20px;
+	margin-right: 20px;
 }
 </style>
