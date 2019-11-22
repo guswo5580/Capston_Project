@@ -8,6 +8,7 @@ import {
   View,
   Animated
 } from "react-native";
+
 import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
 import Color from "../constants/Colors";

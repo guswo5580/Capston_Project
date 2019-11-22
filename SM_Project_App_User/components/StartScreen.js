@@ -62,6 +62,9 @@ export default class StartScreen extends React.Component {
   };
 
   componentDidMount() {
+    this.requestLocationPermission();
+  }
+  componentDidUpdate() {
     EventBus.getInstance().addListener(
       "CancleDeclare",
       (this.listener = data => {

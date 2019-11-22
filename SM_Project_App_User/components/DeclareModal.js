@@ -19,6 +19,7 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 export default class DeclareModal extends React.Component {
+  notification = true;
   state = {
     slideAnimationModal: true,
     count: 15
@@ -28,20 +29,22 @@ export default class DeclareModal extends React.Component {
       this.setState({
         count: this.state.count - 1
       });
-
-      if (this.state.count === 0) {
-        this.setState({
-          slideAnimationModal: false
-        });
-        EventBus.getInstance().fireEvent("GrantDeclare", {
-          declare: true
-        });
-        clearInterval(this.counter);
-      }
     }, 1000);
   }
+  async componentDidUpdate() {
+    if (this.state.count === 0) {
+      await clearInterval(this.counter);
+      await this.setState({
+        slideAnimationModal: false
+      });
+      EventBus.getInstance().fireEvent("GrantDeclare", {
+        count: this.state.count
+      });
+    }
+  }
   componentWillUnmount() {
-    EventBus.getInstance().removeListener(this.listener);
+    clearInterval(this.counter);
+    this.notification = true;
   }
   render() {
     return (
@@ -50,9 +53,6 @@ export default class DeclareModal extends React.Component {
           onDismiss={() => {
             this.setState({
               slideAnimationModal: false
-            });
-            EventBus.getInstance().fireEvent("CancleDeclare", {
-              notification: false
             });
             clearInterval(this.counter);
           }}
@@ -122,14 +122,15 @@ export default class DeclareModal extends React.Component {
           <ModalFooter>
             <TouchableOpacity
               style={styles.closeBtn}
-              onPress={() => {
-                this.setState({
+              onPress={async () => {
+                console.log("Click");
+                await clearInterval(this.counter);
+                await this.setState({
                   slideAnimationModal: false
                 });
                 EventBus.getInstance().fireEvent("CancleDeclare", {
-                  notification: false
+                  notification: this.notification
                 });
-                clearInterval(this.counter);
               }}
             >
               <Text style={styles.closeBtnText}>신고 취소</Text>
