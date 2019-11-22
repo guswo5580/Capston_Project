@@ -110,8 +110,8 @@ export default class DeclareModal extends React.Component {
                   style={{
                     fontSize: 12,
                     fontWeight: "bold",
-                    color: Color.lightgray,
-                    marginTop: 10
+                    color: Color.lightgray
+                    // marginTop: 10
                   }}
                 >
                   응답이 없으면 자동으로 신고 처리가 됩니다.
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
 
   modalContainer: {
     width: width * 0.85,
-    height: height * 0.43 - 120
+    height: height * 0.43 - 150
   },
   closeBtn: {
     width: width * 0.85,

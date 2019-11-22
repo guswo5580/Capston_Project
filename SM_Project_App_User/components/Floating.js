@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   ContentMessage: {
     flex: 1,
-    marginTop: 20
+    marginTop: 30
   },
   Message: {
     fontSize: 14,
