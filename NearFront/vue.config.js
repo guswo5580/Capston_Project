@@ -2,7 +2,7 @@ module.exports = {
 	devServer: {
 		proxy: {
 			'/': {
-				target: 'http://localhost:3000/',
+				target: 'http://localhost:7499/flow',
 				changeOrigin: true,
 			},
 		},

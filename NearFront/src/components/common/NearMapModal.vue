@@ -1,9 +1,5 @@
 <template>
 	<div>
-		<!-- <b-button v-b-modal.modal-center>Launch centered modal</b-button>
-    <b-modal id="modal-center" centered title="BootstrapVue">
-      <p class="my-4">Vertically centered modal!</p>
-    </b-modal>-->
 		<button v-if="isPolice" :style="policeButton" @click="policeButtonClick()">
 			{{ pMessage }}
 		</button>
@@ -13,9 +9,6 @@
 		<button v-if="isVictim" :style="victimButton" @click="victimButtonClick()">
 			{{ vMessage }}
 		</button>
-		<router-link v-if="isWaiting" to="/missionComplete"></router-link>
-		<!-- <button v-if="backPolice" :style="policeButton" @click="buttonChecked()">{{policeMessage}}</button>
-    <button v-if="backVictim" :style="victimButton" @click="buttonChecked()">{{victimMessage}}</button>-->
 	</div>
 </template>
 
@@ -23,9 +16,13 @@
 import { EventBus } from '../../event/eventBus';
 import NearPopUp from '../../view/NearPopUp';
 import NearMissionComplete from '../../view/NearMissionComplete';
+import io from 'socket.io-client';
+
+// let socket = io();
 export default {
 	data() {
 		return {
+			// socket: io('localhost:7499/flow'),
 			vMessage: '출동 배정',
 			pMessage: '출동 대기중',
 			message: '출동 배정',
@@ -110,6 +107,11 @@ export default {
 				this.pMessage = '출동 대기중';
 				this.isPolice = true;
 			});
+			// this.socket.on('POLICE_RECALL', () => {
+			// 	console.log('Received!');
+			// 	this.isWaiting = false;
+			// 	this.isPolice = false;
+			// });
 		});
 	},
 	methods: {
@@ -128,12 +130,15 @@ export default {
 				this.isWaiting = true;
 				this.isPolice = false;
 				this.policeBackCALLID = this.markers.id;
+
+				const socket = io('http://192.168.35.68:7499');
+				socket.emit('POLICE_CALL', console.log('YES!'));
 			} else if (this.markers.report === true && this.isWaiting === true) {
 				// 나중에 서버에서 확인 받는건 NearMap.vue에 경찰 마커 객체에 acceptCall이 true일때 다음 진행하도록 만들자
 				// 서버에서 특정값 true값 나오면 뜨게끔 나중에 바꿔야함
-				this.isWaiting = false;
+				// this.isWaiting = false;
 				//출동 중 일때 버튼 나타내기
-				this.isPolice = true;
+				// this.isPolice = true;
 				this.pMessage = '출동 중';
 				//Second Header에 숫자 변경
 				EventBus.$emit('policeCall', this.policeCall);
@@ -174,6 +179,12 @@ export default {
 				EventBus.$emit('getPosition2', this.markers);
 			}
 		},
+		// callSocket() {
+		// 	console.log('hello#@#!');
+		// 	this.socket.emit('POLICE_MESSAGE', () => {
+		// 		console.log('hello!');
+		// 	});
+		// },
 	},
 	components: {
 		NearPopUp,

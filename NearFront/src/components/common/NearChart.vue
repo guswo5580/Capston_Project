@@ -22,7 +22,7 @@ export default {
 		return {
 			componentKey: 0,
 			bpm: {
-				paddingLeft: '260px',
+				paddingLeft: '290px',
 				fontWeight: 'bold',
 				fontSize: '25px',
 			},

@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 
 router.get('/', (req, res, next) => {
-	res.sendFile(path.join(__dirname, '../../NearFront/dist/index.js'));
+	res.sendFile(path.join(__dirname, '../../NearFront/dist/index.html'));
 });
 
 module.exports = router;
