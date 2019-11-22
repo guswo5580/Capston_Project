@@ -40,30 +40,32 @@ export default class SelectModal extends React.Component {
               <View style={styles.modalText}>
                 <View style={styles.repeatContent}>
                   <Text style={styles.TextTitle}>이름</Text>
-                  <Text style={styles.TextInfo}>조현재</Text>
+                  <Text style={styles.TextInfo}>유승훈</Text>
                 </View>
                 <View style={styles.repeatContent}>
                   <Text style={styles.TextTitle}>나이</Text>
-                  <Text style={styles.TextInfo}>26세, 1994년 03월 08일</Text>
+                  <Text style={styles.TextInfo}>27 (19931027)</Text>
                 </View>
                 <View style={styles.repeatContent}>
                   <Text style={styles.TextTitle}>혈액형</Text>
-                  <Text style={styles.TextInfo}>B형(RH+)</Text>
+                  <Text style={styles.TextInfo}>O형(RH+)</Text>
                 </View>
                 <View style={styles.repeatContent}>
                   <Text style={styles.TextTitle}>정보</Text>
-                  <Text style={styles.TextInfo}>캡스톤 개발 고통 중</Text>
+                  <Text style={styles.TextInfo}>
+                    조선실세 사건 증인 보호 중
+                  </Text>
                 </View>
                 <View style={styles.repeatContentLast}>
                   <Text style={styles.TextTitleLast}>현재 심장박동</Text>
-                  <Text style={styles.TextInfoLast}>보통(164bpm)</Text>
+                  <Text style={styles.TextInfoLast}>보통(87bpm)</Text>
                 </View>
               </View>
             </View>
             <View style={styles.modalSub}>
               <View style={styles.repeatContentSub}>
                 <Text style={styles.TextTitleSub}>이름</Text>
-                <Text style={styles.TextInfoSub}>조현재</Text>
+                <Text style={styles.TextInfoSub}>유승훈</Text>
               </View>
               <View style={styles.repeatContentSub}>
                 <Text style={styles.TextTitleSub}>연락처</Text>
@@ -84,7 +86,7 @@ export default class SelectModal extends React.Component {
         <ModalContent style={styles.finishModal}>
           <View style={styles.finishModalContent}>
             <Text>
-              <Text style={{ fontWeight: "bold" }}>조현재(26세, 남)</Text>
+              <Text style={{ fontWeight: "bold" }}>유승훈(27세, 남)</Text>
               <Text>신고자 사건의</Text>
             </Text>
             <Text>완료 알림을 보냈습니다</Text>

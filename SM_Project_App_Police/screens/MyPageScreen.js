@@ -17,7 +17,7 @@ export default function MyPageScreen() {
       <View style={styles.header}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerMain}>내정보</Text>
-          <Text style={styles.headerSub}>서울 강동 경찰서 관할</Text>
+          <Text style={styles.headerSub}>광진 경찰서 관할</Text>
         </View>
       </View>
 
@@ -40,7 +40,7 @@ export default function MyPageScreen() {
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>소속</Text>
-              <Text style={styles.Information}>둔춘 파출소</Text>
+              <Text style={styles.Information}>광진 파출소</Text>
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>계급</Text>

@@ -48,7 +48,7 @@ export default function MyPageScreen() {
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>설명</Text>
-              <Text style={styles.Information}>캡스톤 고통 보호 중</Text>
+              <Text style={styles.Information}>조선실세 사건 증인 보호 중</Text>
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>연락처</Text>
@@ -56,7 +56,7 @@ export default function MyPageScreen() {
             </View>
             <View style={styles.InfoContent}>
               <Text style={styles.title}>혈액형</Text>
-              <Text style={styles.Information}>A(RH+)</Text>
+              <Text style={styles.Information}>O(RH+)</Text>
             </View>
           </View>
         </View>
