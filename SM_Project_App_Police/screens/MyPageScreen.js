@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     // position: "relative",
     // padding: 5,
     width: width / 5,
-    height: height / 3.5,
+    height: height / 4,
     marginLeft: 10
   },
   InfoContainer: {

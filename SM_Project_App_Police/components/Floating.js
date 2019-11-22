@@ -13,6 +13,7 @@ import {
 import Modal, {
   ModalContent,
   ModalFooter,
+  ModalButton,
   SlideAnimation
 } from "react-native-modals";
 
@@ -171,27 +172,55 @@ export default class FloatingandModal extends React.Component {
             userModal={this.state.userModal}
             finishModal={this.state.finishModal}
           />
-          <ModalFooter>
-            <TouchableOpacity
-              style={styles.closeBtn}
-              onPress={() => {
-                if (this.state.userModal === true) {
-                  this.setState({
-                    slideAnimationModal: false,
-                    userModal: false
-                  });
-                } else {
-                  this.setState({
-                    slideAnimationModal: false,
-                    finishModal: false,
-                    SendMessage: true
-                  });
-                }
-              }}
-            >
-              <Text style={styles.closeBtnText}>닫기</Text>
-            </TouchableOpacity>
-          </ModalFooter>
+          {this.state.userModal === true && this.state.finishModal === false ? (
+            <ModalFooter>
+              <TouchableOpacity
+                style={styles.closeBtn1}
+                onPress={async () => {
+                  if (this.state.userModal === true) {
+                    await this.setState({
+                      slideAnimationModal: false,
+                      userModal: false
+                    });
+                  } else {
+                    await this.setState({
+                      slideAnimationModal: false,
+                      finishModal: false
+                    });
+                    await this.setState({
+                      SendMessage: true
+                    });
+                  }
+                }}
+              >
+                <Text style={styles.closeBtnText}>닫기</Text>
+              </TouchableOpacity>
+            </ModalFooter>
+          ) : (
+            <ModalFooter>
+              <TouchableOpacity
+                style={styles.closeBtn}
+                onPress={async () => {
+                  if (this.state.userModal === true) {
+                    await this.setState({
+                      slideAnimationModal: false,
+                      userModal: false
+                    });
+                  } else {
+                    await this.setState({
+                      slideAnimationModal: false,
+                      finishModal: false
+                    });
+                    await this.setState({
+                      SendMessage: true
+                    });
+                  }
+                }}
+              >
+                <Text style={styles.closeBtnText}>닫기</Text>
+              </TouchableOpacity>
+            </ModalFooter>
+          )}
         </Modal>
       </View>
     );
@@ -206,17 +235,24 @@ const styles = StyleSheet.create({
   Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
   },
-
+  closeBtn1: {
+    width: width * 0.85,
+    backgroundColor: Color.lightgray,
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: 50,
+    marginTop: -30
+  },
+  closeBtnText: {
+    fontSize: 19,
+    color: "white"
+  },
   closeBtn: {
     width: width * 0.85,
     backgroundColor: Color.lightgray,
     justifyContent: "center",
     alignItems: "center",
     minHeight: 50
-  },
-  closeBtnText: {
-    fontSize: 19,
-    color: "white"
   }
 });
 

@@ -99,7 +99,13 @@ export default class DeclareModal extends React.Component {
               </View>
             </View>
           </ModalContent>
-          <ModalFooter>
+          <ModalFooter
+            onPress={() => {
+              this.setState({
+                slideAnimationModal: false
+              });
+            }}
+          >
             <TouchableOpacity
               style={styles.closeBtn}
               onPress={() => {
@@ -124,7 +130,7 @@ DeclareModal.navigationOptions = {
 const styles = StyleSheet.create({
   modalContainer: {
     width: width * 0.85,
-    height: height * 0.4 - 30
+    height: height * 0.28
   },
   modalHeader: {
     maxHeight: height * 0.11,

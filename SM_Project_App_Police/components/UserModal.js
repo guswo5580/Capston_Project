@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-import Modal, { ModalContent } from "react-native-modals";
+import Modal, { ModalContent, ModalFooter } from "react-native-modals";
 
 import Color from "../constants/Colors";
 
@@ -84,10 +84,12 @@ export default class SelectModal extends React.Component {
         <ModalContent style={styles.finishModal}>
           <View style={styles.finishModalContent}>
             <Text>
-              <Text style={{ fontWeight: "bold" }}>조현재(26세, 남)</Text>
-              <Text>신고자 사건의</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                조현재(26세, 남)
+              </Text>
+              <Text style={{ fontSize: 15 }}>신고자 사건의</Text>
             </Text>
-            <Text>완료 알림을 보냈습니다</Text>
+            <Text style={{ fontSize: 15 }}>완료 알림을 보냈습니다</Text>
           </View>
         </ModalContent>
       );
@@ -110,13 +112,12 @@ SelectModal.navigationOptions = {
 const styles = StyleSheet.create({
   modalContainer: {
     width: width * 0.85,
-    height: height * 0.43 - 30,
-    paddingBottom: -10
+    height: height * 0.4 - 35
   },
   modalMain: {
     flex: 5,
     flexDirection: "row",
-    maxHeight: height * 0.21,
+    maxHeight: height * 0.18,
     borderBottomColor: Color.lightgray,
     borderBottomWidth: 2
   },
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 4,
     flexDirection: "row",
     maxHeight: 20,
-    marginTop: 20
+    marginTop: 40
   },
   TextTitleLast: {
     flex: 2,
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   modalSub: {
     flex: 1,
     paddingTop: 10,
-    maxHeight: height / 8
+    maxHeight: height / 9
   },
   repeatContentSub: {
     flex: 5,
@@ -181,11 +182,12 @@ const styles = StyleSheet.create({
   ///////////////////////////////////////////////////////////////
   finishModal: {
     width: width * 0.85,
-    height: height * 0.2
+    height: height * 0.15
   },
   finishModalContent: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
   }
+  ///////////////////////////////////////////////////////////////
 });

@@ -9,6 +9,11 @@ import {
   Animated
 } from "react-native";
 
+//////Import socket/////
+//////io 위치는 상황에 따라 변경 가능/////
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client/dist/socket.io";
+
 import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
 import Color from "../constants/Colors";
@@ -20,11 +25,33 @@ const height = Dimensions.get("window").height;
 export default class StartingScreen extends React.Component {
   state = {
     isActive: false,
-    Modal: true
+    Modal: false
   };
-
-  //소켓 통신으로 Modal을 true로  부르기
-
+  constructor() {
+    super();
+    this.socket = io("http://192.168.35.68:7499", {
+      timeout: 10000,
+      jsonp: false,
+      transports: ["websocket"],
+      autoConnect: true,
+      agent: "-",
+      // path: "/", // Whatever your path is
+      pfx: "-",
+      // key: token, // Using token-based auth.
+      // passphrase: cookie, // Using cookie auth.
+      cert: "-",
+      ca: "-",
+      ciphers: "-",
+      rejectUnauthorized: "-",
+      perMessageDeflate: "-"
+    });
+    this.socket.on("POLICE_MESSAGE", () => {
+      console.log("Socket");
+      this.setState({
+        Modal: true
+      });
+    });
+  }
   render() {
     if (this.state.isActive === false) {
       return (
@@ -151,8 +178,8 @@ const styles = StyleSheet.create({
   },
   StatusTextOFF: {
     position: "absolute",
-    top: height / 2.6,
-    right: width / 8.7
+    top: height / 2.5,
+    right: width / 7
   },
   main: {
     padding: 15
@@ -189,8 +216,8 @@ const styles = StyleSheet.create({
   },
   StatusTextON: {
     position: "absolute",
-    top: height / 2.6,
-    left: width / 8.7
+    top: height / 2.5,
+    left: width / 7
   },
   BtnText: {
     fontSize: 19,

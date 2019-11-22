@@ -80,11 +80,11 @@ const styles = StyleSheet.create({
     flex: 1
   },
   mainContentText: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: "bold"
   },
   mainContentDate: {
-    fontSize: 11,
+    fontSize: 13,
     color: "gray"
   },
   navigationBtn: {

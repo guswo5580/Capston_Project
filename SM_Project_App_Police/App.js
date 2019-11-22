@@ -1,14 +1,29 @@
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import React, { useState } from "react";
-import { Platform, StatusBar, StyleSheet, View } from "react-native";
+import React, { useState, useEffect } from "react";
+console.ignoredYellowBox = ["Remote debugger"];
+import { Platform, StatusBar, StyleSheet, View, YellowBox } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+// import io from "socket.io-client";
 
 import AppNavigator from "./navigation/AppNavigator";
 
+// console.disableYellowBox = true;
+// YellowBox.ignoreWarnings(["Remote debugger"]);
+YellowBox.ignoreWarnings([
+  "Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?"
+]);
+
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+
+  // useEffect(() => {
+  //   const socket = io("http://192.168.35.68:7499", {
+  //     forceNew: true
+  //   });
+  //   socket.on("connect", () => console.log("Connection"));
+  // });
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
