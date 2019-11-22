@@ -50,8 +50,8 @@ export default class StartScreen extends React.Component {
         let initialPosition = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          latitudeDelta: 0.09,
-          longitudeDelta: 0.035
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.001
         };
 
         this.setState({ initialPosition });
