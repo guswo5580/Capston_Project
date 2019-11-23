@@ -9,7 +9,8 @@ import {
   Alert
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client/dist/socket.io";
 import EventBus from "react-native-event-bus";
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
@@ -21,34 +22,54 @@ import Color from "../constants/Colors";
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-
-// const headerHorizontalpadding = width / 4
+let Socket = io("http://172.16.41.21:7499", {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: false, //false = 신고가 들어가기 전, true는 신고가 들어간 후 모달 화면
-    status: true //false = 신고 접수 중, true = 출동 중
+    declare: false,
+    status: false
+    //declare true, status false = 신고 접수 중
+    //decalre false, status false = startscreen
+    //declare true, status true = 출동 중
   };
-
-  ////////////////////////////////////////////////////////////////////
-  ////////소켓 통신으로 신호를 받으면 status를 true로 변경
-  ///////////////////////////////////////////////////////////////////
+  constructor() {
+    super();
+    Socket.on("connect", () => {
+      console.log("connection server");
+    });
+  }
 
   componentDidMount() {
     this.requestLocationPermission();
+    Socket.on("SENDPOLICEINFO", () => {
+      this.setState({
+        declare: true,
+        status: true
+      });
+    });
   }
   componentDidUpdate() {
     EventBus.getInstance().addListener(
       "GrantDeclare",
-      (this.listener = data => {
-        this.setState({
-          declare: true
+      (this.listener = async () => {
+        await Socket.emit("GRANT_CALL", { data: "신고 확인!!" });
+        await console.log("Grant Emit");
+        await this.setState({
+          declare: true,
+          status: false
         });
       })
     );
     EventBus.getInstance().addListener(
-      "CancleDeclare",
-      (this.listener = data => {
+      "CancleDeclare_Home",
+      (this.listener = async () => {
         this.setState({
           declare: false,
           status: false

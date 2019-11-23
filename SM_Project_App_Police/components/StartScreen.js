@@ -78,7 +78,6 @@ export default class StartingScreen extends React.Component {
           identity: "police",
           report: true
         });
-        await console.log("Emit");
         await EventBus.getInstance().fireEvent("ShowMainPage", {
           declare: true
         });

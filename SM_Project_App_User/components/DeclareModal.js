@@ -37,30 +37,35 @@ export default class DeclareModal extends React.Component {
       await this.setState({
         slideAnimationModal: false
       });
-      EventBus.getInstance().fireEvent("GrantDeclare", {
-        count: this.state.count
-      });
+      await EventBus.getInstance().fireEvent("GrantDeclare");
     }
   }
   componentWillUnmount() {
     clearInterval(this.counter);
     this.notification = true;
   }
+
   render() {
     return (
       <View style={styles.container}>
         <Modal
-          onDismiss={() => {
-            this.setState({
-              slideAnimationModal: false
-            });
-            clearInterval(this.counter);
+          onDismiss={async () => {
+            // await EventBus.getInstance().fireEvent("CancleDeclare", {
+            //   notification: this.notification
+            // });
+            // await clearInterval(this.counter);
+            // await this.setState({
+            //   slideAnimationModal: false
+            // });
           }}
           swipeDirection="down"
-          onSwipeOut={() => {
-            clearInterval(this.counter);
-            this.setState({
+          onSwipeOut={async () => {
+            await clearInterval(this.counter);
+            await this.setState({
               slideAnimationModal: false
+            });
+            await EventBus.getInstance().fireEvent("CancleDeclare", {
+              notification: this.notification
             });
           }}
           visible={this.state.slideAnimationModal}
@@ -123,13 +128,12 @@ export default class DeclareModal extends React.Component {
             <TouchableOpacity
               style={styles.closeBtn}
               onPress={async () => {
-                console.log("Click");
+                await EventBus.getInstance().fireEvent("CancleDeclare", {
+                  notification: this.notification
+                });
                 await clearInterval(this.counter);
                 await this.setState({
                   slideAnimationModal: false
-                });
-                EventBus.getInstance().fireEvent("CancleDeclare", {
-                  notification: this.notification
                 });
               }}
             >

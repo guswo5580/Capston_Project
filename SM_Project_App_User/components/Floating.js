@@ -108,7 +108,7 @@ export default class FloatingandModal extends React.Component {
                   slideAnimationModal: true
                 });
               } else if (text === "cancle") {
-                EventBus.getInstance().fireEvent("CancleDeclare", {
+                EventBus.getInstance().fireEvent("CancleDeclare_Home", {
                   declare: false,
                   status: false
                 });
@@ -199,7 +199,7 @@ export default class FloatingandModal extends React.Component {
             actionsPaddingTopBottom={2}
             distanceToEdge={20}
             onPressItem={text => {
-              EventBus.getInstance().fireEvent("CancleDeclare", {
+              EventBus.getInstance().fireEvent("CancleDeclare_Home", {
                 declare: false,
                 status: false
               });

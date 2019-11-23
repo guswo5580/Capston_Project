@@ -7,6 +7,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 import AppNavigator from "./navigation/AppNavigator";
 console.disableYellowBox = true;
+YellowBox.ignoreWarnings(["Remote debugger"]);
+YellowBox.ignoreWarnings([
+  "Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?"
+]);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

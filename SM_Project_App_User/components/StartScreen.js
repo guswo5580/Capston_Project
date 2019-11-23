@@ -31,38 +31,24 @@ const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+let Socket = io("http://172.16.41.21:7499", {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
 export default class StartScreen extends React.Component {
   state = {
     notification: false //true = 신고 접수되어 모달 등장
   };
   constructor() {
     super();
-    this.socket = io("http://192.168.35.68:7499", {
-      timeout: 10000,
-      jsonp: false,
-      autoConnect: false,
-      agent: "-",
-      // path: "/", // Whatever your path is
-      pfx: "-",
-      // key: token, // Using token-based auth.
-      // passphrase: cookie, // Using cookie auth.
-      cert: "-",
-      ca: "-",
-      ciphers: "-",
-      rejectUnauthorized: "-",
-      perMessageDeflate: "-"
-    });
-    this.socket.on("POLICE_MESSAGE", () => {
-      console.log("Socket");
-      this.setState({
-        Modal: true
-      });
+    Socket.on("connect", () => {
+      console.log("connection server");
     });
   }
-
-  ////////////////////////////////////////////////////////
-  //라즈베리파이 소켓 통신을 통해 notification을 true로 변경
-  ////////////////////////////////////////////////////////
 
   requestLocationPermission = async () => {
     const { status } = await Permissions.getAsync(Permissions.LOCATION);
@@ -92,17 +78,28 @@ export default class StartScreen extends React.Component {
 
   componentDidMount() {
     this.requestLocationPermission();
+
+    Socket.on("VICTIMCHECK", () => {
+      console.log("Recieve");
+      this.setState({
+        notification: true
+      });
+    });
   }
+
   componentDidUpdate() {
     EventBus.getInstance().addListener(
       "CancleDeclare",
-      (this.listener = data => {
-        this.setState({
+      (this.listener = async () => {
+        await Socket.emit("CANCEL_CALL", { data: "신고취소!!" });
+        await console.log("Emit");
+        await this.setState({
           notification: false
         });
       })
     );
   }
+
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);
   }
