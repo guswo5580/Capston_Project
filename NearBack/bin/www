@@ -31,15 +31,33 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 io.on('connection', socket => {
+	console.log('connected client');
 	socket.on('POLICE_CALL', () => {
 		console.log('Socket is here! ', socket.id);
 		io.emit('POLICE_MESSAGE');
 	});
-	// socket.on('POLICE_CALLBACK');
+	socket.on('POLICE_CALLBACK', data => {
+		console.log(data);
+		io.emit('POLICE_ISPOLICE', data);
+	});
+	socket.on('JOBS_DONE', data => {
+		console.log(data);
+		io.emit('JOBS_done', data);
+	});
+	//라즈베리파이 사용자 콜이옴
+	socket.on('VICTIM_CALL', victimID => {
+		console.log(victimID);
+		io.emit('redImage', victimID);
+	});
+	//사용자에게 신고확인을 받음
+	socket.on('VICTIM_CHECK', () => {
+		io.emit('VICTIMCHECK');
+	});
+
+	socket.on('disconnected', data => {
+		console.log('disconnected!');
+	});
 });
-// io.on('event', socket => {
-// 	console.log('Event!!');
-// });
 
 /**
  * Normalize a port into a number, string, or false.

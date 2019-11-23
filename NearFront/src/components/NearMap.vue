@@ -42,6 +42,8 @@ import NearMapModal from './common/NearMapModal';
 import NearChart from './common/NearChart';
 import NearMissionComplete from '../view/NearMissionComplete';
 import NearMPopUp from '../view/NearPopUp';
+import io from 'socket.io-client';
+
 export default {
 	name: 'GoogleMap',
 	data() {
@@ -68,7 +70,7 @@ export default {
 				{
 					id: 0,
 					name: '유승훈(남)',
-					age: '27 (9301027)',
+					age: '27 (931027)',
 					bloodType: 'O형 (RH+)',
 					position: { lat: 37.546497, lng: 127.069922 },
 					info: '조선실세 사건 증인 보호 중',
@@ -80,9 +82,9 @@ export default {
 				{
 					id: 1,
 					name: '박원형(남)',
-					workArea: '둔촌 파출소',
+					workArea: '광진 경찰서',
 					class: '경위',
-					bloodType: 'AB형(RH++)',
+					bloodType: 'AB형(RH+)',
 					position: { lat: 37.54817, lng: 127.069234 },
 					img: 'Police.jpg',
 					report: false,
@@ -94,10 +96,11 @@ export default {
 				},
 				{
 					id: 2,
-					name: 'House of Johannes Cele',
-					age: 'age 3',
-					bloodType: '',
+					name: '여소빈',
+					age: '22 (981001)',
+					bloodType: 'B형 (RH+)',
 					position: { lat: 37.539704, lng: 127.065603 },
+					info: '최근 스토커로부터 전화 협박 받음',
 					img: 'MrYoo.jpeg',
 					report: false,
 					identity: 'victim',
@@ -105,11 +108,12 @@ export default {
 				},
 				{
 					id: 3,
-					name: 'House of Johannes Cele',
-					age: 'age 4',
-					bloodType: '',
+					name: '손영덕',
+					age: '27 (930304)',
+					bloodType: 'A형 (RH+)',
 					position: { lat: 37.537928, lng: 127.071459 },
 					img: 'MrYoo.jpeg',
+					info: '신변보호 필요',
 					report: false,
 					identity: 'victim',
 					icon: { url: 'yellow.png' },
@@ -117,9 +121,9 @@ export default {
 				{
 					id: 4,
 					name: '김장수(남)',
-					workArea: '둔촌 파출소',
+					workArea: '광진 파출소',
 					class: '경위',
-					bloodType: 'O형(RH++)',
+					bloodType: 'O형(RH+)',
 					position: { lat: 37.545344, lng: 127.07664 },
 					img: 'Police.jpg',
 					report: false,
@@ -132,9 +136,9 @@ export default {
 				{
 					id: 5,
 					name: '이지광(남)',
-					workArea: '둔촌 파출소',
+					workArea: '광진 파출소',
 					class: '경위',
-					bloodType: 'A형(RH++)',
+					bloodType: 'A형(RH+)',
 					position: { lat: 37.54921, lng: 127.09006 },
 					img: 'Police.jpg',
 					report: false,
@@ -147,9 +151,9 @@ export default {
 				{
 					id: 6,
 					name: '김목수(남)',
-					workArea: '둔촌 파출소',
+					workArea: '광진 파출소',
 					class: '경위',
-					bloodType: 'B형(RH++)',
+					bloodType: 'B형(RH+)',
 					position: { lat: 37.551836, lng: 127.077932 },
 					img: 'Police.jpg',
 					report: false,
@@ -162,9 +166,9 @@ export default {
 				{
 					id: 7,
 					name: '최태형(남)',
-					workArea: '둔촌 파출소',
+					workArea: '광진 파출소',
 					class: '경위',
-					bloodType: 'O형(RH++)',
+					bloodType: 'O형(RH+)',
 					position: { lat: 37.545313, lng: 127.062799 },
 					img: 'Police.jpg',
 					report: false,
@@ -217,9 +221,16 @@ export default {
 			}),
 			EventBus.$on('FinishJob', (pid, vid) => {
 				console.log(pid, vid);
-				this.markers[pid].report = false;
-				this.markers[vid].report = false;
+				this.markers[pid.id].report = false;
+				this.markers[vid.id].report = false;
 			});
+		// 라즈베리파이 신호보낸후 마커 색깔바꾸기
+		// 버튼 글짜 바꿔야됨
+		// this.socket.on("유승훈 출동신호 보냄",()=>{
+		// 	this.marker[0].icon = "red.png";
+		//  EventBus.$emit("버튼 '신고접수"),
+		//  EventBus.$emit("알림창 신고접수 뜨기!")
+		// })
 	},
 	mounted() {
 		this.$refs.gmap.$mapPromise.then(map => {

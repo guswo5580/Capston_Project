@@ -179,17 +179,26 @@ export default {
 				console.log(index);
 				this.victimName = victimMarkers.name;
 			}),
-			EventBus.$on('JOBSDONE', (policeId, victimId) => {
-				setTimeout(() => {
-					this.isBefore = false;
-					this.isDone = true;
-					EventBus.$emit('backYellow', victimId);
-					EventBus.$emit('backWhite', policeId);
-					EventBus.$emit('backPoliceButton');
-					EventBus.$emit('backVictimButton');
-					EventBus.$emit('doneCall');
-					EventBus.$emit('FinishJob', policeId, victimId);
-				}, 6000);
+			EventBus.$on('JOBSDONE', (police, victim) => {
+				// setTimeout(() => {
+				// 	this.isBefore = false;
+				// 	this.isDone = true;
+				// 	EventBus.$emit('backYellow', victimId);
+				// 	EventBus.$emit('backWhite', policeId);
+				// 	EventBus.$emit('backPoliceButton');
+				// 	EventBus.$emit('backVictimButton');
+				// 	EventBus.$emit('doneCall');
+				// 	EventBus.$emit('FinishJob', policeId, victimId);
+				// }, 6000);
+				this.isBefore = false;
+				this.isDone = true;
+				console.log('CHECK!', police.id, victim.id);
+				EventBus.$emit('backYellow', victim.id);
+				EventBus.$emit('backWhite', police.id);
+				EventBus.$emit('backPoliceButton');
+				EventBus.$emit('backVictimButton');
+				EventBus.$emit('doneCall');
+				EventBus.$emit('FinishJob', police, victim);
 			});
 	},
 	mounted() {

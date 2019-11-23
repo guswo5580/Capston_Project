@@ -22,7 +22,21 @@ import io from 'socket.io-client';
 export default {
 	data() {
 		return {
-			// socket: io('localhost:7499/flow'),
+			socket: io('http://172.16.41.21:7499'),
+			victimTest: [
+				{
+					id: 0,
+					name: '유승훈(남)',
+					age: '27 (931027)',
+					bloodType: 'O형 (RH+)',
+					position: { lat: 37.546497, lng: 127.069922 },
+					info: '조선실세 사건 증인 보호 중',
+					img: 'MrYoo.jpeg',
+					report: false,
+					identity: 'victim',
+					icon: { url: 'yellow.png' },
+				},
+			],
 			vMessage: '출동 배정',
 			pMessage: '출동 대기중',
 			message: '출동 배정',
@@ -107,14 +121,35 @@ export default {
 				this.pMessage = '출동 대기중';
 				this.isPolice = true;
 			});
-			// this.socket.on('POLICE_RECALL', () => {
-			// 	console.log('Received!');
-			// 	this.isWaiting = false;
-			// 	this.isPolice = false;
+			this.socket.on('POLICE_ISPOLICE', police => {
+				console.log('Received!');
+				console.log(police);
+				let index = police.id;
+				this.isWaiting = false;
+				this.isPolice = true;
+				this.pMessage = '출동 중';
+				EventBus.$emit('policeCall', this.policeCall);
+				console.log(this.blueCall, police.id);
+				EventBus.$emit('changeBlue', this.blueCall, police.id);
+				EventBus.$emit('policeDONE', police, police.id);
+				EventBus.$emit('getPosition2', police);
+			});
+			// 라즈베리파이에서 사용자가 신고접수 할때 버튼이름 신고접수로 바꾸기
+			// this.socket.on('레드 버튼 글짜 바꾸기 콜', () => {
+			// 	this.vMessage = "신고 접수";
 			// });
+			this.socket.on('JOBS_done', police => {
+				// this.police.report = !this.police.report;
+				EventBus.$emit('JOBSDONE', police, this.victimTest[0]);
+			});
 		});
 	},
 	methods: {
+		//기본적인 시나리오
+		//1.라즈베리파이 소켓통신이 오면 사용자 빨간색변경 및 버튼 '신고접수' 로 변경. 신고접수 알림이 뜸.
+		//2. 출동배정 할 경찰 클릭후 출동배정 클릭시 버튼이 확인중으로 바뀌고 사용자 색 보라색으로 변경. 확인중 알림이 뜸.
+		//3. 앱으로부터 경찰한테 출동확인을 받으면 경찰 마커색 파란색으로 변경후 버튼 출동중으로 바뀜 출동중 알림이 뜸.
+		//4. 앱으로부터 사건완료 소켓통신이 오면 경찰은 '하얀색' 사용자는 '노란색'으로 변경뒤에 사건완료 알림이 뜸. 경찰버튼 '출동 대기중', 사용자버튼 '출동 배정'으로 바뀜
 		policeButtonClick() {
 			if (this.markers.report === false && this.isPolice === true) {
 				this.markers.report = !this.markers.report;
@@ -131,8 +166,8 @@ export default {
 				this.isPolice = false;
 				this.policeBackCALLID = this.markers.id;
 
-				const socket = io('http://192.168.35.68:7499');
-				socket.emit('POLICE_CALL', console.log('YES!'));
+				// const socket = io('http://192.168.35.68:7499');
+				this.socket.emit('POLICE_CALL', console.log('YES!'));
 			} else if (this.markers.report === true && this.isWaiting === true) {
 				// 나중에 서버에서 확인 받는건 NearMap.vue에 경찰 마커 객체에 acceptCall이 true일때 다음 진행하도록 만들자
 				// 서버에서 특정값 true값 나오면 뜨게끔 나중에 바꿔야함
@@ -167,6 +202,10 @@ export default {
 				EventBus.$emit('redImage', this.redCall, index);
 				EventBus.$emit('getPosition2', this.markers);
 				EventBus.$emit('victimDONE', this.markers, index);
+				this.socket.emit(
+					'VICTIM_CHECK',
+					console.log('victim check! from the button')
+				);
 			} else if (
 				this.markers.report === true &&
 				this.markers.identity === 'victim'
