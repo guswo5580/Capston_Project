@@ -63,7 +63,7 @@ export default class DeclareModal extends React.Component {
                 <Text style={{ textAlign: "center" }}>
                   <Text style={styles.modalHeaderMain}>신고자와의 거리</Text>
                   {"\u00A0"}
-                  <Text style={styles.modalHeaderDistance}>294m</Text>
+                  <Text style={styles.modalHeaderDistance}>50m 이내</Text>
                 </Text>
               </View>
               <Text style={styles.modalHeaderSub}>

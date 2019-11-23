@@ -7,13 +7,7 @@ import {
   Dimensions,
   Platform
 } from "react-native";
-import MapView, {
-  PROVIDER_GOOGLE,
-  Marker,
-  Callout,
-  Polygon,
-  Circle
-} from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 //////Import socket/////
 //////io 위치는 상황에 따라 변경 가능/////
@@ -37,7 +31,12 @@ const height = Dimensions.get("window").height;
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: false
+    declare: false,
+    marker: {
+      name: "유승훈",
+      latitude: "37.550378",
+      longitude: "127.073.192"
+    }
   };
 
   componentDidMount() {
@@ -111,7 +110,12 @@ export default class HomeScreen extends React.Component {
               style={styles.map}
               showsUserLocation={true}
               initialRegion={this.state.initialPosition}
-            ></MapView>
+            >
+              <Marker
+                title="유승훈"
+                coordinate={{ latitude: 37.550378, longitude: 127.073192 }}
+              ></Marker>
+            </MapView>
           </View>
 
           <Floating />
