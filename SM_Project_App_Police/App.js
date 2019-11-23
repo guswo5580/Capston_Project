@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 console.ignoredYellowBox = ["Remote debugger"];
 import { Platform, StatusBar, StyleSheet, View, YellowBox } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-// import io from "socket.io-client";
+// import Socket from "./components/Socket.js";
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -17,7 +17,6 @@ YellowBox.ignoreWarnings([
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-
   // useEffect(() => {
   //   const socket = io("http://192.168.35.68:7499", {
   //     forceNew: true

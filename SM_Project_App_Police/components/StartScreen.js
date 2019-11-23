@@ -12,7 +12,11 @@ import {
 //////Import socket/////
 //////io 위치는 상황에 따라 변경 가능/////
 window.navigator.userAgent = "react-native";
-import io from "socket.io-client/dist/socket.io";
+import io from "socket.io-client";
+
+//////Import EventBus//////
+import EventBus from "react-native-event-bus";
+// import Socket from "./Socket";
 
 import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
@@ -21,36 +25,54 @@ import DeclareModal from "./DeclareModal.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+const Socket = io("http://172.16.41.21:7499", {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
 
 export default class StartingScreen extends React.Component {
   state = {
     isActive: false,
-    Modal: false
+    Modal: false,
+    police_data: {
+      id: 1,
+      name: "박원형",
+      class: "경위",
+      workArea: "광진경찰서"
+    }
   };
   constructor() {
     super();
-    this.socket = io("http://192.168.35.68:7499", {
-      timeout: 10000,
-      jsonp: false,
-      transports: ["websocket"],
-      autoConnect: true,
-      agent: "-",
-      // path: "/", // Whatever your path is
-      pfx: "-",
-      // key: token, // Using token-based auth.
-      // passphrase: cookie, // Using cookie auth.
-      cert: "-",
-      ca: "-",
-      ciphers: "-",
-      rejectUnauthorized: "-",
-      perMessageDeflate: "-"
+    Socket.on("connect", () => {
+      console.log("connection server");
     });
-    this.socket.on("POLICE_MESSAGE", () => {
-      console.log("Socket");
+    Socket.on("POLICE_MESSAGE", () => {
+      console.log("Recieve");
       this.setState({
         Modal: true
       });
     });
+  }
+
+  componentDidMount() {
+    EventBus.getInstance().addListener(
+      "EmitToCall",
+      (this.listener = async () => {
+        await Socket.emit("POLICE", { data: this.state.police_data });
+        await console.log("Emit");
+        await EventBus.getInstance().fireEvent("ShowMainPage", {
+          declare: true
+        });
+      })
+    );
+  }
+
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener);
   }
   render() {
     if (this.state.isActive === false) {

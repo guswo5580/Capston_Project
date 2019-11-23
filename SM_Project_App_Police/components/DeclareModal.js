@@ -32,19 +32,27 @@ export default class DeclareModal extends React.Component {
     if (this.props.modal === true) {
       return (
         <Modal
-          onDismiss={() => {
-            this.setState({
+          onDismiss={async () => {
+            // await Socket.emit("POLICE", { data: "Data" });
+            await this.setState({
               slideAnimationModal: false
             });
-            EventBus.getInstance().fireEvent("ShowMainPage", {
-              declare: true
-            });
+            await EventBus.getInstance().fireEvent("EmitToCall");
+            // await EventBus.getInstance().fireEvent("ShowMainPage", {
+            //   declare: true
+            // });
           }}
           swipeDirection="down"
-          onSwipeOut={() => {
-            this.setState({
+          onSwipeOut={async () => {
+            await this.setState({
               slideAnimationModal: false
             });
+            await EventBus.getInstance().fireEvent("EmitToCall", {
+              emit: true
+            });
+            // await EventBus.getInstance().fireEvent("ShowMainPage", {
+            //   declare: true
+            // });
           }}
           visible={this.state.slideAnimationModal}
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}

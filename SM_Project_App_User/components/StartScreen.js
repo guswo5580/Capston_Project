@@ -16,6 +16,11 @@ import Modal, {
   SlideAnimation
 } from "react-native-modals";
 
+//////Import socket/////
+//////io 위치는 상황에 따라 변경 가능/////
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client/dist/socket.io";
+
 import EventBus from "react-native-event-bus";
 import * as Permissions from "expo-permissions";
 import UserHeader from "./UserHeader";
@@ -28,12 +33,36 @@ const height = Dimensions.get("window").height;
 
 export default class StartScreen extends React.Component {
   state = {
-    notification: true //true = 신고 접수되어 모달 등장
+    notification: false //true = 신고 접수되어 모달 등장
   };
+  constructor() {
+    super();
+    this.socket = io("http://192.168.35.68:7499", {
+      timeout: 10000,
+      jsonp: false,
+      autoConnect: false,
+      agent: "-",
+      // path: "/", // Whatever your path is
+      pfx: "-",
+      // key: token, // Using token-based auth.
+      // passphrase: cookie, // Using cookie auth.
+      cert: "-",
+      ca: "-",
+      ciphers: "-",
+      rejectUnauthorized: "-",
+      perMessageDeflate: "-"
+    });
+    this.socket.on("POLICE_MESSAGE", () => {
+      console.log("Socket");
+      this.setState({
+        Modal: true
+      });
+    });
+  }
 
-  //////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
   //라즈베리파이 소켓 통신을 통해 notification을 true로 변경
-  //////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////
 
   requestLocationPermission = async () => {
     const { status } = await Permissions.getAsync(Permissions.LOCATION);
