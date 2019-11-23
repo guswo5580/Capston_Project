@@ -2,27 +2,22 @@ import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
-console.ignoredYellowBox = ["Remote debugger"];
 import { Platform, StatusBar, StyleSheet, View, YellowBox } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-// import Socket from "./components/Socket.js";
 
 import AppNavigator from "./navigation/AppNavigator";
 
-// console.disableYellowBox = true;
-// YellowBox.ignoreWarnings(["Remote debugger"]);
+console.disableYellowBox = true;
+YellowBox.ignoreWarnings(["Remote debugger"]);
 YellowBox.ignoreWarnings([
   "Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?"
 ]);
+// YellowBox.ignoreWarnings([
+//   "Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in %s.%s, the componentWillUnmount method, in FloatingandModal (at HomeScreen.js:120) in RCTView (at View.js:45) in View (at HomeScreen.js:106)"
+// ]);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  // useEffect(() => {
-  //   const socket = io("http://192.168.35.68:7499", {
-  //     forceNew: true
-  //   });
-  //   socket.on("connect", () => console.log("Connection"));
-  // });
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (

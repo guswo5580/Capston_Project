@@ -20,12 +20,24 @@ import Modal, {
 //////Import EventBus//////
 import EventBus from "react-native-event-bus";
 
+//////Import socket/////
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client";
+
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
 import SelectModal from "./UserModal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+const Socket = io("http://172.16.41.21:7499", {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
 
 export default class FloatingandModal extends React.Component {
   state = {
@@ -91,9 +103,7 @@ export default class FloatingandModal extends React.Component {
 
   componentDidUpdate() {
     if (this.state.SendMessage === true) {
-      EventBus.getInstance().fireEvent("BackToStartScreen", {
-        declare: false
-      });
+      EventBus.getInstance().fireEvent("BackToStartScreen");
     }
   }
   render() {
@@ -108,14 +118,23 @@ export default class FloatingandModal extends React.Component {
           iconColor={Color.Deepgray}
           actionsPaddingTopBottom={2}
           distanceToEdge={20}
-          onPressItem={text => {
+          onPressItem={async text => {
             if (text === "신고자 정보 확인") {
               this.setState({
                 slideAnimationModal: true,
                 userModal: true
               });
             } else if (text === "사건 완료") {
-              this.setState({
+              await Socket.emit("JOBS_DONE", {
+                id: 1,
+                name: "박원형",
+                class: "경위",
+                workArea: "광진경찰서",
+                identity: "police",
+                report: true
+              });
+              await console.log("Emit Finish!!!");
+              await this.setState({
                 slideAnimationModal: true,
                 finishModal: true
               });
@@ -125,14 +144,17 @@ export default class FloatingandModal extends React.Component {
           }}
         />
         <Modal
-          onDismiss={() => {
+          onDismiss={async () => {
             if (this.state.userModal === true) {
               this.setState({
                 slideAnimationModal: false,
                 userModal: false
               });
             } else {
-              this.setState({
+              await EventBus.getInstance().fireEvent("JOBS_DONE", {
+                declare: false
+              });
+              await this.setState({
                 slideAnimationModal: false,
                 finishModal: false
               });

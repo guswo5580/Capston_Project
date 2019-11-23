@@ -10,13 +10,11 @@ import {
 } from "react-native";
 
 //////Import socket/////
-//////io 위치는 상황에 따라 변경 가능/////
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client";
 
 //////Import EventBus//////
 import EventBus from "react-native-event-bus";
-// import Socket from "./Socket";
 
 import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
@@ -25,7 +23,7 @@ import DeclareModal from "./DeclareModal.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-const Socket = io("http://172.16.41.21:7499", {
+let Socket = io("http://172.16.41.21:7499", {
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -36,33 +34,50 @@ const Socket = io("http://172.16.41.21:7499", {
 
 export default class StartingScreen extends React.Component {
   state = {
-    isActive: false,
-    Modal: false,
-    police_data: {
-      id: 1,
-      name: "박원형",
-      class: "경위",
-      workArea: "광진경찰서"
-    }
+    impossible: false,
+    Modal: false
   };
   constructor() {
     super();
-    Socket.on("connect", () => {
-      console.log("connection server");
-    });
-    Socket.on("POLICE_MESSAGE", () => {
-      console.log("Recieve");
-      this.setState({
-        Modal: true
-      });
-    });
   }
-
+  componentDidUpdate() {
+    if (this.state.impossible === true) {
+      Socket.disconnect();
+      console.log("Socket Disconnect");
+    }
+    if (this.state.impossible === false) {
+      console.log("Socket Connect");
+      let Socket = io("http://172.16.41.21:7499", {
+        jsonp: false,
+        autoConnect: true,
+        secure: true,
+        reconnection: true,
+        reconnectionDelay: 500,
+        reconnectionAttempts: Infinity
+      });
+      Socket.on("connect", () => {
+        console.log("connection server");
+      });
+      Socket.on("POLICE_MESSAGE", () => {
+        console.log("Recieve");
+        this.setState({
+          Modal: true
+        });
+      });
+    }
+  }
   componentDidMount() {
     EventBus.getInstance().addListener(
       "EmitToCall",
       (this.listener = async () => {
-        await Socket.emit("POLICE", { data: this.state.police_data });
+        await Socket.emit("POLICE_CALLBACK", {
+          id: 1,
+          name: "박원형",
+          class: "경위",
+          workArea: "광진경찰서",
+          identity: "police",
+          report: true
+        });
         await console.log("Emit");
         await EventBus.getInstance().fireEvent("ShowMainPage", {
           declare: true
@@ -75,7 +90,7 @@ export default class StartingScreen extends React.Component {
     EventBus.getInstance().removeListener(this.listener);
   }
   render() {
-    if (this.state.isActive === false) {
+    if (this.state.impossible === false) {
       return (
         <View style={styles.containerON}>
           <View>
@@ -83,7 +98,7 @@ export default class StartingScreen extends React.Component {
           </View>
           <View style={styles.main}>
             <FlipToggle
-              value={this.state.isActive}
+              value={this.state.impossible}
               // disabled={true}
               buttonWidth={400}
               buttonHeight={250}
@@ -91,7 +106,7 @@ export default class StartingScreen extends React.Component {
               buttonOffColor={"rgb(129,178,212)"}
               sliderOffColor={"white"}
               onToggle={value => {
-                this.setState({ isActive: value });
+                this.setState({ impossible: value });
               }}
             />
           </View>
@@ -106,7 +121,7 @@ export default class StartingScreen extends React.Component {
           <View style={styles.StatusTextON}>
             <TouchableNativeFeedback
               onPress={() => {
-                this.setState({ isActive: true });
+                this.setState({ impossible: true });
               }}
             >
               <Animated.Text
@@ -133,7 +148,7 @@ export default class StartingScreen extends React.Component {
           </View>
           <View style={styles.main}>
             <FlipToggle
-              value={this.state.isActive}
+              value={this.state.impossible}
               // disabled={true}
               buttonWidth={400}
               buttonHeight={250}
@@ -141,7 +156,7 @@ export default class StartingScreen extends React.Component {
               buttonOnColor={"rgb(234,128,136)"}
               sliderOnColor={"white"}
               onToggle={value => {
-                this.setState({ isActive: value });
+                this.setState({ impossible: value });
               }}
             />
           </View>
@@ -156,7 +171,7 @@ export default class StartingScreen extends React.Component {
           <View style={styles.StatusTextOFF}>
             <TouchableNativeFeedback
               onPress={() => {
-                this.setState({ isActive: false });
+                this.setState({ impossible: false });
               }}
             >
               <Animated.Text

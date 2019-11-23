@@ -45,7 +45,6 @@ export default class HomeScreen extends React.Component {
     EventBus.getInstance().addListener(
       "ShowMainPage",
       (this.listener = data => {
-        // console.log(data);
         this.setState({
           declare: true
         });
@@ -54,7 +53,14 @@ export default class HomeScreen extends React.Component {
     EventBus.getInstance().addListener(
       "BackToStartScreen",
       (this.listener = data => {
-        // console.log(data);
+        this.setState({
+          declare: false
+        });
+      })
+    );
+    EventBus.getInstance().addListener(
+      "JOBS_DONE",
+      (this.listener = data => {
         this.setState({
           declare: false
         });
