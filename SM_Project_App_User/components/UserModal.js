@@ -19,7 +19,6 @@ const height = Dimensions.get("window").height;
 export default class SelectModal extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {isLoggedIn: false};
   }
   render() {
     if (this.props.userModal === true) {

@@ -23,6 +23,7 @@ import Color from "../constants/Colors";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+//사용자의 신고과 확인되었을 때, 경찰 출동 신호를 전달받는 컴포넌트
 export default class DeclareModal extends React.Component {
   constructor(props) {
     super(props);
@@ -33,14 +34,11 @@ export default class DeclareModal extends React.Component {
       return (
         <Modal
           onDismiss={async () => {
-            // await Socket.emit("POLICE", { data: "Data" });
             await this.setState({
               slideAnimationModal: false
             });
+            //StartScreen에 출동 접수 신호 전송
             await EventBus.getInstance().fireEvent("EmitToCall");
-            // await EventBus.getInstance().fireEvent("ShowMainPage", {
-            //   declare: true
-            // });
           }}
           swipeDirection="down"
           onSwipeOut={async () => {
@@ -50,9 +48,6 @@ export default class DeclareModal extends React.Component {
             await EventBus.getInstance().fireEvent("EmitToCall", {
               emit: true
             });
-            // await EventBus.getInstance().fireEvent("ShowMainPage", {
-            //   declare: true
-            // });
           }}
           visible={this.state.slideAnimationModal}
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}

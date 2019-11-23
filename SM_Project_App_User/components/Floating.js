@@ -90,6 +90,7 @@ export default class FloatingandModal extends React.Component {
 
   render() {
     if (this.props.status) {
+      //경찰 접수 후, 출동 중일 때 플로팅 모달
       return (
         <View style={styles.Floatingcontainer}>
           <FloatingAction
@@ -103,11 +104,14 @@ export default class FloatingandModal extends React.Component {
             distanceToEdge={20}
             showBackground={true}
             onPressItem={text => {
+              //출동한 경찰의 정보를 확인
               if (text === "confirm") {
                 this.setState({
                   slideAnimationModal: true
                 });
               } else if (text === "cancle") {
+                //신고 접수 후, 신고 취소를 할 경우
+                //HomeScreen에 신고 취소의 이벤트를 전송
                 EventBus.getInstance().fireEvent("CancleDeclare_Home", {
                   declare: false,
                   status: false
@@ -188,6 +192,7 @@ export default class FloatingandModal extends React.Component {
       );
     } else {
       return (
+        //경찰 접수 전, 신고 접수 중일 때 플로팅 모달
         <View style={styles.Floatingcontainer}>
           <FloatingAction
             actions={this.state.actions1}
@@ -199,6 +204,7 @@ export default class FloatingandModal extends React.Component {
             actionsPaddingTopBottom={2}
             distanceToEdge={20}
             onPressItem={text => {
+              //신고 접수 중 상태에서의 HomeScreen으로 신고 취소 이벤트 전달
               EventBus.getInstance().fireEvent("CancleDeclare_Home", {
                 declare: false,
                 status: false

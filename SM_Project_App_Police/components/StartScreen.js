@@ -32,6 +32,7 @@ let Socket = io("http://172.16.41.21:7499", {
   reconnectionAttempts: Infinity
 });
 
+//경찰이 출동을 시작하기 전에 시작되는 컴포넌트
 export default class StartingScreen extends React.Component {
   state = {
     impossible: false,
@@ -41,6 +42,7 @@ export default class StartingScreen extends React.Component {
     super();
   }
   componentDidUpdate() {
+    //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
     if (this.state.impossible === true) {
       Socket.disconnect();
       console.log("Socket Disconnect");
@@ -58,6 +60,7 @@ export default class StartingScreen extends React.Component {
       Socket.on("connect", () => {
         console.log("connection server");
       });
+      //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
       Socket.on("POLICE_MESSAGE", () => {
         console.log("Recieve");
         this.setState({
@@ -67,6 +70,7 @@ export default class StartingScreen extends React.Component {
     }
   }
   componentDidMount() {
+    //신고자 정보 확인 후 출동 신고를 웹에 보냄
     EventBus.getInstance().addListener(
       "EmitToCall",
       (this.listener = async () => {
@@ -85,6 +89,7 @@ export default class StartingScreen extends React.Component {
     );
   }
 
+  //전체 이벤트 리스너를 삭제
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);
   }

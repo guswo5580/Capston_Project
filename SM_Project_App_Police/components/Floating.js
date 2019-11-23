@@ -44,7 +44,7 @@ export default class FloatingandModal extends React.Component {
     slideAnimationModal: false,
     userModal: false,
     finishModal: false,
-    SendMessage: false,
+    // SendMessage: false,
     actions: [
       {
         text: "신고자 전화",
@@ -101,11 +101,12 @@ export default class FloatingandModal extends React.Component {
     ]
   };
 
-  componentDidUpdate() {
-    if (this.state.SendMessage === true) {
-      EventBus.getInstance().fireEvent("BackToStartScreen");
-    }
-  }
+  // componentDidUpdate() {
+  //   //플로팅의 사건 완료 버튼 클릭 시, HomeScreen에 전체 데이터를 초기화하는 신호를 보냄
+  //   if (this.state.SendMessage === true) {
+  //     EventBus.getInstance().fireEvent("BackToStartScreen");
+  //   }
+  // }
   render() {
     return (
       <View style={styles.Floatingcontainer}>
@@ -125,6 +126,7 @@ export default class FloatingandModal extends React.Component {
                 userModal: true
               });
             } else if (text === "사건 완료") {
+              //사건을 완료한 것에 대해 웹으로 신호를 전달
               await Socket.emit("JOBS_DONE", {
                 id: 1,
                 name: "박원형",
@@ -145,12 +147,19 @@ export default class FloatingandModal extends React.Component {
         />
         <Modal
           onDismiss={async () => {
-            if (this.state.userModal === true) {
+            if (
+              this.state.userModal === true &&
+              this.state.finishModal === false
+            ) {
               this.setState({
                 slideAnimationModal: false,
                 userModal: false
               });
-            } else {
+            } else if (
+              this.state.userModal === false &&
+              this.state.finishModal === true
+            ) {
+              //Floating 모달이 사건 완료 모달일 경우, HomeScreen으로 사건 완료 이벤트를 전송
               await EventBus.getInstance().fireEvent("JOBS_DONE", {
                 declare: false
               });
@@ -158,6 +167,8 @@ export default class FloatingandModal extends React.Component {
                 slideAnimationModal: false,
                 finishModal: false
               });
+            } else {
+              return null;
             }
           }}
           onTouchOutside={() => {
@@ -194,6 +205,8 @@ export default class FloatingandModal extends React.Component {
             userModal={this.state.userModal}
             finishModal={this.state.finishModal}
           />
+
+          {/* 사건완료와 신고자 정보 확인에 대해서 다른 ModalFooter를 전달 */}
           {this.state.userModal === true && this.state.finishModal === false ? (
             <ModalFooter>
               <TouchableOpacity
@@ -232,9 +245,6 @@ export default class FloatingandModal extends React.Component {
                     await this.setState({
                       slideAnimationModal: false,
                       finishModal: false
-                    });
-                    await this.setState({
-                      SendMessage: true
                     });
                   }
                 }}

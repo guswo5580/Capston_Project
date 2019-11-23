@@ -17,7 +17,6 @@ import Modal, {
 } from "react-native-modals";
 
 //////Import socket/////
-//////io 위치는 상황에 따라 변경 가능/////
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client/dist/socket.io";
 
@@ -43,6 +42,7 @@ export default class StartScreen extends React.Component {
   state = {
     notification: false //true = 신고 접수되어 모달 등장
   };
+
   constructor() {
     super();
     Socket.on("connect", () => {
@@ -79,6 +79,7 @@ export default class StartScreen extends React.Component {
   componentDidMount() {
     this.requestLocationPermission();
 
+    //웹으로부터 신고 여부 확인에 대한 신호 확인, Declare모달을 실행
     Socket.on("VICTIMCHECK", () => {
       console.log("Recieve");
       this.setState({
@@ -87,6 +88,7 @@ export default class StartScreen extends React.Component {
     });
   }
 
+  //Declare모달에서 신고취소 이벤트를 확인, 신고 취소에 대한 정보를 웹으로 전송
   componentDidUpdate() {
     EventBus.getInstance().addListener(
       "CancleDeclare",
@@ -100,6 +102,7 @@ export default class StartScreen extends React.Component {
     );
   }
 
+  //이벤트 버스 리스너를 모두 삭제
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);
   }

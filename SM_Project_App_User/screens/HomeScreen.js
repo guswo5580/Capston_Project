@@ -9,9 +9,12 @@ import {
   Alert
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client/dist/socket.io";
+
 import EventBus from "react-native-event-bus";
+
 import * as Permissions from "expo-permissions";
 import Floating from "../components/Floating";
 import StartingScreen from "../components/StartScreen";
@@ -48,6 +51,10 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     this.requestLocationPermission();
+
+    ///////////////////////////////////////////////////////
+    //해야할 부분
+    //경찰이 출동을 시작하면 연결되고 출동 중으로 변환
     Socket.on("SENDPOLICEINFO", () => {
       this.setState({
         declare: true,
@@ -55,7 +62,9 @@ export default class HomeScreen extends React.Component {
       });
     });
   }
+
   componentDidUpdate() {
+    //신고 확인 여부에 대해 신고가 확인되었을 때, 웹으로 신고 확인을 전송 후 화면 전환
     EventBus.getInstance().addListener(
       "GrantDeclare",
       (this.listener = async () => {
@@ -67,6 +76,10 @@ export default class HomeScreen extends React.Component {
         });
       })
     );
+
+    //신고가 승인되어 신고접수, 출동으로 화면 전환 후, 신고 취소를 클릭할 경우
+    //StartScreen으로 화면 전환
+    //웹에 상태 전송, 모든 것을 완료할 필요 있음
     EventBus.getInstance().addListener(
       "CancleDeclare_Home",
       (this.listener = async () => {
@@ -155,14 +168,6 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     minHeight: 100,
     zIndex: 1
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 6
-    // },
-    // shadowOpacity: 0.37,
-    // shadowRadius: 7.49,
-    // elevation: 1
   },
   main: {
     ...StyleSheet.absoluteFillObject

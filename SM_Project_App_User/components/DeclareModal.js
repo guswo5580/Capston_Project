@@ -24,6 +24,7 @@ export default class DeclareModal extends React.Component {
     slideAnimationModal: true,
     count: 15
   };
+  //모달이 시작되면 15초의 카운트 다운 시작
   componentDidMount() {
     this.counter = setInterval(() => {
       this.setState({
@@ -31,15 +32,18 @@ export default class DeclareModal extends React.Component {
       });
     }, 1000);
   }
+  //카운트가 0이 되는 순간을 캐치
   async componentDidUpdate() {
     if (this.state.count === 0) {
       await clearInterval(this.counter);
       await this.setState({
         slideAnimationModal: false
       });
+      //신고에 대한 사용자의 승인 이벤트를 HomeScreen으로 전송
       await EventBus.getInstance().fireEvent("GrantDeclare");
     }
   }
+  //setInterval에 대한 저장소 초기화
   componentWillUnmount() {
     clearInterval(this.counter);
     this.notification = true;
@@ -49,21 +53,15 @@ export default class DeclareModal extends React.Component {
     return (
       <View style={styles.container}>
         <Modal
-          onDismiss={async () => {
-            // await EventBus.getInstance().fireEvent("CancleDeclare", {
-            //   notification: this.notification
-            // });
-            // await clearInterval(this.counter);
-            // await this.setState({
-            //   slideAnimationModal: false
-            // });
-          }}
+          //모달이 Dismiss 되었을 때는 사용자의 신고 취소 여부를 확인할 수 없으니 신호를 보내면 안됨
+          onDismiss={() => {}}
           swipeDirection="down"
           onSwipeOut={async () => {
             await clearInterval(this.counter);
             await this.setState({
               slideAnimationModal: false
             });
+            //사용자가 신고 확인 모달에 대해 신고 취소를 하였을 때, StartScreen을 통해 이벤트를 전송
             await EventBus.getInstance().fireEvent("CancleDeclare", {
               notification: this.notification
             });

@@ -10,7 +10,6 @@ import {
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
 //////Import socket/////
-//////io 위치는 상황에 따라 변경 가능/////
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client/dist/socket.io";
 
@@ -27,8 +26,6 @@ const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-// const headerHorizontalpadding = width / 4
-
 export default class HomeScreen extends React.Component {
   state = {
     declare: false,
@@ -41,6 +38,8 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     this.requestLocationPermission();
+
+    //출동 접수 이벤트를 받아, 메인 HomeScreen을 렌더링
     EventBus.getInstance().addListener(
       "ShowMainPage",
       (this.listener = data => {
@@ -49,14 +48,17 @@ export default class HomeScreen extends React.Component {
         });
       })
     );
-    EventBus.getInstance().addListener(
-      "BackToStartScreen",
-      (this.listener = data => {
-        this.setState({
-          declare: false
-        });
-      })
-    );
+
+    // EventBus.getInstance().addListener(
+    //   "BackToStartScreen",
+    //   (this.listener = data => {
+    //     this.setState({
+    //       declare: false
+    //     });
+    //   })
+    // );
+
+    //사건 완료 이벤트를 받아, 전체 정보를 초기화하고 StartScreen을 렌더링
     EventBus.getInstance().addListener(
       "JOBS_DONE",
       (this.listener = data => {
