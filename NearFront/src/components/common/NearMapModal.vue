@@ -37,7 +37,7 @@ export default {
 					icon: { url: 'yellow.png' },
 				},
 			],
-			vMessage: '출동 배정',
+			vMessage: '신고 여부 확인',
 			pMessage: '출동 대기중',
 			message: '출동 배정',
 			policeMessage: '출동 대기중',
@@ -117,7 +117,8 @@ export default {
 				this.message = '출동 배정';
 			}
 			EventBus.$on('doneCall', () => {
-				this.vMessage = '출동 배정';
+				this.isVictim = false;
+				this.vMessage = '신고 여부 확인';
 				this.pMessage = '출동 대기중';
 				this.isPolice = true;
 			});
@@ -141,6 +142,14 @@ export default {
 			this.socket.on('JOBS_done', police => {
 				// this.police.report = !this.police.report;
 				EventBus.$emit('JOBSDONE', police, this.victimTest[0]);
+			});
+			EventBus.$on('victimCancleCAll', () => {
+				this.vMessage = '출동 배정';
+				this.victimTest[0].report = false;
+			});
+			this.socket.on('CHECK_BUTTON', () => {
+				this.victimButton.backgroundColor = '#E60012';
+				this.vMessage = '신고 접수';
 			});
 		});
 	},
@@ -195,7 +204,8 @@ export default {
 		victimButtonClick() {
 			if (this.markers.report === false && this.markers.identity === 'victim') {
 				this.markers.report = !this.markers.report;
-				this.vMessage = '신고 접수 ';
+				this.victimButton.backgroundColor = 'gray';
+				this.vMessage = '신고 여부 확인중 ';
 				this.victimBackCALLID = this.markers.id;
 				let index = this.markers.id;
 				EventBus.$emit('victimCall', this.victimCall, index);
@@ -211,7 +221,7 @@ export default {
 				this.markers.identity === 'victim'
 			) {
 				this.markers.report = !this.markers.report;
-				this.vMessage = '출동 배정 ';
+				this.vMessage = '신고 여부 확인 ';
 				let index = this.markers.id;
 				EventBus.$emit('victimCall', this.victimBackCall, index);
 				EventBus.$emit('yellowImage', this.yellowCall, index);

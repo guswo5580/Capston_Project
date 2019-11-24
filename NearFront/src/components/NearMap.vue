@@ -48,6 +48,7 @@ export default {
 	name: 'GoogleMap',
 	data() {
 		return {
+			socket: io('http://172.16.41.21:7499'),
 			currentLocation: { lat: 0, lng: 0 },
 			map: null,
 			infoContent: '',
@@ -72,7 +73,7 @@ export default {
 					name: '유승훈(남)',
 					age: '27 (931027)',
 					bloodType: 'O형 (RH+)',
-					position: { lat: 37.546497, lng: 127.069922 },
+					position: { lat: 37.550378, lng: 127.073192 },
 					info: '조선실세 사건 증인 보호 중',
 					img: 'MrYoo.jpeg',
 					report: false,
@@ -85,8 +86,8 @@ export default {
 					workArea: '광진 경찰서',
 					class: '경위',
 					bloodType: 'AB형(RH+)',
-					position: { lat: 37.54817, lng: 127.069234 },
-					img: 'Police.jpg',
+					position: { lat: 37.545344, lng: 127.07664 },
+					img: 'Police.png',
 					report: false,
 					waitingCall: false,
 					acceptCall: false,
@@ -94,6 +95,7 @@ export default {
 					identity: 'police',
 					icon: { url: 'white.png' },
 				},
+
 				{
 					id: 2,
 					name: '여소빈',
@@ -124,7 +126,7 @@ export default {
 					workArea: '광진 파출소',
 					class: '경위',
 					bloodType: 'O형(RH+)',
-					position: { lat: 37.545344, lng: 127.07664 },
+					position: { lat: 37.55974, lng: 127.085245 },
 					img: 'Police.jpg',
 					report: false,
 					waitingCall: false,
@@ -133,13 +135,14 @@ export default {
 					identity: 'police',
 					icon: { url: 'white.png' },
 				},
+
 				{
 					id: 5,
 					name: '이지광(남)',
 					workArea: '광진 파출소',
 					class: '경위',
 					bloodType: 'A형(RH+)',
-					position: { lat: 37.54921, lng: 127.09006 },
+					position: { lat: 37.548439, lng: 127.04845 },
 					img: 'Police.jpg',
 					report: false,
 					waitingCall: false,
@@ -154,7 +157,7 @@ export default {
 					workArea: '광진 파출소',
 					class: '경위',
 					bloodType: 'B형(RH+)',
-					position: { lat: 37.551836, lng: 127.077932 },
+					position: { lat: 37.545554, lng: 127.099834 },
 					img: 'Police.jpg',
 					report: false,
 					waitingCall: false,
@@ -169,7 +172,7 @@ export default {
 					workArea: '광진 파출소',
 					class: '경위',
 					bloodType: 'O형(RH+)',
-					position: { lat: 37.545313, lng: 127.062799 },
+					position: { lat: 37.538233, lng: 127.053206 },
 					img: 'Police.jpg',
 					report: false,
 					waitingCall: false,
@@ -226,11 +229,12 @@ export default {
 			});
 		// 라즈베리파이 신호보낸후 마커 색깔바꾸기
 		// 버튼 글짜 바꿔야됨
-		// this.socket.on("유승훈 출동신호 보냄",()=>{
-		// 	this.marker[0].icon = "red.png";
-		//  EventBus.$emit("버튼 '신고접수"),
-		//  EventBus.$emit("알림창 신고접수 뜨기!")
-		// })
+		this.socket.on('victim_cancel', () => {
+			this.markers[0].icon = 'yellow.png';
+			this.markers[0].report = false;
+			EventBus.$emit('victimCancleCAll');
+			// EventBus.$emit("버튼 '신고접수"), EventBus.$emit('알림창 신고접수 뜨기!');
+		});
 	},
 	mounted() {
 		this.$refs.gmap.$mapPromise.then(map => {

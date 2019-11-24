@@ -39,6 +39,7 @@ io.on('connection', socket => {
 	socket.on('POLICE_CALLBACK', data => {
 		console.log(data);
 		io.emit('POLICE_ISPOLICE', data);
+		io.emit('POLICE_SENDPOLICEINFO');
 	});
 	socket.on('JOBS_DONE', data => {
 		console.log(data);
@@ -53,9 +54,18 @@ io.on('connection', socket => {
 	socket.on('VICTIM_CHECK', () => {
 		io.emit('VICTIMCHECK');
 	});
+	socket.on('CANCEL_CALL', () => {
+		console.log('사용자 취소 신청!');
+		io.emit('victim_cancel');
+	});
 
-	socket.on('disconnected', data => {
-		console.log('disconnected!');
+	// socket.on('disconnected', data => {
+	// 	console.log('disconnected!');
+	// });
+	// 사용자가 신고가 맞다면 빨간버튼과 신고접수로 바꾸기
+	socket.on('GRANT_CALL', data => {
+		console.log(data);
+		io.emit('CHECK_BUTTON');
 	});
 });
 
