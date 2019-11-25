@@ -40,8 +40,7 @@ io.on('connection', socket => {
 	//경찰이 출동한다고 알림
 	socket.on('POLICE_CALLBACK', data => {
 		console.log(data);
-		// await io.emit('SEND_POLICE_INFO', console.log('보냈다잉!'));
-		io.emit("SEND_POLICE_INFO");
+		io.emit("SEND_POLICE_INFO", console.log("보냈다잉!!!!"));
 
 	});
 	//전체 사건완료
