@@ -32,15 +32,19 @@ server.on('listening', onListening);
 
 io.on('connection', socket => {
 	console.log('connected client');
+	//경찰 출동 확인 가능여부 확인 중
 	socket.on('POLICE_CALL', () => {
 		console.log('Socket is here! ', socket.id);
 		io.emit('POLICE_MESSAGE');
 	});
+	//경찰이 출동한다고 알림
 	socket.on('POLICE_CALLBACK', data => {
 		console.log(data);
-		io.emit('POLICE_ISPOLICE', data);
-		io.emit('POLICE_SENDPOLICEINFO');
+		// await io.emit('SEND_POLICE_INFO', console.log('보냈다잉!'));
+		io.emit("SEND_POLICE_INFO");
+
 	});
+	//전체 사건완료
 	socket.on('JOBS_DONE', data => {
 		console.log(data);
 		io.emit('JOBS_done', data);
@@ -54,11 +58,11 @@ io.on('connection', socket => {
 	socket.on('VICTIM_CHECK', () => {
 		io.emit('VICTIMCHECK');
 	});
+	//사용자 취소신청
 	socket.on('CANCEL_CALL', () => {
 		console.log('사용자 취소 신청!');
 		io.emit('victim_cancel');
 	});
-
 	// socket.on('disconnected', data => {
 	// 	console.log('disconnected!');
 	// });
@@ -66,6 +70,23 @@ io.on('connection', socket => {
 	socket.on('GRANT_CALL', data => {
 		console.log(data);
 		io.emit('CHECK_BUTTON');
+	});
+
+	//11/25/19 해야할일
+	//경찰 출동 불가 상태 전송해서 웹 표시 바꾸기
+	socket.on('POLICE_ISBUSY', () => {
+		console.log('경찰이 다른 엄무때매 바빠요!');
+		io.emit('POLICE_BUSY');
+	});
+	//경찰 출동 가능 상태 전송해서 웹 표시 바꾸기
+	socket.on('POLICE_CAN_WORK_NOW', () => {
+		console.log('경찰이 출동이 가능해졌어요!');
+		io.emit('POLICE_CAN_WORK');
+	});
+	//사용자 신고 접수, 출동 배정 후, 신고 취소 상황시, 웹 페이지 바꾸기
+	socket.on('VICTIM_NO_NEED_POLICE', () => {
+		console.log('난 경찰이 필요 없다구요!');
+		io.emit('VICTIM_NO_NEED_HELP');
 	});
 });
 

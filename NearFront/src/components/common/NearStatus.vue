@@ -31,7 +31,9 @@
 						<b-col style="padding-right:10px">
 							<i class="fas fa-circle fourth"></i>
 							<span>보호 관찰</span>
-							<span style="color:#707070; padding-left:2px;">3건</span>
+							<span style="color:#707070; padding-left:2px;"
+								>{{ victimSafe }}건</span
+							>
 						</b-col>
 					</b-row>
 				</b-col>
@@ -48,6 +50,7 @@ export default {
 			victimCall: 0,
 			askingCall: 0,
 			policeCall: 0,
+			victimSafe: 3,
 		};
 	},
 	created() {
@@ -64,6 +67,12 @@ export default {
 		EventBus.$on('doneCall', () => {
 			this.policeCall -= 1;
 			this.victimCall -= 1;
+		});
+		EventBus.$on('victimSafeCall', () => {
+			this.victimSafe -= 1;
+		});
+		EventBus.$on('victimSafeCallBack', () => {
+			this.victimSafe += 1;
 		});
 	},
 };

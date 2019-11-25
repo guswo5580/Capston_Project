@@ -93,6 +93,36 @@
 				</div>
 			</div>
 		</div>
+		<div v-else-if="cancelCall">
+			<div>
+				<div class="rightBox">
+					<div class="testline">
+						<div :style="finish" class="Div1">
+							<img
+								src="../../public/finish.png"
+								width="30px"
+								align="left"
+								class="imgMv"
+							/>
+						</div>
+						<span class="Div2">신고취소</span>
+						<div>
+							<span class="Div3">
+								유승훈(남)
+								<span>{{ typeOfCall[0] }}</span>
+							</span>
+						</div>
+						<div class="Div4">
+							<span class="Div4">박원형(남)</span>
+							<span style="padding-left:5px">경위</span>
+							<span>(광진 경찰서)</span>
+							<span>담당</span>
+							<span></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -103,6 +133,35 @@ export default {
 	data() {
 		return {
 			isBefore: true,
+			markers: [
+				{
+					id: 0,
+					name: '유승훈(남)',
+					age: '27 (931027)',
+					bloodType: 'O형 (RH+)',
+					position: { lat: 37.550378, lng: 127.073192 },
+					info: '조선실세 사건 증인 보호 중',
+					img: 'MrYoo.jpeg',
+					report: false,
+					identity: 'victim',
+					icon: { url: 'yellow.png' },
+				},
+				{
+					id: 1,
+					name: '박원형(남)',
+					workArea: '광진 경찰서',
+					class: '경위',
+					bloodType: 'AB형(RH+)',
+					position: { lat: 37.545344, lng: 127.07664 },
+					img: 'Police.png',
+					report: false,
+					waitingCall: false,
+					acceptCall: false,
+					finishCall: false,
+					identity: 'police',
+					icon: { url: 'white.png' },
+				},
+			],
 			newPosition: {},
 			messages: ['신고접수', '출동 배정', '출동 중', '출동 승인'],
 			currentSituation: ['담당 경찰관이 배정되지 않았습니다.'],
@@ -143,6 +202,7 @@ export default {
 			policeWorkArea: '',
 			victimWHO: '',
 			isDone: false,
+			cancelCall: false,
 			marker: [],
 			policeId: '',
 			victimId: '',
@@ -180,17 +240,8 @@ export default {
 				this.victimName = victimMarkers.name;
 			}),
 			EventBus.$on('JOBSDONE', (police, victim) => {
-				// setTimeout(() => {
-				// 	this.isBefore = false;
-				// 	this.isDone = true;
-				// 	EventBus.$emit('backYellow', victimId);
-				// 	EventBus.$emit('backWhite', policeId);
-				// 	EventBus.$emit('backPoliceButton');
-				// 	EventBus.$emit('backVictimButton');
-				// 	EventBus.$emit('doneCall');
-				// 	EventBus.$emit('FinishJob', policeId, victimId);
-				// }, 6000);
 				this.isBefore = false;
+				this.cancelCall = false;
 				this.isDone = true;
 				console.log('CHECK!', police.id, victim.id);
 				EventBus.$emit('backYellow', victim.id);
@@ -199,6 +250,13 @@ export default {
 				EventBus.$emit('backVictimButton');
 				EventBus.$emit('doneCall');
 				EventBus.$emit('FinishJob', police, victim);
+			}),
+			//신고 접수 출동 중 상태에서 사용자가 취소함
+			EventBus.$on('victim_no_need_help', () => {
+				this.isBefore = false;
+				this.cancelCall = true;
+				this.isDone = false;
+				EventBus.$emit('victimSafeCallBack');
 			});
 	},
 	mounted() {
@@ -206,6 +264,7 @@ export default {
 			this.newPosition = markers;
 			this.isBefore = true;
 			this.isDone = false;
+			this.cancelCall = false;
 			if (markers.identity === 'victim') {
 				// console.log("1) victim");
 				this.victim = true;
