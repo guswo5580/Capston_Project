@@ -161,14 +161,14 @@ export default class FloatingandModal extends React.Component {
                     </View>
                     <View style={styles.repeatContent}>
                       <Text style={styles.TextTitle}>소속</Text>
-                      <Text style={styles.TextInfo}>둔춘 파출소</Text>
+                      <Text style={styles.TextInfo}>광진 파출소</Text>
                     </View>
                     <View style={styles.repeatContent}>
                       <Text style={styles.TextTitle}>계급</Text>
                       <Text style={styles.TextInfo}>경위</Text>
                     </View>
                     <View style={styles.ContentMessage}>
-                      <Text style={styles.Message}>약 3분 뒤(235m) 이내</Text>
+                      <Text style={styles.Message}>약 3분 뒤(50m) 이내</Text>
                       <Text style={styles.Message}>현장 도착 예정입니다.</Text>
                     </View>
                   </View>

@@ -62,7 +62,7 @@ export default class DeclareModal extends React.Component {
                 </Text>
               </View>
               <Text style={styles.modalHeaderSub}>
-                군자역 근방 (성내 3동 관할)
+                어린이 대공원역 근방 (성내 3동 관할)
               </Text>
             </View>
             <View style={{ flex: 1 }}>

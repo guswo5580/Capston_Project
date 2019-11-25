@@ -23,7 +23,7 @@ import DeclareModal from "./DeclareModal.js";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-let Socket = io("http://172.16.41.21:7499", {
+let Socket = io("http://192.168.0.20:7499", {
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -41,25 +41,24 @@ export default class StartingScreen extends React.Component {
   constructor() {
     super();
   }
-  componentDidUpdate() {
+  async componentDidUpdate() {
     //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
     if (this.state.impossible === true) {
-      Socket.disconnect();
-      console.log("Socket Disconnect");
+      await Socket.on("connect", () => {
+        console.log("connection server in Impossible");
+      });
+      await Socket.emit("POLICE_ISBUSY", () => {
+        console.log("Emit Impossible");
+      });
     }
     if (this.state.impossible === false) {
-      console.log("Socket Connect");
-      let Socket = io("http://172.16.41.21:7499", {
-        jsonp: false,
-        autoConnect: true,
-        secure: true,
-        reconnection: true,
-        reconnectionDelay: 500,
-        reconnectionAttempts: Infinity
-      });
       Socket.on("connect", () => {
-        console.log("connection server");
+        console.log("connection server in Possible");
       });
+      Socket.emit("POLICE_CAN_WORK_NOW", () => {
+        console.log("Emit Possible");
+      });
+
       //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
       Socket.on("POLICE_MESSAGE", () => {
         console.log("Recieve");

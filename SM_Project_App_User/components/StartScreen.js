@@ -30,7 +30,7 @@ const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-let Socket = io("http://172.16.41.21:7499", {
+let Socket = io("http://192.168.0.20:7499", {
   jsonp: false,
   autoConnect: true,
   secure: true,

@@ -20,15 +20,26 @@ import Floating from "../components/Floating";
 import StartingScreen from "../components/StartScreen";
 import MainHeader from "../components/MainHeader";
 import Loading from "../components/Loading";
+import CancleModal from "../components/CancleModal";
 import Color from "../constants/Colors";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
+let Socket = io("http://192.168.0.20:7499", {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
+
 export default class HomeScreen extends React.Component {
   state = {
     declare: false,
+    cancle: false,
     marker: {
       name: "유승훈",
       latitude: "37.550378",
@@ -49,14 +60,15 @@ export default class HomeScreen extends React.Component {
       })
     );
 
-    // EventBus.getInstance().addListener(
-    //   "BackToStartScreen",
-    //   (this.listener = data => {
-    //     this.setState({
-    //       declare: false
-    //     });
-    //   })
-    // );
+    //신고자가 출동 중 상태에서 신고를 취소할 경우 실행
+    EventBus.getInstance().addListener(
+      "BackToStartScreen",
+      (this.listener = data => {
+        this.setState({
+          declare: false
+        });
+      })
+    );
 
     //사건 완료 이벤트를 받아, 전체 정보를 초기화하고 StartScreen을 렌더링
     EventBus.getInstance().addListener(
@@ -121,6 +133,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <Floating />
+          {this.state.cancle ? <CancleModal /> : null}
         </View>
       );
     } else if (this.state.declare === true && !this.state.initialPosition) {

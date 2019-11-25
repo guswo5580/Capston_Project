@@ -147,52 +147,31 @@ export default class FloatingandModal extends React.Component {
         />
         <Modal
           onDismiss={async () => {
-            if (
-              this.state.userModal === true &&
-              this.state.finishModal === false
-            ) {
-              this.setState({
-                slideAnimationModal: false,
-                userModal: false
-              });
-            } else if (
-              this.state.userModal === false &&
-              this.state.finishModal === true
-            ) {
-              //Floating 모달이 사건 완료 모달일 경우, HomeScreen으로 사건 완료 이벤트를 전송
-              await EventBus.getInstance().fireEvent("JOBS_DONE", {
-                declare: false
-              });
-              await this.setState({
-                slideAnimationModal: false,
-                finishModal: false
-              });
-            } else {
-              return null;
-            }
-          }}
-          onTouchOutside={() => {
             if (this.state.userModal === true) {
               this.setState({
                 slideAnimationModal: false,
                 userModal: false
               });
             } else {
-              this.setState({
+              //Floating 모달이 사건 완료 모달일 경우, HomeScreen으로 사건 완료 이벤트를 전송
+              await this.setState({
                 slideAnimationModal: false,
                 finishModal: false
               });
             }
           }}
           swipeDirection="down"
-          onSwipeOut={() => {
+          onSwipeOut={async () => {
             if (this.state.userModal === true) {
               this.setState({
                 slideAnimationModal: false,
                 userModal: false
               });
             } else {
-              this.setState({
+              await EventBus.getInstance().fireEvent("JOBS_DONE", {
+                declare: false
+              });
+              await this.setState({
                 slideAnimationModal: false,
                 finishModal: false
               });

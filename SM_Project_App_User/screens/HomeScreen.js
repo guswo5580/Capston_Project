@@ -25,7 +25,7 @@ import Color from "../constants/Colors";
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-let Socket = io("http://172.16.41.21:7499", {
+let Socket = io("http://192.168.0.20:7499", {
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -52,10 +52,8 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
     this.requestLocationPermission();
 
-    ///////////////////////////////////////////////////////
-    //해야할 부분
     //경찰이 출동을 시작하면 연결되고 출동 중으로 변환
-    Socket.on("SENDPOLICEINFO", () => {
+    Socket.on("SEND_POLICE_INFO", () => {
       this.setState({
         declare: true,
         status: true
