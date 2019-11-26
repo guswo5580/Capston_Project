@@ -21,11 +21,12 @@ import StartingScreen from "../components/StartScreen";
 import MainHeader from "../components/MainHeader";
 import Loading from "../components/Loading";
 import Color from "../constants/Colors";
+import Host from "../constants/Host";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-let Socket = io("http://192.168.0.20:7499", {
+let Socket = io(Host.Port, {
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -52,6 +53,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
     this.requestLocationPermission();
 
+    //해야할 것 1
     //경찰이 출동을 시작하면 연결되고 출동 중으로 변환
     Socket.on("SEND_POLICE_INFO", () => {
       this.setState({
@@ -77,7 +79,8 @@ export default class HomeScreen extends React.Component {
 
     //신고가 승인되어 신고접수, 출동으로 화면 전환 후, 신고 취소를 클릭할 경우
     //StartScreen으로 화면 전환
-    //웹에 상태 전송, 모든 것을 완료할 필요 있음
+    //해야할 것 2
+    //웹에 상태 전송, 모든 것을 완료할 필요 있음(경찰앱에서도)
     EventBus.getInstance().addListener(
       "CancleDeclare_Home",
       (this.listener = async () => {

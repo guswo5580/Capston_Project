@@ -22,12 +22,13 @@ import MainHeader from "../components/MainHeader";
 import Loading from "../components/Loading";
 import CancleModal from "../components/CancleModal";
 import Color from "../constants/Colors";
+import Host from "../constants/Host";
 
 const GOOGLE_MAP_KEY = "AIzaSyDKQLsyN5E-Sj1bUOF0gX6Z7C58ezkEUxQ";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-let Socket = io("http://192.168.0.20:7499", {
+let Socket = io(Host.Port, {
   jsonp: false,
   autoConnect: true,
   secure: true,

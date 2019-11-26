@@ -20,10 +20,11 @@ import FlipToggle from "react-native-flip-toggle-button";
 import { Bubbles } from "react-native-loader";
 import Color from "../constants/Colors";
 import DeclareModal from "./DeclareModal.js";
+import Host from "../constants/Host";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-let Socket = io("http://192.168.0.20:7499", {
+let Socket = io(Host.Port, {
   jsonp: false,
   autoConnect: true,
   secure: true,
