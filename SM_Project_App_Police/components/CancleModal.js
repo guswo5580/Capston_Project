@@ -29,13 +29,6 @@ export default class CancleModal extends React.Component {
   render() {
     return (
       <Modal
-        // onDismiss={async () => {
-        //   await this.setState({
-        //     slideAnimationModal: false
-        //   });
-        //   //StartScreen에 출동 접수 신호 전송
-        //   await EventBus.getInstance().fireEvent("BackToStartScreen");
-        // }}
         swipeDirection="down"
         onSwipeOut={async () => {
           await this.setState({

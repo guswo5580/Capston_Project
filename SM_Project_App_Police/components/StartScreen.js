@@ -65,9 +65,6 @@ export default class StartingScreen extends React.Component {
       await this.setState({
         Modal: false
       });
-      // await this.setState({
-      //   cancel: true
-      // });
     });
     EventBus.getInstance().addListener(
       "EmitToCall",

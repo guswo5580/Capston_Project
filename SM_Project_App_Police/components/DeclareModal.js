@@ -42,11 +42,10 @@ export default class DeclareModal extends React.Component {
     this.state = { slideAnimationModal: true };
   }
   componentDidMount() {
-    Socket.on("VICTIM_NO_NEED_HELP", async () => {
-      await this.setState({
+    Socket.on("VICTIM_NO_NEED_HELP", () => {
+      this.setState({
         slideAnimationModal: false
       });
-      // await EventBus.getInstance().fireEvent("BackToStartScreen");
     });
   }
   _DeleteModalAndCall = () => {
@@ -69,10 +68,9 @@ export default class DeclareModal extends React.Component {
             await this.setState({
               slideAnimationModal: false
             });
+
             //StartScreen에 출동 접수 신호 전송
-            await EventBus.getInstance().fireEvent("EmitToCall", {
-              emit: true
-            });
+            await EventBus.getInstance().fireEvent("EmitToCall");
           }}
           visible={this.state.slideAnimationModal}
           modalAnimation={new SlideAnimation({ slideFrom: "bottom" })}
@@ -87,7 +85,7 @@ export default class DeclareModal extends React.Component {
                 </Text>
               </View>
               <Text style={styles.modalHeaderSub}>
-                어린이 대공원역 근방 (성내 3동 관할)
+                세종대학교 근방 (성내 3동 관할)
               </Text>
             </View>
             <View style={{ flex: 1 }}>
