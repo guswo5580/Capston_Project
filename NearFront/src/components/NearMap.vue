@@ -48,7 +48,7 @@ export default {
   name: "GoogleMap",
   data() {
     return {
-      socket: io("http://192.168.43.42:7499"),
+      socket: io("http://192.168.35.85:7499"),
       currentLocation: { lat: 0, lng: 0 },
       map: null,
       infoContent: "",
@@ -225,6 +225,9 @@ export default {
     // 라즈베리파이 신호보낸후 마커 색깔바꾸기
     // 버튼 글짜 바꿔야됨
     this.socket.on("victim_cancel", () => {
+      console.log(
+        "사용자로부터 취소신청 받고 맵 마커 색깔이 바뀐후에 버튼으로 이벤트 발생!"
+      );
       this.markers[0].icon = "yellow.png";
       this.markers[0].report = false;
       EventBus.$emit("victimCancelCAll");
@@ -241,19 +244,34 @@ export default {
     });
     //알림 표시 필요하면 해야함
     this.socket.on("POLICE_CAN_WORK", () => {
+      console.log("NearMap에서 이벤트 받고 경찰이 다시 일할수있음");
       this.markers[1].icon = "white.png";
       this.policeBusy = false;
       EventBus.$emit("police_canWork");
     });
-    this.socket.on("VICTIM_NO_NEED_HELP", () => {
+    this.socket.on("VICTIM_NO_NEED_HELP", data => {
+      console.log(
+        "사용자가 신고접수후 경찰이 출동했는데 사용자가 취소를 눌렀다!"
+      );
       this.markers[0].icon = "yellow.png";
       this.markers[0].report = false;
       this.markers[1].icon = "white.png";
       this.markers[1].report = false;
       //취소 신청시 알림 신고취소로 변경
       EventBus.$emit("victim_no_need_help");
+      EventBus.$emit("victim_no_button");
       EventBus.$emit("victimSafeCallBack");
       //버튼 표시 변경
+      EventBus.$emit("doneCall", data);
+    });
+    this.socket.on("JOBS_done", police => {
+      // this.police.report = !this.police.report;
+      this.markers[0].icon = "yellow.png";
+      this.markers[1].icon = "white.png";
+      this.markers[0].report = false;
+      this.markers[1].report = false;
+      console.log("JOBS_done 받고 JOBSDONE을 NearFlow로 보냄! ");
+      EventBus.$emit("JOBSDONE", police, this.markers[0]);
       EventBus.$emit("doneCall");
     });
     EventBus.$on("police_not_busy", () => {
@@ -262,6 +280,7 @@ export default {
     this.socket.on("KILL_POLICE", () => {
       this.markers[1].icon = NULL;
     });
+    this.socket.emit("POLICE_YES_OR_NO", () => {});
   },
   mounted() {
     this.$refs.gmap.$mapPromise.then(map => {

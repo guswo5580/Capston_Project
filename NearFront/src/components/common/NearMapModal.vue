@@ -17,7 +17,7 @@ import io from "socket.io-client";
 export default {
   data() {
     return {
-      socket: io("http://192.168.43.42:7499"),
+      socket: io("http://192.168.35.85:7499"),
       markers: [
         {
           id: 0,
@@ -56,7 +56,6 @@ export default {
       backPolice: false,
       backVictim: false,
       buttonClicked: false,
-      markers: [],
       victimCall: 1,
       victimBackCall: -1,
       policeCall: 1,
@@ -143,25 +142,35 @@ export default {
         this.victimCallName = position.name;
       }
       // Police 출동 여부 및 출동배정
-      if (this.markers.report === false && this.markers.identity === "police") {
-        this.message = "출동 대기중";
-      } else if (
-        this.markers.report === false &&
-        this.markers.identity === "victim"
-      ) {
-        this.message = "신고 여부 확인";
-      }
+      // if (this.markers.report === false && this.markers.identity === "police") {
+      //   this.message = "출동 대기중";
+      // } else if (
+      //   this.markers.report === false &&
+      //   this.markers.identity === "victim"
+      // ) {
+      //   this.message = "신고 여부 확인";
+      // }
     });
     //신고 완료 또는 신고 취소시 이벤트 발생
-    EventBus.$on("doneCall", () => {
-      this.isVictim = false;
-      this.vMessage = "신고 여부 확인";
-      this.pMessage = "출동 대기중";
-      this.isPolice = true;
+    EventBus.$on("doneCall", data => {
+      console.log("doneCall identity", data);
+      if (data.identity === "victim") {
+        this.isVictim = true;
+        this.isPolice = false;
+        this.vMessage = "신고 여부 확인";
+        this.pMessage = "출동 대기중";
+      } else {
+        this.isVictim = false;
+        this.isPolice = true;
+        this.vMessage = "신고 여부 확인";
+        this.pMessage = "출동 대기중";
+      }
+      // this.markers[0].report = false;
+      // this.markers[1].report = false;
     });
     this.socket.on("SEND_POLICE_INFO", police => {
-      console.log("Received!");
-      console.log(police);
+      console.log("SEND_POLICE_INFO 작동해서 내 프런트에서 변화 시작!");
+      console.log("경찰 버튼 및 상태 출동중으로 바뀜!");
       let index = police.id;
       this.policeButton.backgroundColor = "#036EB8";
       this.isWaiting = false;
@@ -169,7 +178,7 @@ export default {
       this.isWaiting = false;
       this.isVictim = false;
       this.pMessage = "출동 중";
-      EventBus.$emit("policeCall", this.policeCall);
+      EventBus.$emit("policeCall");
       console.log("파란색!! 파란색!!");
       EventBus.$emit("changeBlue", this.blueCall, police.id);
       EventBus.$emit("policeDONE", police, police.id);
@@ -179,21 +188,21 @@ export default {
     // this.socket.on('레드 버튼 글짜 바꾸기 콜', () => {
     // 	this.vMessage = "신고 접수";
     // });
-    this.socket.on("JOBS_done", police => {
-      // this.police.report = !this.police.report;
-      console.log("도착! ", police);
-      EventBus.$emit("JOBSDONE", police, this.markers[0]);
-    });
     EventBus.$on("victimCancelCAll", () => {
-      this.vMessage = "신고 여부 확인";
-      this.victimButton.backgroundColor = "#E60012";
-      this.markers[0].report = false;
-      this.isVictim = true;
+      console.log("버튼 색깔 및 표시를 바꿈!");
       this.isPolice = false;
       this.isWaiting = false;
-      this.isBudsy = false;
+      this.isBusy = false;
+      this.isVictim = true;
+      this.vMessage = "신고 여부 확인";
+      this.pMessage = "출동 대기중";
+      this.victimButton.backgroundColor = "#E60012";
+      this.policeButton.backgroundColor = "#036EB8";
+      this.markers[0].report = false;
+      this.markers[1].report = false;
     });
     this.socket.on("CHECK_BUTTON", () => {
+      console.log("사용자 버튼 빨간색으로 바뀐뒤! 신고접수 표시!");
       this.victimButton.backgroundColor = "#E60012";
       this.vMessage = "신고 접수";
     });
@@ -216,6 +225,22 @@ export default {
       this.markers[1].report = false;
       EventBus.$emit("police_not_busy");
     });
+    EventBus.$on("victim_no_button", () => {
+      console.log("15초가 지난후에 사용자가 신고취소를 누름!!");
+      this.isVictim = true;
+      this.isBusy = false;
+      this.isWaiting = false;
+      this.isPolice = false;
+      this.vMessage = "사건여부 확인";
+      // this.pMessage = "출동 대기중";
+      // this.policeButton.backgroundColor = "#036EB8";
+      this.victimButton.backgroundColor = "#E60012";
+
+      // this.markers[0].report = false;
+      // console.log("hahaha", this.markers[0].report);
+      // this.markers[1].report = false;
+      // console.log("hahaha", this.markers[1].report);
+    });
   },
   methods: {
     //기본적인 시나리오
@@ -236,7 +261,7 @@ export default {
         //아이콘 보라색 바꾸기
         EventBus.$emit("changePurple", this.purpleCall, this.markers.id);
         //secondHeader에 출동배정 숫자올리기
-        EventBus.$emit("askingPolice", this.waitingCall);
+        EventBus.$emit("askingPolice");
         this.socket.emit("POLICE_CALLNOW", console.log("YES!"));
         this.pMessage = " 확인 중";
         // 확인중 상황일때 버튼 나타내기
@@ -270,7 +295,7 @@ export default {
     },
 
     victimButtonClick() {
-      if (this.markers.report === false && this.markers.identity === "victim") {
+      if (this.markers.report === false && this.isVictim === true) {
         this.markers.report = !this.markers.report;
         this.victimButton.backgroundColor = "gray";
         this.vMessage = "신고 여부 확인중 ";

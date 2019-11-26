@@ -30,22 +30,27 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+let change = true;
 io.on('connection', socket => {
 	console.log('connected client');
+	// io.emit('YES_OR_NO');
+	// socket.on('POLICE_YES_OR_NO', () => {
+	// });
 	//경찰 출동 확인 가능여부 확인 중
 	socket.on('POLICE_CALLNOW', () => {
 		console.log('Socket is here! ', socket.id);
-		io.emit('POLICE_MESSAGE');
+		console.log('POLICE_CALLNOW 프런트에서 보냄!')
+		io.emit('POLICE_MESSAGE', console.log('POLICE_CALLNOW 현재가 받음!'));
 	});
 	//경찰이 출동한다고 알림
 	socket.on('POLICE_CALLBACK', data => {
-		console.log(data);
-		io.emit("SEND_POLICE_INFO", console.log("보냈다잉!!!!"));
+		console.log('현재한테 POLICE_CALLBACK 받음!');
+		io.emit("SEND_POLICE_INFO", data);
 
 	});
 	//전체 사건완료
 	socket.on('JOBS_DONE', data => {
-		console.log("JOBS DONE!");
+		console.log("JOBS DONE! 발생하므로! 모든 사건완료 시작!");
 		io.emit('JOBS_done', data);
 	});
 	//라즈베리파이 사용자 콜이옴
@@ -55,7 +60,8 @@ io.on('connection', socket => {
 	});
 	//사용자에게 신고확인을 받음
 	socket.on('VICTIM_CHECK', () => {
-		io.emit('VICTIMCHECK');
+		console.log("신고여부 확인 버튼 클릭!")
+		io.emit('VICTIMCHECK', console.log("사용자가 15초내에 확인을 받는다!"));
 	});
 	//사용자 취소신청
 	socket.on('CANCEL_CALL', () => {
@@ -67,28 +73,38 @@ io.on('connection', socket => {
 	// });
 	// 사용자가 신고가 맞다면 빨간버튼과 신고접수로 바꾸기
 	socket.on('GRANT_CALL', data => {
-		console.log(data);
+		console.log("15초내에 응답을 안할시 신고가 맞다고 웹관리자가 인지함");
 		io.emit('CHECK_BUTTON');
 	});
+	// socket.on('I_CAN_DO', () => {
+	// 	console.log("I can Do!");
+	// 	io.emit('i_can_do');
+	// })
 
 	//11/25/19 해야할일
 	//경찰 출동 불가 상태 전송해서 웹 표시 바꾸기
-	socket.on('POLICE_ISBUSY', () => {
+
+	socket.on('POLICE_ISBUSY', (data) => {
 		console.log('경찰이 다른 엄무때매 바빠요!');
 		io.emit('POLICE_BUSY');
+		console.log(data);
+		this.change = data;
 	});
 	//경찰 출동 가능 상태 전송해서 웹 표시 바꾸기
-	socket.on('POLICE_CAN_WORK_NOW', () => {
-		console.log('경찰이 출동이 가능해졌어요!');
-		io.emit('POLICE_CAN_WORK');
-	});
+	if (this.change === false) {
+		socket.on('POLICE_CAN_WORK_NOW', () => {
+			console.log('경찰이 출동이 가능해졌어요!');
+			io.emit('POLICE_CAN_WORK');
+		});
+		this.change = true;
+	}
 	//사용자 신고 접수, 출동 배정 후, 신고 취소 상황시, 웹 페이지 바꾸기
 	socket.on('VICTIM_NO_NEED_POLICE', (data) => {
-		console.log(data);
 		console.log('난 경찰이 필요 없다구요!');
-		io.emit('VICTIM_NO_NEED_HELP');
+		io.emit('VICTIM_NO_NEED_HELP', data);
 	});
 	socket.on('LOGOUT_POLICE', () => {
+		console.log("경찰이 로그아웃!");
 		io.emit('KILL_POLICE');
 	})
 });
