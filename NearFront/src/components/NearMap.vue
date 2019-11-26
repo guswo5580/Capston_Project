@@ -48,7 +48,7 @@ export default {
   name: "GoogleMap",
   data() {
     return {
-      socket: io("http://192.168.0.20:7499"),
+      socket: io("http://192.168.43.42:7499"),
       currentLocation: { lat: 0, lng: 0 },
       map: null,
       infoContent: "",
@@ -195,7 +195,6 @@ export default {
   },
   created() {
     EventBus.$on("redImage", (redCall, number) => {
-      console.log(redCall);
       this.markers[number].icon = redCall;
     }),
       EventBus.$on("yellowImage", (yellowCall, number) => {
@@ -205,29 +204,24 @@ export default {
         this.markers[number].icon = blueCall;
       }),
       EventBus.$on("whiteImage", (whiteCall, number) => {
-        console.log(whiteCall);
         this.markers[number].icon = whiteCall;
       }),
       //사건완료시 경찰, 사용자 색 원래대로 돌리기
       EventBus.$on("backYellow", victimBackId => {
         this.victimBackID = victimBackId;
-        console.log(this.victimBackID);
-        console.log("backYellow Call! ", this.victimBackID);
         this.markers[victimBackId].icon = "yellow.png";
       }),
       EventBus.$on("backWhite", policeBackId => {
-        console.log(policeBackId);
         this.markers[policeBackId].icon = "white.png";
       }),
       EventBus.$on("changePurple", (purpleCall, index) => {
-        console.log(this.markers[index].icon);
         this.markers[index].icon = purpleCall;
       }),
       EventBus.$on("FinishJob", (pid, vid) => {
-        console.log(pid, vid);
         this.markers[pid.id].report = false;
         this.markers[vid.id].report = false;
       });
+
     // 라즈베리파이 신호보낸후 마커 색깔바꾸기
     // 버튼 글짜 바꿔야됨
     this.socket.on("victim_cancel", () => {
@@ -264,6 +258,9 @@ export default {
     });
     EventBus.$on("police_not_busy", () => {
       this.policeBusy = false;
+    });
+    this.socket.on("KILL_POLICE", () => {
+      this.markers[1].icon = NULL;
     });
   },
   mounted() {

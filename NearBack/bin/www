@@ -33,7 +33,7 @@ server.on('listening', onListening);
 io.on('connection', socket => {
 	console.log('connected client');
 	//경찰 출동 확인 가능여부 확인 중
-	socket.on('POLICE_CALL', () => {
+	socket.on('POLICE_CALLNOW', () => {
 		console.log('Socket is here! ', socket.id);
 		io.emit('POLICE_MESSAGE');
 	});
@@ -45,7 +45,7 @@ io.on('connection', socket => {
 	});
 	//전체 사건완료
 	socket.on('JOBS_DONE', data => {
-		console.log(data);
+		console.log("JOBS DONE!");
 		io.emit('JOBS_done', data);
 	});
 	//라즈베리파이 사용자 콜이옴
@@ -83,10 +83,14 @@ io.on('connection', socket => {
 		io.emit('POLICE_CAN_WORK');
 	});
 	//사용자 신고 접수, 출동 배정 후, 신고 취소 상황시, 웹 페이지 바꾸기
-	socket.on('VICTIM_NO_NEED_POLICE', () => {
+	socket.on('VICTIM_NO_NEED_POLICE', (data) => {
+		console.log(data);
 		console.log('난 경찰이 필요 없다구요!');
 		io.emit('VICTIM_NO_NEED_HELP');
 	});
+	socket.on('LOGOUT_POLICE', () => {
+		io.emit('KILL_POLICE');
+	})
 });
 
 /**

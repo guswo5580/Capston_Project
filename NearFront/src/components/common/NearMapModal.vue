@@ -17,21 +17,37 @@ import io from "socket.io-client";
 export default {
   data() {
     return {
-      socket: io("http://192.168.0.20:7499"),
-      victimTest: [
+      socket: io("http://192.168.43.42:7499"),
+      markers: [
         {
           id: 0,
           name: "유승훈(남)",
           age: "27 (931027)",
           bloodType: "O형 (RH+)",
-          position: { lat: 37.546497, lng: 127.069922 },
+          position: { lat: 37.550378, lng: 127.073192 },
           info: "조선실세 사건 증인 보호 중",
           img: "MrYoo.jpeg",
           report: false,
           identity: "victim",
           icon: { url: "yellow.png" }
+        },
+        {
+          id: 1,
+          name: "박원형(남)",
+          workArea: "광진 경찰서",
+          class: "경위",
+          bloodType: "AB형(RH+)",
+          position: { lat: 37.545344, lng: 127.07664 },
+          img: "Police.png",
+          report: false,
+          waitingCall: false,
+          acceptCall: false,
+          finishCall: false,
+          identity: "police",
+          icon: { url: "white.png" }
         }
       ],
+
       vMessage: "신고 여부 확인",
       pMessage: "출동 대기중",
       message: "출동 배정",
@@ -133,7 +149,7 @@ export default {
         this.markers.report === false &&
         this.markers.identity === "victim"
       ) {
-        this.message = "출동 배정";
+        this.message = "신고 여부 확인";
       }
     });
     //신고 완료 또는 신고 취소시 이벤트 발생
@@ -150,9 +166,11 @@ export default {
       this.policeButton.backgroundColor = "#036EB8";
       this.isWaiting = false;
       this.isPolice = true;
+      this.isWaiting = false;
+      this.isVictim = false;
       this.pMessage = "출동 중";
       EventBus.$emit("policeCall", this.policeCall);
-      console.log(this.blueCall, police.id);
+      console.log("파란색!! 파란색!!");
       EventBus.$emit("changeBlue", this.blueCall, police.id);
       EventBus.$emit("policeDONE", police, police.id);
       EventBus.$emit("getPosition2", police);
@@ -163,12 +181,17 @@ export default {
     // });
     this.socket.on("JOBS_done", police => {
       // this.police.report = !this.police.report;
-      EventBus.$emit("JOBSDONE", police, this.victimTest[0]);
+      console.log("도착! ", police);
+      EventBus.$emit("JOBSDONE", police, this.markers[0]);
     });
     EventBus.$on("victimCancelCAll", () => {
-      this.vMessage = "출동 배정";
+      this.vMessage = "신고 여부 확인";
       this.victimButton.backgroundColor = "#E60012";
-      this.victimTest[0].report = false;
+      this.markers[0].report = false;
+      this.isVictim = true;
+      this.isPolice = false;
+      this.isWaiting = false;
+      this.isBudsy = false;
     });
     this.socket.on("CHECK_BUTTON", () => {
       this.victimButton.backgroundColor = "#E60012";
@@ -178,17 +201,19 @@ export default {
       console.log("바빠요! 버튼바꿔!");
       this.isPolice = false;
       this.isWaiting = false;
+      this.isVictim = false;
       this.isBusy = true;
-      this.markers.report === true;
+      this.markers[1].report = true;
       this.pMessage = "출동 불가";
     });
     EventBus.$on("police_canWork", () => {
       console.log("다시 일할수 있어요!");
       this.isBusy = false;
       this.isWaiting = false;
+      this.isVictim = false;
       this.isPolice = true;
       this.pMessage = "출동 대기중";
-      this.markers.report === false;
+      this.markers[1].report = false;
       EventBus.$emit("police_not_busy");
     });
   },
@@ -200,23 +225,25 @@ export default {
     //4. 앱으로부터 사건완료 소켓통신이 오면 경찰은 '하얀색' 사용자는 '노란색'으로 변경뒤에 사건완료 알림이 뜸. 경찰버튼 '출동 대기중', 사용자버튼 '출동 배정'으로 바뀜
     policeButtonClick() {
       if (this.markers.report === false && this.isPolice === true) {
+        this.isWaiting = true;
+        this.isPolice = false;
+        this.isVictim = false;
+        this.isBusy = false;
         this.markers.report = !this.markers.report;
         //팝업에 보라색 나타내기
         EventBus.$emit("buttonPurple", this.markers, this.victimCallName);
-        console.log("과연 누구인가?", this.victimCallName);
         this.policeButton.backgroundColor = "gray";
         //아이콘 보라색 바꾸기
         EventBus.$emit("changePurple", this.purpleCall, this.markers.id);
         //secondHeader에 출동배정 숫자올리기
         EventBus.$emit("askingPolice", this.waitingCall);
+        this.socket.emit("POLICE_CALLNOW", console.log("YES!"));
         this.pMessage = " 확인 중";
         // 확인중 상황일때 버튼 나타내기
-        this.isWaiting = true;
-        this.isPolice = false;
+
         this.policeBackCALLID = this.markers.id;
 
         // const socket = io('http://192.168.35.68:7499');
-        this.socket.emit("POLICE_CALL", console.log("YES!"));
       }
       // else if (this.markers.report === true && this.isWaiting === true) {
       // 	// 나중에 서버에서 확인 받는건 NearMap.vue에 경찰 마커 객체에 acceptCall이 true일때 다음 진행하도록 만들자
