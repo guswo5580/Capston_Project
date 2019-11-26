@@ -27,10 +27,11 @@ import io from "socket.io-client";
 import { FloatingAction } from "react-native-floating-action";
 import Color from "../constants/Colors";
 import SelectModal from "./UserModal";
+import Host from "../constants/Host";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
-const Socket = io("http://172.16.41.21:7499", {
+const Socket = io(Host.Port, {
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -101,12 +102,6 @@ export default class FloatingandModal extends React.Component {
     ]
   };
 
-  // componentDidUpdate() {
-  //   //플로팅의 사건 완료 버튼 클릭 시, HomeScreen에 전체 데이터를 초기화하는 신호를 보냄
-  //   if (this.state.SendMessage === true) {
-  //     EventBus.getInstance().fireEvent("BackToStartScreen");
-  //   }
-  // }
   render() {
     return (
       <View style={styles.Floatingcontainer}>
@@ -168,6 +163,8 @@ export default class FloatingandModal extends React.Component {
                 userModal: false
               });
             } else {
+              //여기서 모달이 닫혀야 끝나는데
+              //한 번 더 신호를 보내달라는 건가?
               await EventBus.getInstance().fireEvent("JOBS_DONE", {
                 declare: false
               });

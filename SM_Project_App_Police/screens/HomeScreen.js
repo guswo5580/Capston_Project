@@ -56,7 +56,8 @@ export default class HomeScreen extends React.Component {
       "ShowMainPage",
       (this.listener = data => {
         this.setState({
-          declare: true
+          declare: true,
+          calcle: false
         });
       })
     );
@@ -64,9 +65,10 @@ export default class HomeScreen extends React.Component {
     //신고자가 출동 중 상태에서 신고를 취소할 경우 실행
     EventBus.getInstance().addListener(
       "BackToStartScreen",
-      (this.listener = data => {
+      (this.listener = () => {
         this.setState({
-          declare: false
+          declare: false,
+          cancle: false
         });
       })
     );
@@ -80,6 +82,11 @@ export default class HomeScreen extends React.Component {
         });
       })
     );
+    Socket.on("VICTIM_NO_NEED_HELP", async () => {
+      await this.setState({
+        cancle: true
+      });
+    });
   }
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);

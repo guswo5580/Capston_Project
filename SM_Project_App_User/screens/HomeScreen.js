@@ -54,11 +54,18 @@ export default class HomeScreen extends React.Component {
     this.requestLocationPermission();
 
     //해야할 것 1
-    //경찰이 출동을 시작하면 연결되고 출동 중으로 변환
+    //경찰이 출동을 시작하면 신고자에게 출동을 알림
     Socket.on("SEND_POLICE_INFO", () => {
       this.setState({
         declare: true,
         status: true
+      });
+    });
+    //경찰이 사건완료를 보냈을 때, 신고자의 상황 초기화
+    Socket.on("JOBS_done", () => {
+      this.setState({
+        declare: false,
+        status: false
       });
     });
   }
@@ -80,11 +87,24 @@ export default class HomeScreen extends React.Component {
     //신고가 승인되어 신고접수, 출동으로 화면 전환 후, 신고 취소를 클릭할 경우
     //StartScreen으로 화면 전환
     //해야할 것 2
-    //웹에 상태 전송, 모든 것을 완료할 필요 있음(경찰앱에서도)
+
     EventBus.getInstance().addListener(
-      "CancleDeclare_Home",
+      "CancleDeclare_Home_POLICE",
       (this.listener = async () => {
-        this.setState({
+        await Socket.emit("VICTIM_NO_NEED_POLICE", { identity: "police" });
+        // await console.log("identity = police");
+        await this.setState({
+          declare: false,
+          status: false
+        });
+      })
+    );
+    EventBus.getInstance().addListener(
+      "CancleDeclare_Home_VICTIM",
+      (this.listener = async () => {
+        await Socket.emit("VICTIM_NO_NEED_POLICE", { identity: "victim" });
+        // await console.log("identity = victim");
+        await this.setState({
           declare: false,
           status: false
         });

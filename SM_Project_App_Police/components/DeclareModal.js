@@ -12,16 +12,28 @@ import {
 import Modal, {
   ModalContent,
   ModalFooter,
-  SlideAnimation
+  SlideAnimation,
+  ModalButton
 } from "react-native-modals";
 
 //////Import EventBus//////
 import EventBus from "react-native-event-bus";
 
+window.navigator.userAgent = "react-native";
+import io from "socket.io-client";
+import Host from "../constants/Host";
 import Color from "../constants/Colors";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
+let Socket = io(Host.Port, {
+  jsonp: false,
+  autoConnect: true,
+  secure: true,
+  reconnection: true,
+  reconnectionDelay: 500,
+  reconnectionAttempts: Infinity
+});
 
 //사용자의 신고과 확인되었을 때, 경찰 출동 신호를 전달받는 컴포넌트
 export default class DeclareModal extends React.Component {
@@ -29,6 +41,20 @@ export default class DeclareModal extends React.Component {
     super(props);
     this.state = { slideAnimationModal: true };
   }
+  componentDidMount() {
+    Socket.on("VICTIM_NO_NEED_HELP", async () => {
+      await this.setState({
+        slideAnimationModal: false
+      });
+      // await EventBus.getInstance().fireEvent("BackToStartScreen");
+    });
+  }
+  _DeleteModalAndCall = () => {
+    this.setState({
+      slideAnimationModal: false
+    });
+    EventBus.getInstance().fireEvent("EmitToCall");
+  };
   render() {
     if (this.props.modal === true) {
       return (
@@ -37,14 +63,13 @@ export default class DeclareModal extends React.Component {
             await this.setState({
               slideAnimationModal: false
             });
-            //StartScreen에 출동 접수 신호 전송
-            await EventBus.getInstance().fireEvent("EmitToCall");
           }}
           swipeDirection="down"
           onSwipeOut={async () => {
             await this.setState({
               slideAnimationModal: false
             });
+            //StartScreen에 출동 접수 신호 전송
             await EventBus.getInstance().fireEvent("EmitToCall", {
               emit: true
             });
@@ -104,13 +129,7 @@ export default class DeclareModal extends React.Component {
               </View>
             </View>
           </ModalContent>
-          <ModalFooter
-            onPress={() => {
-              this.setState({
-                slideAnimationModal: false
-              });
-            }}
-          >
+          <ModalFooter>
             <TouchableOpacity
               style={styles.closeBtn}
               onPress={() => {

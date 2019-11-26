@@ -21,6 +21,7 @@ import { Bubbles } from "react-native-loader";
 import Color from "../constants/Colors";
 import DeclareModal from "./DeclareModal.js";
 import Host from "../constants/Host";
+import CancleModal from "../components/CancleModal";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -45,32 +46,29 @@ export default class StartingScreen extends React.Component {
   async componentDidUpdate() {
     //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
     if (this.state.impossible === true) {
-      await Socket.on("connect", () => {
-        console.log("connection server in Impossible");
-      });
-      await Socket.emit("POLICE_ISBUSY", () => {
-        console.log("Emit Impossible");
-      });
+      Socket.emit("POLICE_ISBUSY");
     }
-    if (this.state.impossible === false) {
-      Socket.on("connect", () => {
-        console.log("connection server in Possible");
-      });
-      Socket.emit("POLICE_CAN_WORK_NOW", () => {
-        console.log("Emit Possible");
-      });
 
-      //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
-      Socket.on("POLICE_MESSAGE", () => {
-        console.log("Recieve");
-        this.setState({
-          Modal: true
-        });
+    //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
+    Socket.on("POLICE_MESSAGE", () => {
+      console.log("Recieve");
+      this.setState({
+        Modal: true
       });
-    }
+    });
   }
   componentDidMount() {
+    Socket.on("connect", console.log("Socket is connected"));
+
     //신고자 정보 확인 후 출동 신고를 웹에 보냄
+    Socket.on("VICTIM_NO_NEED_HELP", async () => {
+      await this.setState({
+        Modal: false
+      });
+      // await this.setState({
+      //   cancel: true
+      // });
+    });
     EventBus.getInstance().addListener(
       "EmitToCall",
       (this.listener = async () => {
@@ -84,6 +82,15 @@ export default class StartingScreen extends React.Component {
         });
         await EventBus.getInstance().fireEvent("ShowMainPage", {
           declare: true
+        });
+      })
+    );
+    EventBus.getInstance().addListener(
+      "BackToStartScreen",
+      (this.listener = data => {
+        this.setState({
+          impossible: false,
+          Modal: false
         });
       })
     );
@@ -168,7 +175,13 @@ export default class StartingScreen extends React.Component {
             <Bubbles size={6} color="#FFF" />
           </View>
           <View style={styles.Logout}>
-            <TouchableOpacity style={styles.footerbtnON} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.footerbtnON}
+              onPress={async () => {
+                await Socket.emit("LOGOUT_POLICE", { data: "경찰 퇴근" });
+                await console.log("퇴근 신호 전달");
+              }}
+            >
               <Text style={styles.BtnText}>퇴근하기</Text>
             </TouchableOpacity>
           </View>

@@ -112,10 +112,11 @@ export default class FloatingandModal extends React.Component {
               } else if (text === "cancle") {
                 //신고 접수 후, 신고 취소를 할 경우
                 //HomeScreen에 신고 취소의 이벤트를 전송
-                EventBus.getInstance().fireEvent("CancleDeclare_Home", {
+                EventBus.getInstance().fireEvent("CancleDeclare_Home_POLICE", {
                   declare: false,
                   status: false
                 });
+                // console.log("VICTIM 이벤트 전송");
               } else {
                 Alert.alert("Icon pressed", `the icon ${text} was pressed`);
               }
@@ -203,12 +204,15 @@ export default class FloatingandModal extends React.Component {
             iconColor={Color.Deepgray}
             actionsPaddingTopBottom={2}
             distanceToEdge={20}
-            onPressItem={text => {
+            onPressItem={async () => {
               //신고 접수 중 상태에서의 HomeScreen으로 신고 취소 이벤트 전달
-              EventBus.getInstance().fireEvent("CancleDeclare_Home", {
-                declare: false,
-                status: false
-              });
+              await EventBus.getInstance().fireEvent(
+                "CancleDeclare_Home_VICTIM",
+                {
+                  declare: false,
+                  status: false
+                }
+              );
             }}
           />
         </View>
