@@ -39,7 +39,7 @@ let Socket = io(Host.Port, {
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: false,
+    declare: true,
     cancle: false,
     marker: {
       name: "유승훈",
@@ -179,5 +179,6 @@ const styles = StyleSheet.create({
   },
   Floatingcontainer: {
     ...StyleSheet.absoluteFillObject
+    // zIndex: 2
   }
 });

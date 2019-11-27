@@ -241,7 +241,8 @@ FloatingandModal.navigationOptions = {
 
 const styles = StyleSheet.create({
   Floatingcontainer: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1
   },
   closeBtn1: {
     width: width * 0.85,
