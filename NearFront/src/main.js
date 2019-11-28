@@ -2,7 +2,6 @@ import Vue from 'vue';
 import App from './App.vue';
 import { router } from './routes/index';
 import { store } from './store/store';
-Vue.config.productionTip = false;
 
 import * as VueGoogleMaps from 'vue2-google-maps';
 
@@ -23,25 +22,7 @@ Vue.use(Trend);
 
 Vue.prototype.$eventBus = new Vue();
 
-// import VueSocketIO from 'vue-socket.io';
-// Vue.use(
-// 	new VueSocketIO({
-// 		debug: true,
-// 		connection: SocketIO('http://metinseylan.com:1992', options), //options object is Optional
-// 		vuex: {
-// 			store,
-// 			actionPrefix: 'SOCKET_',
-// 			mutationPrefix: 'SOCKET_',
-// 		},
-// 	})
-// );
-
-// import socketIo from 'socket.io';
-// import socketIoClient from 'socket.io-client';
-
-// // Vue.use(socketIo, 'http://localhost:7499/');
-// // Vue.use(socketIoClient, 'http://localhost:7499/');
-
+Vue.config.productionTip = false;
 new Vue({
 	render: h => h(App),
 	router,

@@ -32,7 +32,6 @@ server.on('listening', onListening);
 
 let change = true;
 io.on('connection', socket => {
-	console.log('connected client');
 	// io.emit('YES_OR_NO');
 	// socket.on('POLICE_YES_OR_NO', () => {
 	// });
@@ -68,18 +67,12 @@ io.on('connection', socket => {
 		console.log('사용자 취소 신청!');
 		io.emit('victim_cancel');
 	});
-	// socket.on('disconnected', data => {
-	// 	console.log('disconnected!');
-	// });
+
 	// 사용자가 신고가 맞다면 빨간버튼과 신고접수로 바꾸기
 	socket.on('GRANT_CALL', data => {
 		console.log('15초내에 응답을 안할시 신고가 맞다고 웹관리자가 인지함');
 		io.emit('CHECK_BUTTON');
 	});
-	// socket.on('I_CAN_DO', () => {
-	// 	console.log("I can Do!");
-	// 	io.emit('i_can_do');
-	// })
 
 	//11/25/19 해야할일
 	//경찰 출동 불가 상태 전송해서 웹 표시 바꾸기
@@ -106,6 +99,9 @@ io.on('connection', socket => {
 	socket.on('LOGOUT_POLICE', () => {
 		console.log('경찰이 로그아웃!');
 		io.emit('KILL_POLICE');
+	});
+	socket.on('FUCKING_FUCK', () => {
+		console.log("FUCK FUCK!!!!");
 	});
 });
 

@@ -31,7 +31,7 @@ import io from 'socket.io-client';
 export default {
 	data() {
 		return {
-			socket: io('http://192.168.35.85:7499'),
+			socket: io('http://192.168.200.109:7499'),
 			markers: [
 				{
 					id: 0,
@@ -182,6 +182,7 @@ export default {
 				this.vMessage = '신고 여부 확인';
 				this.pMessage = '출동 대기중';
 			}
+			EventBus.$emit('statusReset');
 			// this.markers[0].report = false;
 			// this.markers[1].report = false;
 		});
@@ -195,7 +196,7 @@ export default {
 			this.isWaiting = false;
 			this.isVictim = false;
 			this.pMessage = '출동 중';
-			EventBus.$emit('policeCall');
+			EventBus.$emit('policeCall', console.log('status에 파란색 값 증가!'));
 			console.log('파란색!! 파란색!!');
 			EventBus.$emit('changeBlue', this.blueCall, police.id);
 			EventBus.$emit('policeDONE', police, police.id);

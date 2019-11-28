@@ -36,7 +36,7 @@
 </template>
 <script>
 /* global google */
-
+import axios from 'axios';
 import { EventBus } from '../event/eventBus';
 import NearMapModal from './common/NearMapModal';
 import NearChart from './common/NearChart';
@@ -48,7 +48,7 @@ export default {
 	name: 'GoogleMap',
 	data() {
 		return {
-			socket: io('http://192.168.35.85:7499'),
+			socket: io('http://192.168.200.109:7499'),
 			currentLocation: { lat: 0, lng: 0 },
 			map: null,
 			infoContent: '',
@@ -191,9 +191,30 @@ export default {
 			policeBackID: '',
 			victimBackID: '',
 			policeBusy: false,
+			rasberryCall: '',
+			res: 'Fucking',
 		};
 	},
 	created() {
+		setInterval(() => {
+			axios
+				.get('/raspData')
+				.then(res => {
+					if (res === 'Fucking') {
+						this.rasberryCall = res;
+					} else {
+						this.rasberryCall = '';
+					}
+					// this.rasberryCall = res.body;
+					// console.log(this.rasberryCall);
+					// this.markers[0].icon = 'red.png';
+					// EventBus.$emit('getPosition2', this.markers[0]);
+				})
+				.catch();
+		}, 5000);
+		EventBus.$on('rasberryCall', () => {
+			this.markers[0].icon = 'red.png';
+		});
 		EventBus.$on('redImage', (redCall, number) => {
 			this.markers[number].icon = redCall;
 		}),
@@ -290,6 +311,17 @@ export default {
 			}
 			map.fitBounds(bounds);
 		});
+	},
+	watch: {
+		rasberryCall: function(newVal) {
+			console.log(newVal);
+			if (newVal === 'Fucking') {
+				this.markers[0].icon = 'red.png';
+				EventBus.$emit('getPosition2', this.markers[0]);
+			} else {
+				console.log('Rasberry Call is done');
+			}
+		},
 	},
 	methods: {
 		toggleInfoWindow: function(marker, idx) {
