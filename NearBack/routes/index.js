@@ -24,6 +24,21 @@ router.get('/raspData', (req, res, next) => {
 		next(e);
 	}
 });
+//프론트에서 서버로 RaspberryData에 NULL값 넣기ㅣ
+router.get('/rasNULL', (req, res, next) => {
+	console.log('왔다!');
+	try {
+		if (res === NULL) {
+			RaspberryData = NULL;
+			console.log('Success NULL');
+		} else {
+			console.log('Fail NULL');
+		}
+	} catch (e) {
+		console.error(e);
+		next(e);
+	}
+});
 
 //라즈베리 파이 프레스 신호 응답
 router.post('/rasp', (req, res, next) => {
@@ -32,7 +47,7 @@ router.post('/rasp', (req, res, next) => {
 		// let data = req.body.Fuck;
 		RaspberryData = req.body.Fuck;
 		// console.log('파이썬 신호 : ' + data);
-		console.log('전역 Data : ' + RaspberryData);
+		console.log('전역변수 값 : ' + RaspberryData);
 		res.json(response);
 	} catch (e) {
 		console.error(e);
