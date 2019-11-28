@@ -22,6 +22,9 @@ Vue.use(Trend);
 
 Vue.prototype.$eventBus = new Vue();
 
+import axios from 'axios';
+Vue.prototype.$http = axios;
+
 Vue.config.productionTip = false;
 new Vue({
 	render: h => h(App),

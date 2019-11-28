@@ -192,68 +192,33 @@ export default {
       victimBackID: "",
       policeBusy: false,
       rasberryCall: null,
-      calling: true
+      calling: true,
+      intervalid: ""
     };
   },
+  //   axios
+  //         .post("/RaspNull", {
+  //           RaspberryData: null
+  //         })
+  //         .then(res => {
+  //           console.log(res.data);
+  //         });
 
   created() {
-    this.intervalid = setInterval(() => {
-      axios
-        .get("/raspData")
-        .then(res => {
-          console.log(res.data.response);
-          if (res.data.response === "Fucking") {
-            this.rasberryCall = res.data.response;
-          } else {
-            this.rasberryCall = null;
-          }
-        })
-        .catch();
-    }, 5000);
-    //     const rasBCall = () => {
-    //       setInterval(() => {
-    //         axios
-    //           .get("/raspData")
-    //           .then(res => {
-    //             console.log(res.data.response);
-    //             if (res.data.response === "Fucking") {
-    //               this.rasberryCall = res.data.response;
-    //               //     this.calling = false;
-    //               //     postNull();
-    //               //     stopNow();
-    //             } else {
-    //               this.rasberryCall = "";
-    //             }
-    //           })
-    //       ;    .catch();
-    //       }, 5000);
-    //     };
-    //     if (this.calling === true) {
-    //       console.log("this.calling", this.calling);
-    //       console.log("열렸다!");
-    //       rasBCall();
-    //     } else if (this.calling === false) {
-    //       console.log("this.calling", this.calling);
-    //       console.log("닫혔다!");
-    //     }
-    //     const postNull = () => {
-    //       axios.post("/rasNULL").then((req, res, next) => {
-    //         try {
-    //           let response = NULL;
-    //           res.json(response);
-    //         } catch (e) {
-    //           console.error(e);
-    //           next(e);
-    //         }
-    //       });
-    //     };
-    //     const stopNow = () => {
-    //       console.log("멈춰라!");
-    //       window.clearInterval(this.rasBcall);
-    //     };
-    //     const reStartInterval = () => {
-    //       this.rasBCall();
-    //     };
+    this.SetInterval();
+    //     this.intervalid = setInterval(() => {
+    //       axios
+    //         .get("/raspData")
+    //         .then(res => {
+    //           console.log(res.data.response);
+    //           if (res.data.response === "Fucking") {
+    //             this.rasberryCall = res.data.response;
+    //           } else {
+    //             this.rasberryCall = null;
+    //           }
+    //         })
+    //         .catch();
+    //     }, 5000);
 
     EventBus.$on("rasberryCall", () => {
       this.markers[0].icon = "red.png";
@@ -297,7 +262,7 @@ export default {
       this.markers[0].report = false;
       EventBus.$emit("victimCancelCAll");
       EventBus.$emit("victimSafeCallBack");
-      this.reStartInterval();
+      this.SetInterval();
     });
     //알림 표시 필요하면 해야함
     this.socket.on("POLICE_BUSY", () => {
@@ -329,7 +294,7 @@ export default {
       //버튼 표시 변경
       EventBus.$emit("doneCall", data);
       // setInterval 다시 켜주기
-      this.reStartInterval();
+      this.SetInterval();
     });
     this.socket.on("JOBS_done", police => {
       // this.police.report = !this.police.report;
@@ -340,7 +305,7 @@ export default {
       console.log("JOBS_done 받고 JOBSDONE을 NearFlow로 보냄! ");
       EventBus.$emit("JOBSDONE", police, this.markers[0]);
       EventBus.$emit("doneCall");
-      this.reStartInterval();
+      this.SetInterval();
     });
     EventBus.$on("police_not_busy", () => {
       this.policeBusy = false;
@@ -365,31 +330,44 @@ export default {
       if (newVal === "Fucking") {
         this.markers[0].icon = "red.png";
         EventBus.$emit("getPosition2", this.markers[0]);
-        this._StopInterval();
+        this.SetInterval();
       } else {
         console.log("Rasberry Call is done");
       }
     }
   },
   methods: {
-    _postNull() {
-      axios.post("/rasNULL").then((req, res, next) => {
-        try {
-          let response = NULL;
-          res.json(response);
-        } catch (e) {
-          console.error(e);
-          next(e);
-        }
-      });
+    SetInterval() {
+      this.intervalid = setInterval(() => {
+        axios
+          .get("/raspData")
+          .then(res => {
+            console.log(res.data.response);
+            if (res.data.response === "Fucking") {
+              this.rasberryCall = res.data.response;
+            } else {
+              this.rasberryCall = null;
+            }
+          })
+          .catch();
+      }, 5000);
     },
-
+    _StartInterVal() {
+      console.log("시작한다!!");
+      console.log(this.intervalid);
+    },
     _StopInterval() {
       clearInterval(this.intervalid);
-    },
-    stopNow() {
-      console.log("멈춰라!");
-      clearInterval(this.rasBCall);
+      axios
+        .post("/raspNull", {
+          data: null
+        })
+        .then(function(data) {
+          console.log(data.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     toggleInfoWindow: function(marker, idx) {
       this.infoWindowPos = marker.position;

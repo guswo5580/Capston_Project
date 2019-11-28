@@ -25,19 +25,8 @@ router.get('/raspData', (req, res, next) => {
 	}
 });
 //프론트에서 서버로 RaspberryData에 NULL값 넣기ㅣ
-router.get('/rasNULL', (req, res, next) => {
-	console.log('왔다!');
-	try {
-		if (res === NULL) {
-			RaspberryData = NULL;
-			console.log('Success NULL');
-		} else {
-			console.log('Fail NULL');
-		}
-	} catch (e) {
-		console.error(e);
-		next(e);
-	}
+router.post('/raspNull', (req, res, next) => {
+	RaspberryData = req.body.data;
 });
 
 //라즈베리 파이 프레스 신호 응답
