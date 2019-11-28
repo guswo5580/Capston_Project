@@ -10,17 +10,30 @@ import {
   ScrollView
 } from "react-native";
 import Color from "../constants/Colors";
-
+import moment from "moment";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 const headerHorizontalpadding = width / 4;
 
 export default class MainHeader extends React.Component {
+  state = {
+    now: moment().format("YYYY/MM/DD h:mma")
+  };
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        now: moment().format("YYYY/MM/DD h:mma")
+      });
+    }, 60000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.now);
+  }
   render() {
     return (
       <View style={styles.headerContentContainer}>
         <View style={styles.headerContentDate}>
-          <Text style={styles.headerContentDateText}>2019/11/09/18:29</Text>
+          <Text style={styles.headerContentDateText}>{this.state.now}</Text>
         </View>
         <View style={styles.headerContentMain}>
           <Text style={styles.headerContentMainText}>출동 중</Text>

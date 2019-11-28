@@ -9,6 +9,7 @@ import {
   Button,
   ScrollView
 } from "react-native";
+import moment from "moment";
 import Color from "../constants/Colors";
 
 const width = Dimensions.get("window").width;
@@ -19,12 +20,25 @@ export default class MainHeader extends React.Component {
   constructor(props) {
     super(props);
   }
+  state = {
+    now: moment().format("YYYY/MM/DD h:mma")
+  };
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        now: moment().format("YYYY/MM/DD h:mma")
+      });
+    }, 60000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.now);
+  }
   render() {
     if (this.props.status) {
       return (
         <View style={styles.headerContentContainer}>
           <View style={styles.headerContentDate}>
-            <Text style={styles.headerContentDateText}>2019/11/09/18:29</Text>
+            <Text style={styles.headerContentDateText}>{this.state.now}</Text>
           </View>
           <View style={styles.headerContentMain}>
             <Text style={styles.headerContentMainText}>출동 중</Text>
@@ -45,7 +59,7 @@ export default class MainHeader extends React.Component {
           }}
         >
           <View style={styles.headerContentDate}>
-            <Text style={styles.headerContentDateText}>2019/11/09/18:29</Text>
+            <Text style={styles.headerContentDateText}>{this.state.now}</Text>
           </View>
           <View style={styles.headerContentMain}>
             <Text style={styles.headerContentMainText}>신고 접수 중</Text>

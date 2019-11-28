@@ -13,6 +13,8 @@ import {
 window.navigator.userAgent = "react-native";
 import io from "socket.io-client";
 
+import moment from "moment";
+
 //////Import EventBus//////
 import EventBus from "react-native-event-bus";
 
@@ -38,11 +40,13 @@ let Socket = io(Host.Port, {
 export default class StartingScreen extends React.Component {
   state = {
     impossible: false,
-    Modal: false
+    Modal: false,
+    now: moment().format("YYYY/MM/DD h:mma")
   };
   constructor() {
     super();
   }
+
   async componentDidUpdate() {
     //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
     if (this.state.impossible === true) {
@@ -58,6 +62,11 @@ export default class StartingScreen extends React.Component {
     });
   }
   componentDidMount() {
+    setInterval(() => {
+      this.setState({
+        now: moment().format("YYYY/MM/DD h:mma")
+      });
+    }, 60000);
     Socket.on("connect", console.log("Socket is connected"));
 
     //신고자 정보 확인 후 출동 신고를 웹에 보냄
@@ -96,13 +105,14 @@ export default class StartingScreen extends React.Component {
   //전체 이벤트 리스너를 삭제
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);
+    clearInterval(this.state.now);
   }
   render() {
     if (this.state.impossible === false) {
       return (
         <View style={styles.containerON}>
           <View>
-            <Text style={{ color: "white" }}>2019/11/15/18:29</Text>
+            <Text style={{ color: "white" }}>{this.state.now}</Text>
           </View>
           <View style={styles.main}>
             <FlipToggle
