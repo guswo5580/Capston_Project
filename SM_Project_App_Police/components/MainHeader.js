@@ -20,14 +20,14 @@ export default class MainHeader extends React.Component {
     now: moment().format("YYYY/MM/DD h:mma")
   };
   componentDidMount() {
-    setInterval(() => {
+    this.intervalid = setInterval(() => {
       this.setState({
         now: moment().format("YYYY/MM/DD h:mma")
       });
     }, 60000);
   }
   componentWillUnmount() {
-    clearInterval(this.state.now);
+    clearInterval(this.intervalid);
   }
   render() {
     return (

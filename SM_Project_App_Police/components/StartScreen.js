@@ -46,23 +46,8 @@ export default class StartingScreen extends React.Component {
   constructor() {
     super();
   }
-
-  async componentDidUpdate() {
-    //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
-    if (this.state.impossible === true) {
-      Socket.emit("POLICE_ISBUSY");
-    }
-
-    //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
-    Socket.on("POLICE_MESSAGE", () => {
-      console.log("Recieve");
-      this.setState({
-        Modal: true
-      });
-    });
-  }
   componentDidMount() {
-    setInterval(() => {
+    this.intervalid = setInterval(() => {
       this.setState({
         now: moment().format("YYYY/MM/DD h:mma")
       });
@@ -102,10 +87,24 @@ export default class StartingScreen extends React.Component {
     );
   }
 
+  async componentDidUpdate() {
+    //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
+    if (this.state.impossible === true) {
+      Socket.emit("POLICE_ISBUSY");
+    }
+
+    //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
+    Socket.on("POLICE_MESSAGE", () => {
+      console.log("Recieve");
+      this.setState({
+        Modal: true
+      });
+    });
+  }
   //전체 이벤트 리스너를 삭제
   componentWillUnmount() {
     EventBus.getInstance().removeListener(this.listener);
-    clearInterval(this.state.now);
+    clearInterval(this.intervalid);
   }
   render() {
     if (this.state.impossible === false) {
