@@ -39,7 +39,7 @@ let Socket = io(Host.Port, {
 
 export default class HomeScreen extends React.Component {
   state = {
-    declare: true,
+    declare: false,
     cancle: false,
     marker: {
       name: "유승훈",
