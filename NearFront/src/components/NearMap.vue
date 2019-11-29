@@ -48,7 +48,7 @@ export default {
   name: "GoogleMap",
   data() {
     return {
-      socket: io("http://192.168.35.35:7499"),
+      socket: io("http://172.16.41.21:7499"),
       currentLocation: { lat: 0, lng: 0 },
       map: null,
       infoContent: "",
@@ -193,32 +193,31 @@ export default {
       policeBusy: false,
       rasberryCall: null,
       calling: true,
-      intervalid: ""
+      clear: true,
+      repeat: false,
+      repeat2: false
     };
   },
-  //   axios
-  //         .post("/RaspNull", {
-  //           RaspberryData: null
-  //         })
-  //         .then(res => {
-  //           console.log(res.data);
-  //         });
 
   created() {
-    this.SetInterval();
-    //     this.intervalid = setInterval(() => {
-    //       axios
-    //         .get("/raspData")
-    //         .then(res => {
-    //           console.log(res.data.response);
-    //           if (res.data.response === "Fucking") {
-    //             this.rasberryCall = res.data.response;
-    //           } else {
-    //             this.rasberryCall = null;
-    //           }
-    //         })
-    //         .catch();
-    //     }, 5000);
+    this.intervalid = setInterval(() => {
+      axios
+        .get("/raspData")
+        .then(res => {
+          console.log("intervalid");
+
+          if (res.data.response === "Fucking") {
+            this.rasberryCall = res.data.response;
+            this._StopInterval();
+            axios.post("/raspNull", {
+              data: null
+            });
+          } else {
+            this.rasberryCall = null;
+          }
+        })
+        .catch();
+    }, 5000);
 
     EventBus.$on("rasberryCall", () => {
       this.markers[0].icon = "red.png";
@@ -262,7 +261,9 @@ export default {
       this.markers[0].report = false;
       EventBus.$emit("victimCancelCAll");
       EventBus.$emit("victimSafeCallBack");
-      this.SetInterval();
+      this._StartInterval();
+      this.repeat = true;
+      this.repeat2 = false;
     });
     //알림 표시 필요하면 해야함
     this.socket.on("POLICE_BUSY", () => {
@@ -293,8 +294,10 @@ export default {
       EventBus.$emit("victimSafeCallBack");
       //버튼 표시 변경
       EventBus.$emit("doneCall", data);
+      this._StartInterval();
+      this.repeat = true;
+      this.repeat2 = false;
       // setInterval 다시 켜주기
-      this.SetInterval();
     });
     this.socket.on("JOBS_done", police => {
       // this.police.report = !this.police.report;
@@ -305,7 +308,9 @@ export default {
       console.log("JOBS_done 받고 JOBSDONE을 NearFlow로 보냄! ");
       EventBus.$emit("JOBSDONE", police, this.markers[0]);
       EventBus.$emit("doneCall");
-      this.SetInterval();
+      this._StartInterval();
+      this.repeat = true;
+      this.repeat2 = false;
     });
     EventBus.$on("police_not_busy", () => {
       this.policeBusy = false;
@@ -322,6 +327,22 @@ export default {
         bounds.extend(m.position);
       }
       map.fitBounds(bounds);
+
+      //  this.intervalid = setInterval(() => {
+      //    axios
+      //      .get("/raspData")
+      //      .then(res => {
+      //        console.log(res.data.response);
+      //        if (res.data.response === "Fucking") {
+      //          this.rasberryCall = res.data.response;
+      //          this._StopInterval();
+      //          this.repeat = res.data.repeat;
+      //        } else {
+      //          this.rasberryCall = null;
+      //        }
+      //      })
+      //      .catch();
+      //  }, 5000);
     });
   },
   watch: {
@@ -330,44 +351,82 @@ export default {
       if (newVal === "Fucking") {
         this.markers[0].icon = "red.png";
         EventBus.$emit("getPosition2", this.markers[0]);
-        this.SetInterval();
       } else {
         console.log("Rasberry Call is done");
       }
+    },
+    clear: function(newVal) {
+      this._StopInterval();
     }
   },
-  methods: {
-    SetInterval() {
-      this.intervalid = setInterval(() => {
+  beforeMount() {
+    console.log("beforeMount");
+  },
+  beforeUpdate() {
+    console.log("beforeUpdate");
+  },
+  updated() {
+    console.log("updated");
+    if (this.repeat === true && this.repeat2 === false) {
+      console.log("hahaha");
+      let intervalid2 = setInterval(() => {
+        console.log("intervalid2");
         axios
           .get("/raspData")
           .then(res => {
             console.log(res.data.response);
             if (res.data.response === "Fucking") {
               this.rasberryCall = res.data.response;
+              this._StopInterval2();
+              this.repeat = res.data.repeat;
             } else {
               this.rasberryCall = null;
             }
           })
           .catch();
       }, 5000);
-    },
-    _StartInterVal() {
-      console.log("시작한다!!");
-      console.log(this.intervalid);
-    },
-    _StopInterval() {
-      clearInterval(this.intervalid);
+    }
+    if (this.repeat === false && this.repeat2 === true) {
+      console.log("GOOD");
+      let intervalid3 = setInterval(() => {
+        console.log("intervalid3");
+        axios
+          .get("/raspData")
+          .then(res => {
+            console.log(res.data.response);
+            if (res.data.response === "Fucking") {
+              this.rasberryCall = res.data.response;
+              this._StopInterval3();
+              this.repeat = res.data.repeat;
+            } else {
+              this.rasberryCall = null;
+            }
+          })
+          .catch();
+      }, 5000);
+    }
+  },
+
+  methods: {
+    _StartInterval() {
       axios
-        .post("/raspNull", {
-          data: null
-        })
-        .then(function(data) {
-          console.log(data.data);
+        .post("/rasNotNull")
+        .then(res => {
+          console.log("도착!!");
+          console.log(this.repeat);
         })
         .catch(function(error) {
           console.log(error);
         });
+    },
+    _StopInterval() {
+      clearInterval(this.intervalid);
+    },
+    _StopInterval2() {
+      clearInterval(this.intervalid2);
+    },
+    _StopInterval3() {
+      clearInterval(this.intervalid3);
     },
     toggleInfoWindow: function(marker, idx) {
       this.infoWindowPos = marker.position;

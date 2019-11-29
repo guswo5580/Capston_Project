@@ -12,6 +12,7 @@ router.get('/raspData', (req, res, next) => {
 		if (RaspberryData === 'Fucking') {
 			res.send({
 				response: RaspberryData,
+				repeat: true,
 			});
 			console.log('Success');
 		} else {
@@ -27,6 +28,13 @@ router.get('/raspData', (req, res, next) => {
 //프론트에서 서버로 RaspberryData에 NULL값 넣기ㅣ
 router.post('/raspNull', (req, res, next) => {
 	RaspberryData = req.body.data;
+});
+
+router.post('/rasNotNull', (req, res, next) => {
+	const RaspberryBack = true;
+	res.send({
+		RaspberryBack,
+	});
 });
 
 //라즈베리 파이 프레스 신호 응답

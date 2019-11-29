@@ -17,7 +17,7 @@ import io from "socket.io-client";
 export default {
   data() {
     return {
-      socket: io("http://192.168.35.35:7499"),
+      socket: io("http://172.16.41.21:7499"),
       markers: [
         {
           id: 0,
