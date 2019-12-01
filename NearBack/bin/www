@@ -32,9 +32,8 @@ server.on('listening', onListening);
 
 let change = true;
 io.on('connection', socket => {
-	// io.emit('YES_OR_NO');
-	// socket.on('POLICE_YES_OR_NO', () => {
-	// });
+	console.log("connected!");
+
 	//경찰 출동 확인 가능여부 확인 중
 	socket.on('POLICE_CALLNOW', () => {
 		console.log('Socket is here! ', socket.id);
@@ -53,10 +52,10 @@ io.on('connection', socket => {
 		io.emit('JOBS_done', data);
 	});
 	//라즈베리파이 사용자 콜이옴
-	socket.on('VICTIM_CALL', victimID => {
-		console.log(victimID);
-		io.emit('redImage', victimID);
-	});
+	// socket.on('VICTIM_CALL', victimID => {
+	// 	console.log(victimID);
+	// 	io.emit('redImage', victimID);
+	// });
 	//사용자에게 신고확인을 받음
 	socket.on('VICTIM_CHECK', () => {
 		console.log('신고여부 확인 버튼 클릭!');
@@ -103,6 +102,15 @@ io.on('connection', socket => {
 	socket.on('FUCKING_FUCK', () => {
 		console.log("FUCK FUCK!!!!");
 	});
+	socket.on('RASPBERRY_SIGNAL', (data, callback) => {
+		// console.log(data.id);
+		// if (callback)
+		// 	return callback({
+		// 		'result': 'success'
+		// 	})
+		io.emit('VICTIM_CALL');
+	});
+
 });
 
 /**

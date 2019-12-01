@@ -48,7 +48,7 @@ export default {
   name: "GoogleMap",
   data() {
     return {
-      socket: io("http://172.16.41.21:7499"),
+      socket: io("http://192.168.43.42:7499"),
       currentLocation: { lat: 0, lng: 0 },
       map: null,
       infoContent: "",
@@ -200,29 +200,31 @@ export default {
   },
 
   created() {
-    this.intervalid = setInterval(() => {
-      axios
-        .get("/raspData")
-        .then(res => {
-          console.log("intervalid");
+    //초기 라즈베리파이가 웹관리자에게 통신보냄!
+    //     this.intervalid = setInterval(() => {
+    //       axios
+    //         .get("/raspData")
+    //         .then(res => {
+    //           console.log("intervalid");
 
-          if (res.data.response === "Fucking") {
-            this.rasberryCall = res.data.response;
-            this._StopInterval();
-            axios.post("/raspNull", {
-              data: null
-            });
-          } else {
-            this.rasberryCall = null;
-          }
-        })
-        .catch();
-    }, 5000);
+    //           if (res.data.response === "Fucking") {
+    //             //라즈베리파이에서 온 값이 "Fucking"이면 실행하시오
+    //             this.rasberryCall = res.data.response;
+    //             //rasberryCall값이 바뀌면서 watch에서 지도에 사용자 아이콘 변환시킴
+    //             this._StopInterval();
+    //             //현재 intervalid를 중지한다
+    //             axios.post("/raspNull", {
+    //               //서버로부터 통신을 받았으니 null값을 서버로 보내어 전역변수값을 null로 바꿔준다.
+    //               data: null
+    //             });
+    //           } else {
+    //             this.rasberryCall = null;
+    //             //통신이 이뤄지지않았을때 null값으로 바꿔줌
+    //           }
+    //         })
+    //         .catch();
+    //     }, 5000);
 
-    EventBus.$on("rasberryCall", () => {
-      this.markers[0].icon = "red.png";
-      clearInterval(rasBCall);
-    });
     EventBus.$on("redImage", (redCall, number) => {
       this.markers[number].icon = redCall;
     }),
@@ -261,18 +263,19 @@ export default {
       this.markers[0].report = false;
       EventBus.$emit("victimCancelCAll");
       EventBus.$emit("victimSafeCallBack");
-      this._StartInterval();
+
+      //프론트에서 서버로 null값을 보냄
       this.repeat = true;
       this.repeat2 = false;
     });
     //알림 표시 필요하면 해야함
-    this.socket.on("POLICE_BUSY", () => {
-      console.log("바쁘다고! 색깔바꿔!");
-      this.markers[1].icon = "green.png";
-      // 버튼 출동불가 바꾸기
-      this.policeBusy = true;
-      EventBus.$emit("police_isBusy");
-    });
+    //     this.socket.on("POLICE_BUSY", () => {
+    //       console.log("바쁘다고! 색깔바꿔!");
+    //       this.markers[1].icon = "green.png";
+    //       // 버튼 출동불가 바꾸기
+    //       this.policeBusy = true;
+    //       EventBus.$emit("police_isBusy");
+    //     });
     //알림 표시 필요하면 해야함
     this.socket.on("POLICE_CAN_WORK", () => {
       console.log("NearMap에서 이벤트 받고 경찰이 다시 일할수있음");
@@ -294,7 +297,9 @@ export default {
       EventBus.$emit("victimSafeCallBack");
       //버튼 표시 변경
       EventBus.$emit("doneCall", data);
-      this._StartInterval();
+      EventBus.$emit("statusReset");
+
+      //프론트에서 서버로 null값을 보냄
       this.repeat = true;
       this.repeat2 = false;
       // setInterval 다시 켜주기
@@ -308,7 +313,8 @@ export default {
       console.log("JOBS_done 받고 JOBSDONE을 NearFlow로 보냄! ");
       EventBus.$emit("JOBSDONE", police, this.markers[0]);
       EventBus.$emit("doneCall");
-      this._StartInterval();
+      EventBus.$emit("statusReset");
+      //프론트에서 서버로 null값을 보냄
       this.repeat = true;
       this.repeat2 = false;
     });
@@ -319,6 +325,12 @@ export default {
       this.markers[1].icon = NULL;
     });
     this.socket.emit("POLICE_YES_OR_NO", () => {});
+
+    this.socket.on("VICTIM_CALL", () => {
+      this.markers[0].icon = "red.png";
+      EventBus.$emit("getPosition2", this.markers[0]);
+      EventBus.$emit("victimCall");
+    });
   },
   mounted() {
     this.$refs.gmap.$mapPromise.then(map => {
@@ -327,107 +339,96 @@ export default {
         bounds.extend(m.position);
       }
       map.fitBounds(bounds);
-
-      //  this.intervalid = setInterval(() => {
-      //    axios
-      //      .get("/raspData")
-      //      .then(res => {
-      //        console.log(res.data.response);
-      //        if (res.data.response === "Fucking") {
-      //          this.rasberryCall = res.data.response;
-      //          this._StopInterval();
-      //          this.repeat = res.data.repeat;
-      //        } else {
-      //          this.rasberryCall = null;
-      //        }
-      //      })
-      //      .catch();
-      //  }, 5000);
     });
   },
-  watch: {
-    rasberryCall: function(newVal) {
-      console.log(newVal);
-      if (newVal === "Fucking") {
-        this.markers[0].icon = "red.png";
-        EventBus.$emit("getPosition2", this.markers[0]);
-      } else {
-        console.log("Rasberry Call is done");
-      }
-    },
-    clear: function(newVal) {
-      this._StopInterval();
-    }
-  },
-  beforeMount() {
-    console.log("beforeMount");
-  },
-  beforeUpdate() {
-    console.log("beforeUpdate");
-  },
-  updated() {
-    console.log("updated");
-    if (this.repeat === true && this.repeat2 === false) {
-      console.log("hahaha");
-      let intervalid2 = setInterval(() => {
-        console.log("intervalid2");
-        axios
-          .get("/raspData")
-          .then(res => {
-            console.log(res.data.response);
-            if (res.data.response === "Fucking") {
-              this.rasberryCall = res.data.response;
-              this._StopInterval2();
-              this.repeat = res.data.repeat;
-            } else {
-              this.rasberryCall = null;
-            }
-          })
-          .catch();
-      }, 5000);
-    }
-    if (this.repeat === false && this.repeat2 === true) {
-      console.log("GOOD");
-      let intervalid3 = setInterval(() => {
-        console.log("intervalid3");
-        axios
-          .get("/raspData")
-          .then(res => {
-            console.log(res.data.response);
-            if (res.data.response === "Fucking") {
-              this.rasberryCall = res.data.response;
-              this._StopInterval3();
-              this.repeat = res.data.repeat;
-            } else {
-              this.rasberryCall = null;
-            }
-          })
-          .catch();
-      }, 5000);
-    }
-  },
+  //   watch: {
+  //     rasberryCall: function(newVal) {
+  //       console.log(newVal);
+  //       if (newVal === "Fucking") {
+  //         this.markers[0].icon = "red.png";
+  //         EventBus.$emit("getPosition2", this.markers[0]);
+  //       } else {
+  //         console.log("Rasberry Call is done");
+  //       }
+  //     }
+  //   },
+  //   updated() {
+  //     console.log("updated");
+  //     if (this.repeat === true && this.repeat2 === false) {
+  //       console.log("hahaha");
+  //       let intervalid2 = setInterval(() => {
+  //         console.log("intervalid2");
+  //         axios
+  //           .get("/raspData")
+  //           .then(res => {
+  //             console.log("나를 봐", res.data);
+  //             console.log("나를 봐 2", res.data.response);
+  //             if (res.data.response === "Fucking") {
+  //               //라즈베리파이에서 온 값이 "Fucking"이면 실행하시오
+  //               this.rasberryCall = res.data.response;
+  //               //rasberryCall값이 바뀌면서 watch에서 지도에 사용자 아이콘 변환시킴
+  //               clearInterval(intervalid2);
+  //               //     this._StopInterval2();
+  //               //현재 intervalid를 중지한다
+  //               axios.post("/raspNull", {
+  //                 //서버로부터 통신을 받았으니 null값을 서버로 보내어 전역변수값을 null로 바꿔준다.
+  //                 data: null
+  //               });
+  //             } else {
+  //               this.rasberryCall = null;
+  //               //통신이 이뤄지지않았을때 null값으로 바꿔줌
+  //             }
+  //           })
+  //           .catch();
+  //       }, 5000);
+  //     } else if (this.repeat === false && this.repeat2 === true) {
+  //       console.log("GOOD");
+  //       let intervalid3 = setInterval(() => {
+  //         console.log("intervalid3");
+  //         axios
+  //           .get("/raspData")
+  //           .then(res => {
+  //             if (res.data.response === "Fucking") {
+  //               //라즈베리파이에서 온 값이 "Fucking"이면 실행하시오
+  //               this.rasberryCall = res.data.response;
+  //               //rasberryCall값이 바뀌면서 watch에서 지도에 사용자 아이콘 변환시킴
+  //               //     clearInterval(this.intervalid3);
+  //               //현재 intervalid를 중지한다
+  //               axios.post("/raspNull", {
+  //                 //서버로부터 통신을 받았으니 null값을 서버로 보내어 전역변수값을 null로 바꿔준다.
+  //                 data: null
+  //               });
+  //             } else {
+  //               this.rasberryCall = null;
+  //               //통신이 이뤄지지않았을때 null값으로 바꿔줌
+  //             }
+  //           })
+  //           .catch();
+  //       }, 5000);
+  //     }
+  //   },
 
   methods: {
-    _StartInterval() {
-      axios
-        .post("/rasNotNull")
-        .then(res => {
-          console.log("도착!!");
-          console.log(this.repeat);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    _StopInterval() {
-      clearInterval(this.intervalid);
-    },
-    _StopInterval2() {
-      clearInterval(this.intervalid2);
-    },
-    _StopInterval3() {
-      clearInterval(this.intervalid3);
-    },
+    //     _StartInterval() {
+    //       axios
+    //         .post("/rasNotNull")
+    //         .then(res => {
+    //           console.log("도착!!");
+    //           console.log(this.repeat);
+    //         })
+    //         .catch(function(error) {
+    //           console.log(error);
+    //         });
+    //     },
+    //     _StopInterval() {
+    //       clearInterval(this.intervalid);
+    //     },
+    //     _StopInterval2() {
+    //       clearInterval(this.intervalid2);
+    //     },
+    //     _StopInterval3() {
+    //       clearInterval(this.intervalid3);
+    //     },
     toggleInfoWindow: function(marker, idx) {
       this.infoWindowPos = marker.position;
       this.infoContent = this.getInfoWindowContent(marker);
