@@ -11,7 +11,7 @@ import {
 
 //////Import socket/////
 window.navigator.userAgent = "react-native";
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io";
 
 import moment from "moment";
 
@@ -28,6 +28,7 @@ import CancleModal from "../components/CancleModal";
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 let Socket = io(Host.Port, {
+  // path: "/endpoint",
   jsonp: false,
   autoConnect: true,
   secure: true,
@@ -52,7 +53,6 @@ export default class StartingScreen extends React.Component {
         now: moment().format("YYYY/MM/DD h:mma")
       });
     }, 60000);
-    Socket.on("connect", console.log("Socket is connected"));
 
     //신고자 정보 확인 후 출동 신고를 웹에 보냄
     Socket.on("VICTIM_NO_NEED_HELP", async () => {
@@ -89,9 +89,9 @@ export default class StartingScreen extends React.Component {
 
   async componentDidUpdate() {
     //경찰의 현 상황에 따라서 웹으로부터 통신 불가, 통신 가능 상태를 웹에 전송
-    if (this.state.impossible === true) {
-      Socket.emit("POLICE_ISBUSY");
-    }
+    // if (this.state.impossible === true) {
+    //   Socket.emit("POLICE_ISBUSY");
+    // }
 
     //경찰이 출동 신호를 받고 모달을 통해 신고자의 정보를 확인
     Socket.on("POLICE_MESSAGE", () => {

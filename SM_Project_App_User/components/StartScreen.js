@@ -78,7 +78,7 @@ export default class StartScreen extends React.Component {
   };
 
   componentDidMount() {
-    // Socket.emit("RASPBERRY_SIGNAL");
+    Socket.emit("RASPBERRY_SIGNAL");
     this.requestLocationPermission();
 
     //웹으로부터 신고 여부 확인에 대한 신호 확인, Declare모달을 실행

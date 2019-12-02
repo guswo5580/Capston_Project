@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   Information: {
     flex: 4,
-    fontSize: 15
+    fontSize: 14
   },
   footerbtn: {
     backgroundColor: Color.lightgray,

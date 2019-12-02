@@ -29,6 +29,7 @@ const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
 let Socket = io(Host.Port, {
+  // path: "/endpoint",
   jsonp: false,
   autoConnect: true,
   secure: true,
