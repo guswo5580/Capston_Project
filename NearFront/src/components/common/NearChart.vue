@@ -226,9 +226,10 @@ export default {
 		},
 		checkPulse() {
 			var v = this;
+			v.pulseNumber = 0;
 			setInterval(function() {
-				v.pulseNumber = Math.ceil(Math.random() * 40 + 50);
-			}, 5000);
+				v.pulseNumber = Math.ceil(Math.random() * (80 - 60 + 1) + 60);
+			}, 10000);
 		},
 	},
 	mounted() {

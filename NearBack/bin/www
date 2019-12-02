@@ -76,12 +76,12 @@ io.on('connection', socket => {
 	//11/25/19 해야할일
 	//경찰 출동 불가 상태 전송해서 웹 표시 바꾸기
 
-	socket.on('POLICE_ISBUSY', data => {
-		console.log('경찰이 다른 엄무때매 바빠요!');
-		io.emit('POLICE_BUSY');
-		console.log(data);
-		this.change = data;
-	});
+	// socket.on('POLICE_ISBUSY', data => {
+	// 	console.log('경찰이 다른 엄무때매 바빠요!');
+	// 	io.emit('POLICE_BUSY');
+	// 	console.log(data);
+	// 	this.change = data;
+	// });
 	//경찰 출동 가능 상태 전송해서 웹 표시 바꾸기
 	if (this.change === false) {
 		socket.on('POLICE_CAN_WORK_NOW', () => {
